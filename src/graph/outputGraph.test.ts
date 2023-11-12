@@ -1,13 +1,8 @@
 import { Graph, Node } from '@ysk8hori/typescript-graph/dist/src/models';
 import { outputGraph } from './outputGraph';
+import github from '../github';
 
-beforeEach(() => {
-  global.markdown = jest.fn();
-});
-
-afterEach(() => {
-  global.markdown = undefined;
-});
+github.commentToPR = jest.fn();
 
 const a: Node = {
   path: 'src/A.tsx',
@@ -45,17 +40,13 @@ test('出力可能なグラフがない場合は何も出力しない', () => {
   const meta = {
     rootDir: '',
   };
-  const renamed = undefined;
-  global.danger = {
-    github: { pr: { title: 'My Test Title' } },
-    git: {
-      modified_files: [],
-      created_files: [],
-      deleted_files: [],
-    },
-  };
-  outputGraph(graph, graph, meta, renamed);
-  expect(global.markdown).not.toHaveBeenCalled();
+  outputGraph(graph, graph, meta, {
+    created: [],
+    deleted: [],
+    modified: [],
+    renamed: [],
+  });
+  expect(github.commentToPR).not.toHaveBeenCalled();
 });
 
 test('追加や依存の削除がある場合', () => {
@@ -114,17 +105,13 @@ test('追加や依存の削除がある場合', () => {
   const meta = {
     rootDir: '',
   };
-  const renamed = undefined;
-  global.danger = {
-    github: { pr: { title: '' } },
-    git: {
-      modified_files: [a.path],
-      created_files: [b.path],
-      deleted_files: [],
-    },
-  };
-  outputGraph(graphA, graphB, meta, renamed);
-  expect((global.markdown as jest.Mock).mock.calls[0][0])
+  outputGraph(graphA, graphB, meta, {
+    created: [{ filename: b.path, previous_filename: undefined }],
+    deleted: [],
+    modified: [{ filename: a.path, previous_filename: undefined }],
+    renamed: [],
+  });
+  expect((github.commentToPR as jest.Mock).mock.calls[0][0])
     .toMatchInlineSnapshot(`
     "
     ## TypeScript Graph - Diff

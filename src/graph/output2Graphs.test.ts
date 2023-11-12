@@ -1,13 +1,8 @@
 import { Graph, Node } from '@ysk8hori/typescript-graph/dist/src/models';
 import { output2Graphs } from './output2Graphs';
+import github from '../github';
 
-beforeEach(() => {
-  global.markdown = jest.fn();
-});
-
-afterEach(() => {
-  global.markdown = undefined;
-});
+github.commentToPR = jest.fn();
 
 const a: Node = {
   path: 'src/A.tsx',
@@ -100,17 +95,14 @@ test('削除がある場合', async () => {
   const meta = {
     rootDir: '',
   };
-  const renamed = undefined;
-  global.danger = {
-    github: { pr: { title: '' } },
-    git: {
-      modified_files: [a.path],
-      created_files: [],
-      deleted_files: [b.path],
-    },
-  };
-  await output2Graphs(base, head, meta, renamed);
-  expect((global.markdown as jest.Mock).mock.calls[0]).toMatchInlineSnapshot(`
+  await output2Graphs(base, head, meta, {
+    created: [],
+    deleted: [{ filename: b.path, previous_filename: undefined }],
+    modified: [{ filename: a.path, previous_filename: undefined }],
+    renamed: [],
+  });
+  expect((github.commentToPR as jest.Mock).mock.calls[0])
+    .toMatchInlineSnapshot(`
     [
       "
     ## TypeScript Graph - Diff

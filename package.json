@@ -6,7 +6,11 @@
   "scripts": {
     "test": "jest",
     "build": "tsc & ncc build lib/index.js --license licenses.txt",
-    "build2": "ncc build src/index.ts --license licenses.txt"
+    "build2": "ncc build src/index.ts --license licenses.txt",
+    "type-check": "tsc --noEmit",
+    "prettier": "prettier --write ./src",
+    "lint:fix": "eslint --fix src",
+    "lint": "eslint \"src/**/*.ts\""
   },
   "keywords": [],
   "author": "",

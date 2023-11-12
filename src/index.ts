@@ -2,7 +2,7 @@ import getFullGraph from './getFullGraph';
 import { outputGraph, output2Graphs } from './graph';
 import { log } from './utils/log';
 import { readRuntimeConfig } from './utils/config';
-import * as github from './github';
+import github from './github';
 
 /**
  * Visualize the dependencies between files in the TypeScript code base.
@@ -53,8 +53,18 @@ async function makeGraph() {
 
   if (deleted.length !== 0 || hasRenamed) {
     // ファイルの削除またはリネームがある場合は Graph を2つ表示する
-    await output2Graphs(fullBaseGraph, fullHeadGraph, meta, renamed);
+    await output2Graphs(fullBaseGraph, fullHeadGraph, meta, {
+      created,
+      deleted,
+      modified,
+      renamed,
+    });
   } else {
-    await outputGraph(fullBaseGraph, fullHeadGraph, meta, renamed);
+    await outputGraph(fullBaseGraph, fullHeadGraph, meta, {
+      created,
+      deleted,
+      modified,
+      renamed,
+    });
   }
 }

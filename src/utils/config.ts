@@ -3,7 +3,7 @@ import path from 'path';
 import { z } from 'zod';
 import type mermaidify from '@ysk8hori/typescript-graph/dist/src/mermaidify';
 
-const dangerPluginTsgConfigScheme = z.object({
+const tsgConfigScheme = z.object({
   /** tsconfig のルートディレクトリ */
   tsconfigRoot: z.string().optional(),
   /** 変更ファイル数が多い場合にグラフの表示を抑止するが、その際のノード数を指定する値 */
@@ -20,11 +20,9 @@ const dangerPluginTsgConfigScheme = z.object({
   includeIndexFileDependencies: z.boolean().optional(),
 });
 
-export type DangerPluginTsgConfigScheme = z.infer<
-  typeof dangerPluginTsgConfigScheme
->;
+export type TsgConfigScheme = z.infer<typeof tsgConfigScheme>;
 
-let rc: DangerPluginTsgConfigScheme | undefined;
+let rc: TsgConfigScheme | undefined;
 
 /**
  * @deprecated test用関数。テスト以外で使用しないでください。
@@ -41,9 +39,7 @@ export function readRuntimeConfig(
     rc = {};
   }
   try {
-    rc = dangerPluginTsgConfigScheme.parse(
-      JSON.parse(readFileSync(filePath, 'utf-8')),
-    );
+    rc = tsgConfigScheme.parse(JSON.parse(readFileSync(filePath, 'utf-8')));
   } catch (e) {
     rc = {};
     console.error(e);

@@ -1,4 +1,4 @@
-# danger の設計
+# 設計
 
 ```mermaid
 flowchart

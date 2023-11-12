@@ -1,33 +1,32 @@
 import mermaidify from '@ysk8hori/typescript-graph/dist/src/mermaidify';
 import { Graph, Meta } from '@ysk8hori/typescript-graph/dist/src/models';
-import { DangerDSLType } from 'danger/distribution/dsl/DangerDSL';
 import { getMaxSize, getOrientation, isInDetails } from '../utils/config';
 import mergeGraphsWithDifferences from './mergeGraphsWithDifferences';
-declare let danger: DangerDSLType;
-export declare function markdown(message: string): void;
+import github from '../github';
+
+type FileInfoList = {
+  filename: string;
+  previous_filename: string | undefined;
+}[];
 
 export function outputGraph(
   fullBaseGraph: Graph,
   fullHeadGraph: Graph,
   meta: Meta,
-  renamed:
-    | {
-        filename: string;
-        previous_filename: string | undefined;
-      }[]
-    | undefined,
+  files: {
+    created: FileInfoList;
+    deleted: FileInfoList;
+    modified: FileInfoList;
+    renamed: FileInfoList;
+  },
 ) {
-  const modified = danger.git.modified_files;
-  const created = danger.git.created_files;
-  const deleted = danger.git.deleted_files;
-
   const { graph, tsgCommand } = mergeGraphsWithDifferences(
     fullBaseGraph,
     fullHeadGraph,
-    created,
-    deleted,
-    modified,
-    renamed,
+    files.created.map(({ filename }) => filename),
+    files.deleted.map(({ filename }) => filename),
+    files.modified.map(({ filename }) => filename),
+    files.renamed,
   );
 
   if (graph.nodes.length === 0) {
@@ -37,7 +36,7 @@ export function outputGraph(
 
   if (graph.nodes.length > getMaxSize()) {
     // グラフが大きすぎる場合は表示しない
-    markdown(`
+    github.commentToPR(`
 ## TypeScript Graph - Diff
 
 > 表示ノード数が多いため、グラフを表示しません。
@@ -59,7 +58,7 @@ ${tsgCommand}
     ...getOrientation(),
   });
 
-  markdown(`
+  github.commentToPR(`
 ## TypeScript Graph - Diff
 
 ${outputIfInDetails(`
