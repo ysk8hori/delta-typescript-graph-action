@@ -42,7 +42,7 @@ export function readRuntimeConfig(
     rc = tsgConfigScheme.parse(JSON.parse(readFileSync(filePath, 'utf-8')));
   } catch (e) {
     rc = {};
-    console.error(e);
+    // console.error(e);
   }
 }
 

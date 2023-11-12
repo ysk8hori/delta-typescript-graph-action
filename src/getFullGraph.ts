@@ -19,13 +19,6 @@ export default function getFullGraph() {
     fullBaseGraph: Graph;
     meta: Meta;
   }>(resolve => {
-    // head の Graph を生成
-    const { graph: fullHeadGraph, meta } = createGraph(
-      path.resolve(getTsconfigRoot()),
-    );
-    log('fullHeadGraph.nodes.length:', fullHeadGraph.nodes.length);
-    log('fullHeadGraph.relations.length:', fullHeadGraph.relations.length);
-
     // base の Graph を生成するために base に checkout する
     execSync(`git fetch origin ${github.getBaseSha()}`);
     execSync(`git checkout ${github.getBaseSha()}`);
@@ -38,6 +31,12 @@ export default function getFullGraph() {
     // head に戻す
     execSync(`git fetch origin ${github.getHeadSha()}`);
     execSync(`git checkout ${github.getHeadSha()}`);
+    // head の Graph を生成
+    const { graph: fullHeadGraph, meta } = createGraph(
+      path.resolve(getTsconfigRoot()),
+    );
+    log('fullHeadGraph.nodes.length:', fullHeadGraph.nodes.length);
+    log('fullHeadGraph.relations.length:', fullHeadGraph.relations.length);
     resolve({ fullHeadGraph, fullBaseGraph, meta });
   });
 }
