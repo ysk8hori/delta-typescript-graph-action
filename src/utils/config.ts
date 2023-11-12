@@ -1,3 +1,5 @@
+// TODO: ワークフローからパラメータを受け取って使用するようにする
+
 import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 import { z } from 'zod';

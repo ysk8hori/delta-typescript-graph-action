@@ -1,5 +1,9 @@
 # typescript-graph-action
 
+TODO: delta-typescript-graph-action に変える
+
+TODO: 日本語版ドキュメント作る
+
 This Action visualizes changes in file dependencies within the TypeScript codebase that occur in Pull Requests.
 
 ### Sample Usage
@@ -83,6 +87,8 @@ flowchart
 ```
 
 ## Configuration
+
+TODO: ワークフローのパラメータを使用する場合の説明に変える
 
 The `.danger-tsgrc.json` is a configuration file that stores settings in JSON format. If the relevant configuration file does not exist, or if it is in an invalid format, the default settings will be applied.
 Each configuration item has a corresponding environment variable, which takes precedence over the settings in the configuration file.

@@ -35,7 +35,7 @@ export function outputGraph(
   }
 
   if (graph.nodes.length > getMaxSize()) {
-    // グラフが大きすぎる場合は表示しない
+    // グラフが大きすぎる場合は表示しない TODO: ワークフローのパラメータの場合の文言にする
     github.commentToPR(`
 ## TypeScript Graph - Diff
 

@@ -42,6 +42,7 @@ export async function output2Graphs(
     baseGraph.nodes.length > getMaxSize() ||
     headGraph.nodes.length > getMaxSize()
   ) {
+    //  TODO: ワークフローのパラメータの場合の文言にする
     github.commentToPR(`
 ## TypeScript Graph - Diff
 

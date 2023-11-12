@@ -61,6 +61,7 @@ export async function cloneRepo() {
   return { repoDir: repo.repo };
 }
 
+// TODO: それぞれの関数を export する。テストの変更も必要。
 export default {
   getFiles,
   getBaseSha,
