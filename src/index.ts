@@ -1,23 +1,68 @@
-import * as core from "@actions/core";
-import * as github from "@actions/github";
+import { DangerDSLType } from '../node_modules/danger/distribution/dsl/DangerDSL';
+import getRenameFiles from './getRenameFiles';
+import getFullGraph from './getFullGraph';
+import { outputGraph, output2Graphs } from './graph';
 
-try {
-  // `who-to-greet` import defined in action metadata file
-  const nameToGreet = core.getInput("who-to-greet");
-  console.log(`Hello ${nameToGreet}!`);
-  const time = new Date().toTimeString();
-  core.setOutput("time", time);
-  // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2);
-  console.log(`The event payload: ${payload}`);
-  const octokit = github.getOctokit(core.getInput("access-token"));
-  // issue #1 に書き込む
-  octokit.rest.issues.createComment({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    issue_number: 1,
-    body: "Hello World: " + time,
-  });
-} catch (error) {
-  core.setFailed((error as Error).message);
+import { log } from './utils/log';
+import { readRuntimeConfig } from './utils/config';
+// Provides dev-time type structures for  `danger` - doesn't affect runtime.
+declare let danger: DangerDSLType;
+export declare function message(message: string): void;
+export declare function warn(message: string): void;
+export declare function fail(message: string): void;
+export declare function markdown(message: string): void;
+
+/**
+ * Visualize the dependencies between files in the TypeScript code base.
+ */
+export default async function typescriptGraph() {
+  // Replace this with the code from your Dangerfile
+  const title = danger.github.pr.title;
+  message(`PR Title: ${title}`);
+
+  await makeGraph();
+}
+
+async function makeGraph() {
+  readRuntimeConfig();
+
+  // 以下の *_files は src/index.ts のようなパス文字列になっている
+  const modified = danger.git.modified_files;
+  log('modified:', modified);
+  const created = danger.git.created_files;
+  log('created:', created);
+  const deleted = danger.git.deleted_files;
+  log('deleted:', deleted);
+
+  // .tsファイルの変更がある場合のみ Graph を生成する。コンパイル対象外の ts ファイルもあるかもしれないがわからないので気にしない
+  if (
+    ![modified, created, deleted].flat().some(file => /\.ts|\.tsx/.test(file))
+  ) {
+    return;
+  }
+
+  const [renamed, { fullHeadGraph, fullBaseGraph, meta }] = await Promise.all([
+    getRenameFiles(),
+    getFullGraph(),
+  ]);
+  log('renamed:', renamed);
+  log('fullBaseGraph.nodes.length:', fullBaseGraph.nodes.length);
+  log('fullBaseGraph.relations.length:', fullBaseGraph.relations.length);
+  log('fullHeadGraph.nodes.length:', fullHeadGraph.nodes.length);
+  log('fullHeadGraph.relations.length:', fullHeadGraph.relations.length);
+  log('meta:', meta);
+
+  // head のグラフが空の場合は何もしない
+  if (fullHeadGraph.nodes.length === 0) return;
+
+  const hasRenamed = fullHeadGraph.nodes.some(headNode =>
+    renamed?.map(({ filename }) => filename).includes(headNode.path),
+  );
+
+  if (deleted.length !== 0 || hasRenamed) {
+    // ファイルの削除またはリネームがある場合は Graph を2つ表示する
+    await output2Graphs(fullBaseGraph, fullHeadGraph, meta, renamed);
+  } else {
+    await outputGraph(fullBaseGraph, fullHeadGraph, meta, renamed);
+  }
 }
