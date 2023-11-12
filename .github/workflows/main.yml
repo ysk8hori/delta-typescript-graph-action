@@ -2,7 +2,7 @@ on: [push]
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  issues: write
+  pull-requests: write
 
 jobs:
   hello_world_job:
@@ -14,7 +14,7 @@ jobs:
         uses: ysk8hori/typescript-graph-action@v0.0.2
         with:
           who-to-greet: "ysk8hori"
-          access-token: ${{ secrets.ISSUEACCESS }}
+          access-token: ${{ secrets.GITHUB_TOKEN }}
       # Use the output from the `hello` step
       - name: Get the output time
         run: echo "The time was ${{ steps.hello.outputs.time }}"
