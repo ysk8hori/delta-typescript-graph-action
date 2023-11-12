@@ -1,12 +1,9 @@
-import { createGraph } from '@ysk8hori/typescript-graph/dist/src/graph/createGraph';
-import { filterGraph } from '@ysk8hori/typescript-graph/dist/src/graph/filterGraph';
-import { Graph, Meta } from '@ysk8hori/typescript-graph/dist/src/models';
-import { execSync } from 'child_process';
-import { DangerDSLType } from 'danger/distribution/dsl/DangerDSL';
-import { log } from './utils/log';
-import { getTsconfigRoot } from './utils/config';
-import path from 'path';
-declare let danger: DangerDSLType;
+import { createGraph } from "@ysk8hori/typescript-graph/dist/src/graph/createGraph";
+import { Graph, Meta } from "@ysk8hori/typescript-graph/dist/src/models";
+import { execSync } from "child_process";
+import { log } from "./utils/log";
+import { getTsconfigRoot } from "./utils/config";
+import path from "path";
 
 /**
  * TypeScript Graph の createGraph を使い head と base の Graph を生成する
@@ -20,23 +17,23 @@ export default function getFullGraph() {
     fullHeadGraph: Graph;
     fullBaseGraph: Graph;
     meta: Meta;
-  }>(resolve => {
+  }>((resolve) => {
     // head の Graph を生成
     const { graph: fullHeadGraph, meta } = createGraph(
-      path.resolve(getTsconfigRoot()),
+      path.resolve(getTsconfigRoot())
     );
-    log('fullHeadGraph.nodes.length:', fullHeadGraph.nodes.length);
-    log('fullHeadGraph.relations.length:', fullHeadGraph.relations.length);
+    log("fullHeadGraph.nodes.length:", fullHeadGraph.nodes.length);
+    log("fullHeadGraph.relations.length:", fullHeadGraph.relations.length);
 
     // base の Graph を生成するために base に checkout する
     execSync(`git fetch origin ${danger.github.pr.base.ref}`);
     execSync(`git checkout ${danger.github.pr.base.ref}`);
     // base の Graph を生成
     const { graph: fullBaseGraph } = createGraph(
-      path.resolve(getTsconfigRoot()),
+      path.resolve(getTsconfigRoot())
     );
-    log('fullBaseGraph.nodes.length:', fullBaseGraph.nodes.length);
-    log('fullBaseGraph.relations.length:', fullBaseGraph.relations.length);
+    log("fullBaseGraph.nodes.length:", fullBaseGraph.nodes.length);
+    log("fullBaseGraph.relations.length:", fullBaseGraph.relations.length);
     // head に戻す
     execSync(`git fetch origin ${danger.github.pr.head.ref}`);
     execSync(`git checkout ${danger.github.pr.head.ref}`);
