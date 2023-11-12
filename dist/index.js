@@ -29933,7 +29933,7 @@ try {
     // Get the JSON webhook payload for the event that triggered the workflow
     const payload = JSON.stringify(github.context.payload, undefined, 2);
     console.log(`The event payload: ${payload}`);
-    const octokit = github.getOctokit(core.getInput("access-token"));
+    const octokit = github.getOctokit('core.getInput("access-token")');
     // issue #1 に書き込む
     octokit.rest.issues.createComment({
         owner: github.context.repo.owner,
