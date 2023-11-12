@@ -16,7 +16,7 @@ try {
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
     issue_number: 1,
-    body: "Hello World",
+    body: "Hello World: " + time,
   });
 } catch (error) {
   core.setFailed((error as Error).message);
