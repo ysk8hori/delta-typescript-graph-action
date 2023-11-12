@@ -12,6 +12,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "20.9.0",
     "@vercel/ncc": "0.38.1",
     "typescript": "5.2.2"
   },
