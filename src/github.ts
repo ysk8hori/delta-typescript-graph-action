@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { log } from './utils/log';
+import { execSync } from 'child_process';
 
 async function getFiles() {
   const octokit = github.getOctokit(core.getInput('access-token'));
@@ -50,9 +51,20 @@ export function commentToPR(message: string) {
   });
 }
 
+export async function cloneRepo() {
+  const repo = github.context.repo;
+  // リポジトリのURLを取得
+  const repoUrl = `https://github.com/${repo.owner}/${repo.repo}.git`;
+  // リポジトリをチェックアウト
+  execSync(`git clone ${repoUrl}`);
+  // result としてリポジトリ名を返す
+  return { repoDir: repo.repo };
+}
+
 export default {
   getFiles,
   getBaseSha,
   getHeadSha,
   commentToPR,
+  cloneRepo,
 };

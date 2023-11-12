@@ -13,30 +13,25 @@ import github from './github';
  *
  * また、処理に時間がかかるため Promise を返す。
  */
-export default function getFullGraph() {
-  return new Promise<{
-    fullHeadGraph: Graph;
-    fullBaseGraph: Graph;
-    meta: Meta;
-  }>(resolve => {
-    // base の Graph を生成するために base に checkout する
-    execSync(`git fetch origin ${github.getBaseSha()}`);
-    execSync(`git checkout ${github.getBaseSha()}`);
-    // base の Graph を生成
-    const { graph: fullBaseGraph } = createGraph(
-      path.resolve(getTsconfigRoot()),
-    );
-    log('fullBaseGraph.nodes.length:', fullBaseGraph.nodes.length);
-    log('fullBaseGraph.relations.length:', fullBaseGraph.relations.length);
-    // head に戻す
-    execSync(`git fetch origin ${github.getHeadSha()}`);
-    execSync(`git checkout ${github.getHeadSha()}`);
-    // head の Graph を生成
-    const { graph: fullHeadGraph, meta } = createGraph(
-      path.resolve(getTsconfigRoot()),
-    );
-    log('fullHeadGraph.nodes.length:', fullHeadGraph.nodes.length);
-    log('fullHeadGraph.relations.length:', fullHeadGraph.relations.length);
-    resolve({ fullHeadGraph, fullBaseGraph, meta });
-  });
+export default async function getFullGraph() {
+  const { repoDir } = await github.cloneRepo();
+  // head の Graph を生成するために head に checkout する
+  execSync(`git fetch origin ${github.getHeadSha()}`, { cwd: repoDir });
+  execSync(`git checkout ${github.getHeadSha()}`, { cwd: repoDir });
+  // head の Graph を生成
+  const { graph: fullHeadGraph, meta } = createGraph(
+    path.resolve(repoDir, getTsconfigRoot()),
+  );
+  log('fullHeadGraph.nodes.length:', fullHeadGraph.nodes.length);
+  log('fullHeadGraph.relations.length:', fullHeadGraph.relations.length);
+  // base の Graph を生成するために base に checkout する
+  execSync(`git fetch origin ${github.getBaseSha()}`, { cwd: repoDir });
+  execSync(`git checkout ${github.getBaseSha()}`, { cwd: repoDir });
+  // base の Graph を生成
+  const { graph: fullBaseGraph } = createGraph(
+    path.resolve(repoDir, getTsconfigRoot()),
+  );
+  log('fullBaseGraph.nodes.length:', fullBaseGraph.nodes.length);
+  log('fullBaseGraph.relations.length:', fullBaseGraph.relations.length);
+  return { fullHeadGraph, fullBaseGraph, meta };
 }
