@@ -4,13 +4,6 @@ import { log } from './utils/log';
 import { readRuntimeConfig } from './utils/config';
 import github from './github';
 
-/**
- * Visualize the dependencies between files in the TypeScript code base.
- */
-export default async function typescriptGraph() {
-  await makeGraph();
-}
-
 async function makeGraph() {
   readRuntimeConfig();
 
@@ -68,3 +61,5 @@ async function makeGraph() {
     });
   }
 }
+
+makeGraph();
