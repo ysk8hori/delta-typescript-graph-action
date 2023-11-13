@@ -111,34 +111,5 @@ test('追加や依存の削除がある場合', () => {
     modified: [{ filename: a.path, previous_filename: undefined }],
     renamed: [],
   });
-  expect((github.commentToPR as jest.Mock).mock.calls[0][0])
-    .toMatchInlineSnapshot(`
-    "
-    ## TypeScript Graph - Diff
-
-
-
-    \`\`\`bash
-    tsg  --include src/B.tsx src/A.tsx --highlight src/B.tsx src/A.tsx --exclude node_modules --abstraction src/1
-    \`\`\`
-
-    \`\`\`mermaid
-    flowchart
-        classDef created fill:cyan,stroke:#999,color:black
-        classDef modified fill:yellow,stroke:#999,color:black
-        subgraph src["src"]
-            src/A.tsx["A"]:::modified
-            src/B.tsx["B"]:::created
-            src/1["/1"]:::dir
-            src/C.tsx["C"]
-        end
-        src/A.tsx-->src/B.tsx
-        src/A.tsx-->src/1
-        src/A.tsx-.->src/C.tsx
-
-    \`\`\`
-
-
-    "
-  `);
+  expect((github.commentToPR as jest.Mock).mock.calls[0][0]).toMatchSnapshot();
 });

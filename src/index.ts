@@ -1,12 +1,9 @@
 import getFullGraph from './getFullGraph';
 import { outputGraph, output2Graphs } from './graph';
 import { log } from './utils/log';
-import { loggingConfig } from './utils/config';
 import github from './github';
 
 async function makeGraph() {
-  loggingConfig();
-
   // 以下の *_files は src/index.ts のようなパス文字列になっている
   const {
     created,
