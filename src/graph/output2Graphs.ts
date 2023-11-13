@@ -37,21 +37,19 @@ export async function output2Graphs(
     return;
   }
 
-  // base または head のグラフが大きすぎる場合は表示しない
   if (
     baseGraph.nodes.length > getMaxSize() ||
     headGraph.nodes.length > getMaxSize()
   ) {
-    //  TODO: ワークフローのパラメータの場合の文言にする
+    // base または head のグラフが大きすぎる場合は表示しない
     github.commentToPR(`
 ${github.getCommentTitle()}  
 
 > 表示ノード数が多いため、グラフを表示しません。
-> グラフを表示したい場合、環境変数 TSG_MAX_SIZE を設定してください。
+> 表示ノード数の上限を変更したい場合はアクションのパラメータ \`max-size\` を設定してください。
 >
 > Base branch の表示ノード数: ${baseGraph.nodes.length}
 > Head branch の表示ノード数: ${headGraph.nodes.length}
-> 最大表示ノード数: ${getMaxSize()}
 
 \`\`\`bash
 ${tsgCommand}

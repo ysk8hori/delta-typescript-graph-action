@@ -42,8 +42,11 @@ function getHeadSha() {
   return github.context.payload.pull_request?.head.sha;
 }
 
+/**
+ * コメントのタイトルは同一コメントを探す際にも使用する
+ */
 function getCommentTitle() {
-  return `## TypeScript Graph - Diff (${github.context.workflow})`;
+  return `## Delta TypeScript Graph<!--${github.context.workflow}-->`;
 }
 
 /**

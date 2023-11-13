@@ -35,12 +35,12 @@ export function outputGraph(
   }
 
   if (graph.nodes.length > getMaxSize()) {
-    // グラフが大きすぎる場合は表示しない TODO: ワークフローのパラメータの場合の文言にする
+    // グラフが大きすぎる場合は表示しない
     github.commentToPR(`
 ${github.getCommentTitle()}  
 
 > 表示ノード数が多いため、グラフを表示しません。
-> グラフを表示したい場合、環境変数 TSG_MAX_SIZE を設定してください。
+> 表示ノード数の上限を変更したい場合はアクションのパラメータ \`max-size\` を設定してください。
 >
 > 本PRでの表示ノード数: ${graph.nodes.length}
 > 最大表示ノード数: ${getMaxSize()}
