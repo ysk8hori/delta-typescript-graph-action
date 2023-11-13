@@ -99,7 +99,8 @@ export function exclude(): string[] {
   return core
     .getInput(EXCLUDE)
     .split(',')
-    .map(s => s.trim());
+    .map(s => s.trim())
+    .filter(Boolean);
 }
 
 /** 変更対象のファイルが同階層の index.ts などから参照されている場合、その index.ts への依存ファイルも表示するかどうか */
