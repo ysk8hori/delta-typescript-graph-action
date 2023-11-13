@@ -1,5 +1,5 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'Delta TypeScript Graph'
+description: 'Visualizes changes in typescript-file dependencies.'
 inputs:
   access-token:
     description: 'Access token for the repo'
@@ -33,9 +33,6 @@ inputs:
     description: 'Whether to display dependencies of index.ts files that refer to the change target files'
     required: false
     default: false
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
 runs:
   using: 'node20'
   main: 'dist/index.js'
