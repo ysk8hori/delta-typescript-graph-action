@@ -44,7 +44,7 @@ export async function output2Graphs(
   ) {
     //  TODO: ワークフローのパラメータの場合の文言にする
     github.commentToPR(`
-## TypeScript Graph - Diff
+${github.getCommentTitle()}  
 
 > 表示ノード数が多いため、グラフを表示しません。
 > グラフを表示したい場合、環境変数 TSG_MAX_SIZE を設定してください。
@@ -75,7 +75,7 @@ ${tsgCommand}
   });
 
   github.commentToPR(`
-## TypeScript Graph - Diff
+${github.getCommentTitle()}  
 
 ${outputIfInDetails(`
 <details>

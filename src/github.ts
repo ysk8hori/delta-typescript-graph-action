@@ -2,6 +2,7 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { log } from './utils/log';
 import { execSync } from 'child_process';
+import { get } from 'http';
 
 async function getFiles() {
   const octokit = github.getOctokit(core.getInput('access-token'));
@@ -41,6 +42,10 @@ function getHeadSha() {
   return github.context.payload.pull_request?.head.sha;
 }
 
+function getCommentTitle() {
+  return `## TypeScript Graph - Diff (${github.context.workflow})`;
+}
+
 /**
  * PRにコメントする。
  *
@@ -51,6 +56,7 @@ export async function commentToPR(body: string) {
   const owner = github.context.repo.owner;
   const repo = github.context.repo.repo;
   const issue_number = github.context.payload.number;
+  github.context.workflow;
   // 1. 既存のコメントを取得する
   const comments = await octokit.rest.issues.listComments({
     owner,
@@ -60,7 +66,7 @@ export async function commentToPR(body: string) {
 
   // 2. 既存のコメントがあれば、そのコメントのIDを取得する
   const existingComment = comments.data.find(
-    comment => comment.user?.login === owner,
+    comment => comment.body?.trim().startsWith(getCommentTitle()),
   );
 
   if (existingComment) {
@@ -80,12 +86,6 @@ export async function commentToPR(body: string) {
       body,
     });
   }
-  // octokit.rest.issues.createComment({
-  //   owner: github.context.repo.owner,
-  //   repo: github.context.repo.repo,
-  //   issue_number: github.context.payload.number,
-  //   body: message,
-  // });
 }
 
 export async function cloneRepo() {
@@ -105,4 +105,5 @@ export default {
   getHeadSha,
   commentToPR,
   cloneRepo,
+  getCommentTitle,
 };

@@ -7,11 +7,11 @@ permissions:
 jobs:
   hello_world_job:
     runs-on: ubuntu-latest
-    name: A job to say hello
+    name: Test no params
     steps:
       - name: Hello world action step
         id: hello
-        uses: ysk8hori/typescript-graph-action@v0.1.12
+        uses: ysk8hori/typescript-graph-action@v0.1.13
         with:
           access-token: ${{ secrets.GITHUB_TOKEN }}
       # Use the output from the `hello` step
