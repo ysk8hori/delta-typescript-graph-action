@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Delta Typescript Graph
         id: tsg
-        uses: ysk8hori/delta-typescript-graph-action@v0.1.16
+        uses: ysk8hori/delta-typescript-graph-action@v0.1.17
         with:
           access-token: ${{ secrets.GITHUB_TOKEN }}
           tsconfig-root: './src'

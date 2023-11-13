@@ -9,4 +9,4 @@ jobs:
     runs-on: ubuntu-latest
     name: Test no params
     steps:
-      - uses: ysk8hori/delta-typescript-graph-action@v0.1.16
+      - uses: ysk8hori/delta-typescript-graph-action@v0.1.17
