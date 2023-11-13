@@ -1,18 +1,12 @@
 import { Node, Relation } from '@ysk8hori/typescript-graph/dist/src/models';
 import { createIncludeList } from './createIncludeList';
+import { isIncludeIndexFileDependencies } from '../utils/config';
 
-let ENV_ORG: NodeJS.ProcessEnv;
-
-beforeAll(() => {
-  ENV_ORG = process.env;
-});
-
-afterEach(() => {
-  process.env = ENV_ORG;
-});
+jest.mock('../utils/config', () => ({
+  isIncludeIndexFileDependencies: jest.fn(),
+}));
 
 test('新規作成、更新、削除、リネーム前後のファイルが include 対象となる', () => {
-  process.env.TSG_INCLUDE_INDEX_FILE_DEPENDENCIES = 'false';
   expect(
     createIncludeList({
       created: ['created.ts'],
@@ -31,7 +25,7 @@ test('新規作成、更新、削除、リネーム前後のファイルが incl
 });
 
 test('TSG_INCLUDE_INDEX_FILE_DEPENDENCIES が false の場合は include 対象となるファイルを参照している index.ts を含めない', () => {
-  process.env.TSG_INCLUDE_INDEX_FILE_DEPENDENCIES = 'false';
+  (isIncludeIndexFileDependencies as jest.Mock).mockImplementation(() => false);
   expect(
     createIncludeList({
       created: [],
@@ -70,8 +64,8 @@ test('TSG_INCLUDE_INDEX_FILE_DEPENDENCIES が false の場合は include 対象�
   ).toEqual(['src/a.ts']);
 });
 
-test('TSG_INCLUDE_INDEX_FILE_DEPENDENCIES が false の場合は include 対象となるファイルを参照している index.ts を含める', () => {
-  process.env.TSG_INCLUDE_INDEX_FILE_DEPENDENCIES = 'true';
+test('TSG_INCLUDE_INDEX_FILE_DEPENDENCIES が true の場合は include 対象となるファイルを参照している index.ts を含める', () => {
+  (isIncludeIndexFileDependencies as jest.Mock).mockImplementation(() => true);
   expect(
     createIncludeList({
       created: [],

@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import type mermaidify from '@ysk8hori/typescript-graph/dist/src/mermaidify';
 import * as core from '@actions/core';
-import { log } from './log';
 
 /** tsconfig のルートディレクトリ */
 const TSCONFIG_ROOT = 'tsconfig-root';
@@ -36,22 +35,6 @@ const tsgConfigScheme = z.object({
 });
 
 export type TsgConfigScheme = z.infer<typeof tsgConfigScheme>;
-
-export function loggingConfig() {
-  // それぞれの値を core.getInput で取得し、取得したままの値をオブジェクトにして JSON にして出力する
-  const config = {
-    tsconfigRoot: core.getInput(TSCONFIG_ROOT),
-    maxSize: core.getInput(MAX_SIZE),
-    orientation: core.getInput(ORIENTATION),
-    debug: core.getInput(DEBUG),
-    inDetails: core.getInput(IN_DETAILS),
-    exclude: core.getInput(EXCLUDE),
-    includeIndexFileDependencies: core.getInput(
-      INCLUDE_INDEX_FILE_DEPENDENCIES,
-    ),
-  };
-  log('config:', JSON.stringify(config, null, 2));
-}
 
 /**
  * tsconfig を探索するディレクトリ情報を取得する。
@@ -99,7 +82,8 @@ export function exclude(): string[] {
   return core
     .getInput(EXCLUDE)
     .split(',')
-    .map(s => s.trim());
+    .map(s => s.trim())
+    .filter(Boolean);
 }
 
 /** 変更対象のファイルが同階層の index.ts などから参照されている場合、その index.ts への依存ファイルも表示するかどうか */

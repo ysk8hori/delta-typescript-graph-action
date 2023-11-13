@@ -1,5 +1,5 @@
 {
-  "name": "typescript-graph-action",
+  "name": "delta-typescript-graph-action",
   "version": "1.0.0",
   "description": "This Action visualizes changes in file dependencies within the TypeScript codebase that occur in Pull Requests.",
   "main": "index.js",
@@ -33,6 +33,8 @@
   "dependencies": {
     "@actions/core": "1.10.1",
     "@actions/github": "6.0.0",
-    "@ysk8hori/typescript-graph": "0.12.1"
+    "@ysk8hori/typescript-graph": "0.12.1",
+    "remeda": "^1.12.0",
+    "zod": "3.22.2"
   }
 }
