@@ -1,0 +1,26 @@
+on: pull_request
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  pull-requests: write
+
+jobs:
+  hello_world_job:
+    runs-on: ubuntu-latest
+    name: Test with params
+    steps:
+      - name: Hello world action step
+        id: hello
+        uses: ysk8hori/typescript-graph-action@v0.1.15
+        with:
+          access-token: ${{ secrets.GITHUB_TOKEN }}
+          tsconfig-root: './src'
+          max-size: 3
+          orientation: LR
+          debug: true
+          in-details: true
+          exclude: 'node_modules, test'
+          include-index-file-dependencies: true
+      # Use the output from the `hello` step
+      - name: Get the output time
+        run: echo "The time was ${{ steps.hello.outputs.time }}"

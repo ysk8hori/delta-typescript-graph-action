@@ -1,23 +1,65 @@
-import * as core from "@actions/core";
-import * as github from "@actions/github";
+import getFullGraph from './getFullGraph';
+import { outputGraph, output2Graphs } from './graph';
+import { log } from './utils/log';
+import { loggingConfig } from './utils/config';
+import github from './github';
 
-try {
-  // `who-to-greet` import defined in action metadata file
-  const nameToGreet = core.getInput("who-to-greet");
-  console.log(`Hello ${nameToGreet}!`);
-  const time = new Date().toTimeString();
-  core.setOutput("time", time);
-  // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2);
-  console.log(`The event payload: ${payload}`);
-  const octokit = github.getOctokit(core.getInput("access-token"));
-  // issue #1 に書き込む
-  octokit.rest.issues.createComment({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    issue_number: 1,
-    body: "Hello World: " + time,
-  });
-} catch (error) {
-  core.setFailed((error as Error).message);
+async function makeGraph() {
+  loggingConfig();
+
+  // 以下の *_files は src/index.ts のようなパス文字列になっている
+  const {
+    created,
+    deleted,
+    modified,
+    renamed,
+    unchanged: _,
+  } = await github.getFiles();
+  log('modified:', modified);
+  log('created:', created);
+  log('deleted:', deleted);
+  log('renamed:', renamed);
+
+  // .tsファイルの変更がある場合のみ Graph を生成する。コンパイル対象外の ts ファイルもあるかもしれないがわからないので気にしない
+  if (
+    ![modified, created, deleted, renamed]
+      .flat()
+      .some(file => /\.ts|\.tsx/.test(file.filename))
+  ) {
+    return;
+  }
+
+  const { fullHeadGraph, fullBaseGraph, meta } = await getFullGraph();
+  log('fullBaseGraph.nodes.length:', fullBaseGraph.nodes.length);
+  log('fullBaseGraph.relations.length:', fullBaseGraph.relations.length);
+  log('fullHeadGraph.nodes.length:', fullHeadGraph.nodes.length);
+  log('fullHeadGraph.relations.length:', fullHeadGraph.relations.length);
+  log('meta:', meta);
+
+  // head のグラフが空の場合は何もしない
+  if (fullHeadGraph.nodes.length === 0) return;
+
+  const hasRenamed = fullHeadGraph.nodes.some(
+    headNode =>
+      renamed?.map(({ filename }) => filename).includes(headNode.path),
+  );
+
+  if (deleted.length !== 0 || hasRenamed) {
+    // ファイルの削除またはリネームがある場合は Graph を2つ表示する
+    await output2Graphs(fullBaseGraph, fullHeadGraph, meta, {
+      created,
+      deleted,
+      modified,
+      renamed,
+    });
+  } else {
+    await outputGraph(fullBaseGraph, fullHeadGraph, meta, {
+      created,
+      deleted,
+      modified,
+      renamed,
+    });
+  }
 }
+
+makeGraph();
