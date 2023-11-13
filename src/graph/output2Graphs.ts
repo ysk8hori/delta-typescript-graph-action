@@ -43,7 +43,12 @@ export async function output2Graphs(
   ) {
     // base または head のグラフが大きすぎる場合は表示しない
     github.commentToPR(`
-${github.getCommentTitle()}  
+${github.getCommentTitle()}
+
+${outputIfInDetails(`
+<details>
+<summary>mermaid</summary>
+`)}
 
 > 表示ノード数が多いため、グラフを表示しません。
 > 表示ノード数の上限を変更したい場合はアクションのパラメータ \`max-size\` を設定してください。
@@ -54,6 +59,8 @@ ${github.getCommentTitle()}
 \`\`\`bash
 ${tsgCommand}
 \`\`\`
+
+${outputIfInDetails('</details>')}
 `);
     return;
   }
@@ -73,7 +80,7 @@ ${tsgCommand}
   });
 
   github.commentToPR(`
-${github.getCommentTitle()}  
+${github.getCommentTitle()}
 
 ${outputIfInDetails(`
 <details>

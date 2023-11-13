@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Hello world action step
         id: hello
-        uses: ysk8hori/typescript-graph-action@v0.1.14
+        uses: ysk8hori/typescript-graph-action@v0.1.15
         with:
           access-token: ${{ secrets.GITHUB_TOKEN }}
       # Use the output from the `hello` step
