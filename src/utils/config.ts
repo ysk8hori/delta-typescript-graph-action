@@ -50,6 +50,21 @@ export function loggingConfig() {
     INCLUDE_INDEX_FILE_DEPENDENCIES,
     core.getInput(INCLUDE_INDEX_FILE_DEPENDENCIES),
   );
+
+  // それぞれの値を core.getInput で取得し、取得したままの値をオブジェクトにして JSON にして出力する
+  const config = {
+    tsconfigRoot: core.getInput(TSCONFIG_ROOT),
+    maxSize: core.getInput(MAX_SIZE),
+    orientation: core.getInput(ORIENTATION),
+    debug: core.getInput(DEBUG),
+    inDetails: core.getInput(IN_DETAILS),
+    exclude: core.getInput(EXCLUDE),
+    includeIndexFileDependencies: core.getInput(
+      INCLUDE_INDEX_FILE_DEPENDENCIES,
+    ),
+  };
+  // json にして出力する
+  log('config:', JSON.stringify(config));
 }
 
 /**

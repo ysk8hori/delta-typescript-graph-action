@@ -11,9 +11,8 @@ jobs:
     steps:
       - name: Hello world action step
         id: hello
-        uses: ysk8hori/typescript-graph-action@v0.1.5
+        uses: ysk8hori/typescript-graph-action@v0.1.7
         with:
-          who-to-greet: 'ysk8hori'
           access-token: ${{ secrets.GITHUB_TOKEN }}
           tsconfig-root: './src'
           max-size: 100
