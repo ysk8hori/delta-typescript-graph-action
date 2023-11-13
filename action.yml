@@ -1,17 +1,41 @@
-name: "Hello World"
-description: "Greet someone and record the time"
+name: 'Hello World'
+description: 'Greet someone and record the time'
 inputs:
-  who-to-greet: # id of input
-    description: "Who to greet"
-    required: true
-    default: "World"
   access-token:
-    description: "Access token for the repo"
-    required: true
+    description: 'Access token for the repo'
+    required: false
     default: ${{ github.token }}
+  tsconfig-root:
+    description: 'Root directory of tsconfig to search'
+    required: false
+    default: './'
+  max-size:
+    description: 'Maximum number of nodes to display in the graph when there are many change files'
+    required: false
+    default: '30'
+  orientation:
+    description: 'Orientation of the graph (TB or LR)'
+    required: false
+    default: 'TB'
+  debug:
+    description: 'Enable debug mode'
+    required: false
+    default: false
+  in-details:
+    description: 'Whether to wrap Mermaid in a `<details>` tag for collapsing'
+    required: false
+    default: false
+  exclude:
+    description: 'Array of files to exclude'
+    required: false
+    default: ['node_modules'] # node_modules をデフォルトの除外リストに追加
+  include-index-file-dependencies:
+    description: 'Whether to display dependencies of index.ts files that refer to the change target files'
+    required: false
+    default: false
 outputs:
   time: # id of output
-    description: "The time we greeted you"
+    description: 'The time we greeted you'
 runs:
-  using: "node20"
-  main: "dist/index.js"
+  using: 'node20'
+  main: 'dist/index.js'
