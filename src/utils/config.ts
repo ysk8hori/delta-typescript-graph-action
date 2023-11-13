@@ -40,17 +40,6 @@ const tsgConfigScheme = z.object({
 export type TsgConfigScheme = z.infer<typeof tsgConfigScheme>;
 
 export function loggingConfig() {
-  log(TSCONFIG_ROOT, core.getInput(TSCONFIG_ROOT));
-  log(MAX_SIZE, core.getInput(MAX_SIZE));
-  log(ORIENTATION, core.getInput(ORIENTATION));
-  log(DEBUG, core.getInput(DEBUG));
-  log(IN_DETAILS, core.getInput(IN_DETAILS));
-  log(EXCLUDE, core.getInput(EXCLUDE));
-  log(
-    INCLUDE_INDEX_FILE_DEPENDENCIES,
-    core.getInput(INCLUDE_INDEX_FILE_DEPENDENCIES),
-  );
-
   // それぞれの値を core.getInput で取得し、取得したままの値をオブジェクトにして JSON にして出力する
   const config = {
     tsconfigRoot: core.getInput(TSCONFIG_ROOT),
@@ -63,8 +52,7 @@ export function loggingConfig() {
       INCLUDE_INDEX_FILE_DEPENDENCIES,
     ),
   };
-  // json にして出力する
-  log('config:', JSON.stringify(config));
+  log('config:', JSON.stringify(config, null, 2));
 }
 
 /**
@@ -110,17 +98,13 @@ export function isInDetails(): boolean {
 }
 
 export function exclude(): string[] {
-  // return rc?.exclude ?? [];
-  log('exclude', core.getInput(EXCLUDE));
-  return [];
+  return core
+    .getInput(EXCLUDE)
+    .split(',')
+    .map(s => s.trim());
 }
 
 /** 変更対象のファイルが同階層の index.ts などから参照されている場合、その index.ts への依存ファイルも表示するかどうか */
 export function isIncludeIndexFileDependencies(): boolean {
-  // return process.env.TSG_INCLUDE_INDEX_FILE_DEPENDENCIES === 'true'
-  //   ? true
-  //   : process.env.TSG_INCLUDE_INDEX_FILE_DEPENDENCIES === 'false'
-  //   ? false
-  //   : rc?.includeIndexFileDependencies ?? false;
   return core.getInput(INCLUDE_INDEX_FILE_DEPENDENCIES) === 'true';
 }
