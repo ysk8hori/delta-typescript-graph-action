@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Hello world action step
         id: hello
-        uses: ysk8hori/typescript-graph-action@v0.1.4
+        uses: ysk8hori/typescript-graph-action@v0.1.5
         with:
           who-to-greet: 'ysk8hori'
           access-token: ${{ secrets.GITHUB_TOKEN }}
@@ -20,7 +20,7 @@ jobs:
           orientation: LR
           debug: true
           in-details: true
-          exclude: ['node_modules', 'test']
+          exclude: 'node_modules, test'
           include-index-file-dependencies: true
       # Use the output from the `hello` step
       - name: Get the output time

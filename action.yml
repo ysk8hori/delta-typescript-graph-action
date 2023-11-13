@@ -28,7 +28,7 @@ inputs:
   exclude:
     description: 'Array of files to exclude'
     required: false
-    default: ['node_modules'] # node_modules をデフォルトの除外リストに追加
+    default: 'node_modules' # node_modules をデフォルトの除外リストに追加
   include-index-file-dependencies:
     description: 'Whether to display dependencies of index.ts files that refer to the change target files'
     required: false
