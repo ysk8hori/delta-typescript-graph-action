@@ -1,9 +1,5 @@
 # Delta TypeScript Graph Action
 
-TODO: delta-typescript-graph-action に変える
-
-TODO: 日本語版ドキュメント作る
-
 This Action visualizes changes in file dependencies within the TypeScript codebase that occur in Pull Requests.
 
 ### Sample Usage
@@ -85,6 +81,27 @@ flowchart
     src/index.ts-->src/_graph__/outputGraph.ts
     src/index.test.ts-->src/index.ts
 ```
+
+## Getting Started
+
+To quickly integrate this Action into your workflow, you can use the following minimal YAML configuration. This setup is sufficient to start using the Action with its default settings on pull request events.
+
+```yml
+on: pull_request
+
+# Sets permissions of the GITHUB_TOKEN to allow write pull-requests
+permissions:
+  pull-requests: write
+
+jobs:
+  delta-typescript-graph-job:
+    runs-on: ubuntu-latest
+    name: Delta TypeScript Graph
+    steps:
+      - uses: ysk8hori/delta-typescript-graph-action@v...
+```
+
+This basic setup will trigger the Action on every pull request. The Action will run on the latest Ubuntu runner and use its default settings. If you want to customize the Action, you can add parameters under the `with` section of the workflow file.
 
 ## Configuration
 
