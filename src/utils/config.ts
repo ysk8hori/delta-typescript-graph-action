@@ -1,5 +1,3 @@
-// TODO: ワークフローからパラメータを受け取って使用するようにする
-
 import { z } from 'zod';
 import type mermaidify from '@ysk8hori/typescript-graph/dist/src/mermaidify';
 import * as core from '@actions/core';
