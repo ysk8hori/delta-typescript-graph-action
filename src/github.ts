@@ -41,14 +41,51 @@ function getHeadSha() {
   return github.context.payload.pull_request?.head.sha;
 }
 
-export function commentToPR(message: string) {
+/**
+ * PRにコメントする。
+ *
+ * 同一PR内では同一コメントを上書きし続ける。
+ */
+export async function commentToPR(body: string) {
   const octokit = github.getOctokit(core.getInput('access-token'));
-  octokit.rest.issues.createComment({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    issue_number: github.context.payload.number,
-    body: message,
+  const owner = github.context.repo.owner;
+  const repo = github.context.repo.repo;
+  const issue_number = github.context.payload.number;
+  // 1. 既存のコメントを取得する
+  const comments = await octokit.rest.issues.listComments({
+    owner,
+    repo,
+    issue_number,
   });
+
+  // 2. 既存のコメントがあれば、そのコメントのIDを取得する
+  const existingComment = comments.data.find(
+    comment => comment.user?.login === owner,
+  );
+
+  if (existingComment) {
+    // 3. 既存のコメントがあれば、そのコメントを更新する
+    await octokit.rest.issues.updateComment({
+      owner,
+      repo,
+      comment_id: existingComment.id,
+      body,
+    });
+  } else {
+    // 4. 既存のコメントがなければ、新規にコメントを作成する
+    await octokit.rest.issues.createComment({
+      owner,
+      repo,
+      issue_number,
+      body,
+    });
+  }
+  // octokit.rest.issues.createComment({
+  //   owner: github.context.repo.owner,
+  //   repo: github.context.repo.repo,
+  //   issue_number: github.context.payload.number,
+  //   body: message,
+  // });
 }
 
 export async function cloneRepo() {
@@ -61,7 +98,7 @@ export async function cloneRepo() {
   return { repoDir: repo.repo };
 }
 
-// TODO: それぞれの関数を export する。テストの変更も必要。
+// TODO: refactor: それぞれの関数を export する。テストの変更も必要。
 export default {
   getFiles,
   getBaseSha,
