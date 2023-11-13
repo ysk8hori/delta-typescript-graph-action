@@ -1,4 +1,4 @@
-# typescript-graph-action
+# Delta TypeScript Graph Action
 
 TODO: delta-typescript-graph-action に変える
 
@@ -88,17 +88,33 @@ flowchart
 
 ## Configuration
 
-TODO: ワークフローのパラメータを使用する場合の説明に変える
+This Action provides several parameters to customize its behavior. You can specify these parameters in your GitHub Actions workflow file.
 
-The `.danger-tsgrc.json` is a configuration file that stores settings in JSON format. If the relevant configuration file does not exist, or if it is in an invalid format, the default settings will be applied.
-Each configuration item has a corresponding environment variable, which takes precedence over the settings in the configuration file.
+| Parameter                         | Type         | Default Value          | Description                                                                                                                |
+| --------------------------------- | ------------ | ---------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `access-token`                    | `string`     | `${{ github.token }}`  | Access token for the repo.                                                                                                 |
+| `tsconfig-root`                   | `string`     | `'./'`                 | Specifies the root directory where tsconfig will be searched.                                                              |
+| `max-size`                        | `number`     | `30`                   | Limits the number of nodes to display in the graph when there are many changed files.                                      |
+| `orientation`                     | `TB` or `LR` | `'TB'`                 | Specifies the orientation (`TB` or `LR`) of the graph. Note: Mermaid may produce graphs in the opposite direction.         |
+| `debug`                           | `boolean`    | `false`                | Enables debug mode. Logs will be output in debug mode.                                                                     |
+| `in-details`                      | `boolean`    | `false`                | Specifies whether to enclose Mermaid in a `<details>` tag for collapsing.                                                  |
+| `exclude`                         | `string`     | `'node_modules, test'` | Specifies a comma-separated list of files to exclude from the graph.                                                       |
+| `include-index-file-dependencies` | `boolean`    | `false`                | Determines whether to display dependency files when the changed file is referenced from an index.ts in the same directory. |
 
-| Configuration Item                | Details                                                                           | Type         | Default Value | Description                                                                                                               |
-| --------------------------------- | --------------------------------------------------------------------------------- | ------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Root directory for tsconfig       | Env: `TSG_TSCONFIG_ROOT`<br>Key: `tsconfigRoot`                                   | `string`     | `"./"`        | Specifies the directory where tsconfig will be searched.                                                                  |
-| Maximum Node Count                | Env: `TSG_MAX_SIZE`<br>Key: `maxSize`                                             | `number`     | `30`          | Specifies the value to limit graph display when the number of changed files is large.                                     |
-| Graph Orientation                 | Env: `TSG_ORIENTATION`<br>Key: `orientation`                                      | `TB` or `LR` | Not specified | Specifies the orientation (`TB` or `LR`) of the graph. However, Mermaid may produce graphs in the opposite direction.     |
-| Debug Mode                        | Env: `TSG_DEBUG`<br>Key: `debug`                                                  | `boolean`    | `false`       | Specifies whether to enable debug mode. Logs will be output in debug mode.                                                |
-| Enclose in `<details>` tag        | Env: `TSG_IN_DETAILS`<br>Key: `inDetails`                                         | `boolean`    | `true`        | Specifies whether to enclose Mermaid in a `<details>` tag and collapse it.                                                |
-| Exclude Files                     | Env: None<br>Key: `exclude`                                                       | `string[]`   | `[]`          | Specifies the files to be excluded from the graph.                                                                        |
-| Display index.ts Dependency Files | Env: `TSG_INCLUDE_INDEX_FILE_DEPENDENCIES`<br>Key: `includeIndexFileDependencies` | `boolean`    | `false`       | Specifies whether to display dependency files when the changed file is referenced from an index.ts in the same directory. |
+To use these parameters, include them under the `with` section of your workflow file when using this Action. For example:
+
+```yml
+steps:
+  - uses: ysk8hori/delta-typescript-graph-action@v1.0.0
+    with:
+      access-token: ${{ secrets.GITHUB_TOKEN }}
+      tsconfig-root: './src'
+      max-size: 20
+      orientation: 'LR'
+      debug: true
+      in-details: true
+      exclude: 'node_modules, test'
+      include-index-file-dependencies: true
+```
+
+This configuration will set up the Action with the specified parameters, allowing you to customize its behavior according to your project's needs.

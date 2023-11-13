@@ -1,19 +1,12 @@
 on: pull_request
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# Sets permissions of the GITHUB_TOKEN to allow write pull-requests
 permissions:
   pull-requests: write
 
 jobs:
-  hello_world_job:
+  delta-typescript-graph-job:
     runs-on: ubuntu-latest
     name: Test no params
     steps:
-      - name: Hello world action step
-        id: hello
-        uses: ysk8hori/typescript-graph-action@v0.1.15
-        with:
-          access-token: ${{ secrets.GITHUB_TOKEN }}
-      # Use the output from the `hello` step
-      - name: Get the output time
-        run: echo "The time was ${{ steps.hello.outputs.time }}"
+      - uses: ysk8hori/delta-typescript-graph-action@v0.1.16
