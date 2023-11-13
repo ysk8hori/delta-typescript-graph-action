@@ -98,6 +98,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Delta TypeScript Graph
     steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # specify latest version
       - uses: ysk8hori/delta-typescript-graph-action@v...
 ```
 

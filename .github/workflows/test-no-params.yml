@@ -9,4 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Test no params
     steps:
-      - uses: ysk8hori/delta-typescript-graph-action@v0.1.17
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - uses: ysk8hori/delta-typescript-graph-action@v0.2.1-alpha-0
