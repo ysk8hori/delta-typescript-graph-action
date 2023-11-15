@@ -2,20 +2,23 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { log } from './utils/log';
 import { execSync } from 'child_process';
-import { get } from 'http';
 
-async function getFiles() {
+async function getTSFiles() {
   const octokit = github.getOctokit(core.getInput('access-token'));
   const compareResult = await octokit.rest.repos.compareCommitsWithBasehead({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
     basehead: `${github.context.payload.pull_request?.base.sha}...${github.context.payload.pull_request?.head.sha}`,
   });
-  const files = compareResult.data.files?.map(file => ({
-    filename: file.filename,
-    status: file.status,
-    previous_filename: file.previous_filename,
-  }));
+  const files = compareResult.data.files
+    ?.filter(file =>
+      /\.ts$|\.tsx$|\.vue$|\.astro$|\.svelte$/.test(file.filename),
+    )
+    .map(file => ({
+      filename: file.filename,
+      status: file.status,
+      previous_filename: file.previous_filename,
+    }));
   log(files);
 
   // typescript-graph では、以下の分類で処理する。
@@ -103,7 +106,7 @@ export async function cloneRepo() {
 
 // TODO: refactor: それぞれの関数を export する。テストの変更も必要。
 export default {
-  getFiles,
+  getFiles: getTSFiles,
   getBaseSha,
   getHeadSha,
   commentToPR,
