@@ -2,20 +2,23 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { log } from './utils/log';
 import { execSync } from 'child_process';
-import { get } from 'http';
 
-async function getFiles() {
+async function getTSFiles() {
   const octokit = github.getOctokit(core.getInput('access-token'));
   const compareResult = await octokit.rest.repos.compareCommitsWithBasehead({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
     basehead: `${github.context.payload.pull_request?.base.sha}...${github.context.payload.pull_request?.head.sha}`,
   });
-  const files = compareResult.data.files?.map(file => ({
-    filename: file.filename,
-    status: file.status,
-    previous_filename: file.previous_filename,
-  }));
+  const files = compareResult.data.files
+    ?.filter(file =>
+      /\.ts$|\.tsx$|\.vue$|\.astro$|\.svelte$/.test(file.filename),
+    )
+    .map(file => ({
+      filename: file.filename,
+      status: file.status,
+      previous_filename: file.previous_filename,
+    }));
   log(files);
 
   // typescript-graph では、以下の分類で処理する。
@@ -91,6 +94,36 @@ export async function commentToPR(body: string) {
   }
 }
 
+/**
+ * PRのコメントを削除する
+ */
+export async function deleteComment() {
+  const octokit = github.getOctokit(core.getInput('access-token'));
+  const owner = github.context.repo.owner;
+  const repo = github.context.repo.repo;
+  const issue_number = github.context.payload.number;
+  // 1. 既存のコメントを取得する
+  const comments = await octokit.rest.issues.listComments({
+    owner,
+    repo,
+    issue_number,
+  });
+
+  // 2. 既存のコメントがあれば、そのコメントのIDを取得する
+  const existingComment = comments.data.find(
+    comment => comment.body?.trim().startsWith(getCommentTitle()),
+  );
+
+  if (existingComment) {
+    // 3. 既存のコメントがあれば、そのコメントを削除する
+    await octokit.rest.issues.deleteComment({
+      owner,
+      repo,
+      comment_id: existingComment.id,
+    });
+  }
+}
+
 export async function cloneRepo() {
   const repo = github.context.repo;
   // リポジトリのURLを取得
@@ -103,10 +136,11 @@ export async function cloneRepo() {
 
 // TODO: refactor: それぞれの関数を export する。テストの変更も必要。
 export default {
-  getFiles,
+  getFiles: getTSFiles,
   getBaseSha,
   getHeadSha,
   commentToPR,
   cloneRepo,
   getCommentTitle,
+  deleteComment,
 };

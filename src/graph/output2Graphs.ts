@@ -3,6 +3,7 @@ import { Graph, Meta } from '@ysk8hori/typescript-graph/dist/src/models';
 import { getMaxSize, getOrientation, isInDetails } from '../utils/config';
 import applyMutualDifferences from './applyMutualDifferences';
 import github from '../github';
+import { info } from '../utils/log';
 
 type FileInfoList = {
   filename: string;
@@ -34,6 +35,8 @@ export async function output2Graphs(
 
   if (baseGraph.nodes.length === 0 && headGraph.nodes.length === 0) {
     // base と head のグラフが空の場合は表示しない
+    github.deleteComment();
+    info('The graph is empty.');
     return;
   }
 

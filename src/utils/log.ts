@@ -14,3 +14,11 @@ function stringifyObject(message: any) {
   }
   return message;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function info(message?: any, ...optionalParams: any[]): void {
+  console.info(
+    stringifyObject(message),
+    ...optionalParams.map(stringifyObject),
+  );
+}

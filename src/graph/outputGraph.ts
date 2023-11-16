@@ -3,6 +3,7 @@ import { Graph, Meta } from '@ysk8hori/typescript-graph/dist/src/models';
 import { getMaxSize, getOrientation, isInDetails } from '../utils/config';
 import mergeGraphsWithDifferences from './mergeGraphsWithDifferences';
 import github from '../github';
+import { info } from '../utils/log';
 
 type FileInfoList = {
   filename: string;
@@ -31,6 +32,8 @@ export function outputGraph(
 
   if (graph.nodes.length === 0) {
     // グラフが空の場合は表示しない
+    github.deleteComment();
+    info('The graph is empty.');
     return;
   }
 

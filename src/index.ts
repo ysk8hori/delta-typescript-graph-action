@@ -1,6 +1,6 @@
 import getFullGraph from './getFullGraph';
 import { outputGraph, output2Graphs } from './graph';
-import { log } from './utils/log';
+import { info, log } from './utils/log';
 import github from './github';
 
 async function makeGraph() {
@@ -18,11 +18,9 @@ async function makeGraph() {
   log('renamed:', renamed);
 
   // .tsファイルの変更がある場合のみ Graph を生成する。コンパイル対象外の ts ファイルもあるかもしれないがわからないので気にしない
-  if (
-    ![modified, created, deleted, renamed]
-      .flat()
-      .some(file => /\.ts|\.tsx/.test(file.filename))
-  ) {
+  if ([modified, created, deleted, renamed].flat().length === 0) {
+    github.deleteComment();
+    info('No TypeScript files were changed.');
     return;
   }
 
