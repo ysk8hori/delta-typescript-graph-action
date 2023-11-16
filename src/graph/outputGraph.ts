@@ -32,6 +32,7 @@ export function outputGraph(
 
   if (graph.nodes.length === 0) {
     // グラフが空の場合は表示しない
+    github.deleteComment();
     info('The graph is empty.');
     return;
   }

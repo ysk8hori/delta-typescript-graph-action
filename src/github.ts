@@ -94,6 +94,36 @@ export async function commentToPR(body: string) {
   }
 }
 
+/**
+ * PRのコメントを削除する
+ */
+export async function deleteComment() {
+  const octokit = github.getOctokit(core.getInput('access-token'));
+  const owner = github.context.repo.owner;
+  const repo = github.context.repo.repo;
+  const issue_number = github.context.payload.number;
+  // 1. 既存のコメントを取得する
+  const comments = await octokit.rest.issues.listComments({
+    owner,
+    repo,
+    issue_number,
+  });
+
+  // 2. 既存のコメントがあれば、そのコメントのIDを取得する
+  const existingComment = comments.data.find(
+    comment => comment.body?.trim().startsWith(getCommentTitle()),
+  );
+
+  if (existingComment) {
+    // 3. 既存のコメントがあれば、そのコメントを削除する
+    await octokit.rest.issues.deleteComment({
+      owner,
+      repo,
+      comment_id: existingComment.id,
+    });
+  }
+}
+
 export async function cloneRepo() {
   const repo = github.context.repo;
   // リポジトリのURLを取得
@@ -112,4 +142,5 @@ export default {
   commentToPR,
   cloneRepo,
   getCommentTitle,
+  deleteComment,
 };

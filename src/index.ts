@@ -19,6 +19,7 @@ async function makeGraph() {
 
   // .tsファイルの変更がある場合のみ Graph を生成する。コンパイル対象外の ts ファイルもあるかもしれないがわからないので気にしない
   if ([modified, created, deleted, renamed].flat().length === 0) {
+    github.deleteComment();
     info('No TypeScript files were changed.');
     return;
   }
