@@ -19,3 +19,4 @@ files.forEach(file => {
   );
   fs.writeFileSync(filePath, updatedContent);
 });
+//
