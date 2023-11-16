@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import type mermaidify from '@ysk8hori/typescript-graph/dist/src/mermaidify';
 import * as core from '@actions/core';
 
@@ -16,25 +15,6 @@ const IN_DETAILS = 'in-details';
 const EXCLUDE = 'exclude';
 /** 変更対象のファイルが同階層の index.ts などから参照されている場合、その index.ts への依存ファイルも表示するかどうか */
 const INCLUDE_INDEX_FILE_DEPENDENCIES = 'include-index-file-dependencies';
-
-const tsgConfigScheme = z.object({
-  /** tsconfig のルートディレクトリ */
-  tsconfigRoot: z.string().optional(),
-  /** 変更ファイル数が多い場合にグラフの表示を抑止するが、その際のノード数を指定する値 */
-  maxSize: z.number().optional(),
-  /** グラフの方向を指定する */
-  orientation: z.union([z.literal('TB'), z.literal('LR')]).optional(),
-  /** デバッグモード */
-  debug: z.boolean().optional(),
-  /** Mermaid を `<details>` タグで囲み折りたたむかどうか */
-  inDetails: z.boolean().optional(),
-  /** ファイルの除外対象 */
-  exclude: z.array(z.string()).optional(),
-  /** 変更対象のファイルが同階層の index.ts などから参照されている場合、その index.ts への依存ファイルも表示するかどうか */
-  includeIndexFileDependencies: z.boolean().optional(),
-});
-
-export type TsgConfigScheme = z.infer<typeof tsgConfigScheme>;
 
 /**
  * tsconfig を探索するディレクトリ情報を取得する。
