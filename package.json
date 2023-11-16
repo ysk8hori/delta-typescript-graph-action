@@ -10,7 +10,8 @@
     "type-check": "tsc --noEmit",
     "prettier": "prettier --write ./src",
     "lint:fix": "eslint --fix src",
-    "lint": "eslint \"src/**/*.ts\""
+    "lint": "eslint \"src/**/*.ts\"",
+    "update-workflowfiles": "node ./scripts/update-workflowfiles.mjs"
   },
   "keywords": [],
   "author": "",
