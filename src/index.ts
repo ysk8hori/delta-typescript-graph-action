@@ -18,7 +18,7 @@ async function makeGraph() {
   log('renamed:', renamed);
 
   // .tsファイルの変更がある場合のみ Graph を生成する。コンパイル対象外の ts ファイルもあるかもしれないがわからないので気にしない
-  if (![modified, created, deleted, renamed].flat()) {
+  if ([modified, created, deleted, renamed].flat().length === 0) {
     info('No TypeScript files were changed.');
     return;
   }
