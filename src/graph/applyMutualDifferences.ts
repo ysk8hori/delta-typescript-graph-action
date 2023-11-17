@@ -43,7 +43,7 @@ export default function applyMutualDifferences(
   log('abstractionTargetsForBase:', abstractionTargetsForBase);
   const baseGraph = pipe(
     fullBaseGraph,
-    graph => filterGraph(includes, ['node_modules', ...exclude()], graph),
+    graph => filterGraph(includes, exclude(), graph),
     graph => (
       log('filtered base graph.nodes.length:', graph.nodes.length),
       log('filtered base graph.relations.length:', graph.relations.length),
@@ -68,7 +68,7 @@ export default function applyMutualDifferences(
   log('abstractionTargetsForHead:', abstractionTargetsForHead);
   const headGraph = pipe(
     fullHeadGraph,
-    graph => filterGraph(includes, ['node_modules', ...exclude()], graph),
+    graph => filterGraph(includes, exclude(), graph),
     graph => (
       log('filtered head graph.nodes.length:', graph.nodes.length),
       log('filtered head graph.relations.length:', graph.relations.length),
@@ -87,7 +87,7 @@ export default function applyMutualDifferences(
 
   const tsgCommand = createTsgCommand({
     includes,
-    excludes: ['node_modules', ...exclude()],
+    excludes: exclude(),
     abstractions: extractAbstractionTargetFromGraphs(baseGraph, headGraph),
   });
 

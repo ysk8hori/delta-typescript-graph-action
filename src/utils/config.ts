@@ -1,5 +1,6 @@
 import type mermaidify from '@ysk8hori/typescript-graph/dist/src/mermaidify';
 import * as core from '@actions/core';
+import { uniqueString } from './reducer';
 
 /** tsconfig のルートディレクトリ */
 const TSCONFIG_ROOT = 'tsconfig-root';
@@ -63,7 +64,9 @@ export function exclude(): string[] {
     .getInput(EXCLUDE)
     .split(',')
     .map(s => s.trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .with(0, 'node_modules') // デフォルトで node_modules を含める
+    .reduce(uniqueString, []);
 }
 
 /** 変更対象のファイルが同階層の index.ts などから参照されている場合、その index.ts への依存ファイルも表示するかどうか */

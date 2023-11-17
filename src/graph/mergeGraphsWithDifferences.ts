@@ -52,7 +52,7 @@ export default function mergeGraphsWithDifferences(
 
   const graph = pipe(
     mergedGraph,
-    graph => filterGraph(includes, ['node_modules', ...exclude()], graph),
+    graph => filterGraph(includes, exclude(), graph),
     graph => (
       log('filteredGraph.nodes.length:', graph.nodes.length),
       log('filteredGraph.relations.length:', graph.relations.length),
@@ -74,7 +74,7 @@ export default function mergeGraphsWithDifferences(
 
   const tsgCommand = createTsgCommand({
     includes,
-    excludes: ['node_modules', ...exclude()],
+    excludes: exclude(),
     abstractions: extractAbstractionTargetFromGraphs(graph),
   });
 
