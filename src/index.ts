@@ -57,4 +57,6 @@ async function makeGraph() {
   }
 }
 
-makeGraph();
+makeGraph().catch(err => {
+  info('Error in delta-typescript-graph-action: ', err);
+});
