@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
-import { log } from './utils/log';
+import { log } from './log';
 import { execSync } from 'child_process';
 
 async function getTSFiles() {

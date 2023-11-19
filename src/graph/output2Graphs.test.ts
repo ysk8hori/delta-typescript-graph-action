@@ -1,6 +1,6 @@
 import { Graph, Node } from '@ysk8hori/typescript-graph/dist/src/models';
 import { output2Graphs } from './output2Graphs';
-import github from '../github';
+import github from '../utils/github';
 
 github.commentToPR = jest.fn();
 github.getCommentTitle = jest.fn();
