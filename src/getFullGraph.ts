@@ -3,7 +3,7 @@ import { execSync } from 'child_process';
 import { log } from './utils/log';
 import { getTsconfigRoot } from './utils/config';
 import path from 'path';
-import github from './github';
+import github from './utils/github';
 
 /**
  * TypeScript Graph の createGraph を使い head と base の Graph を生成する

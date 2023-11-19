@@ -2,7 +2,7 @@ import mermaidify from '@ysk8hori/typescript-graph/dist/src/mermaidify';
 import { Graph, Meta } from '@ysk8hori/typescript-graph/dist/src/models';
 import { getMaxSize, getOrientation, isInDetails } from '../utils/config';
 import mergeGraphsWithDifferences from './mergeGraphsWithDifferences';
-import github from '../github';
+import github from '../utils/github';
 import { info } from '../utils/log';
 
 type FileInfoList = {

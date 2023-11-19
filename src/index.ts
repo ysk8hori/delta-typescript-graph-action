@@ -1,7 +1,7 @@
 import getFullGraph from './getFullGraph';
 import { outputGraph, output2Graphs } from './graph';
 import { info, log } from './utils/log';
-import github from './github';
+import github from './utils/github';
 
 async function makeGraph() {
   // 以下の *_files は src/index.ts のようなパス文字列になっている
