@@ -4,6 +4,10 @@ import github from '../github';
 
 github.commentToPR = jest.fn();
 github.deleteComment = jest.fn();
+github.getCommentTitle = jest.fn();
+(github.getCommentTitle as jest.Mock).mockImplementation(
+  () => `## Delta TypeScript Graph<!--test-workflow.yml-->`,
+);
 
 const a: Node = {
   path: 'src/A.tsx',
