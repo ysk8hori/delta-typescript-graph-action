@@ -1,5 +1,4 @@
 import { createGraph } from '@ysk8hori/typescript-graph/dist/src/graph/createGraph';
-import { Graph, Meta } from '@ysk8hori/typescript-graph/dist/src/models';
 import { execSync } from 'child_process';
 import { log } from './utils/log';
 import { getTsconfigRoot } from './utils/config';
