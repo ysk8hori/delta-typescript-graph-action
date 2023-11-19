@@ -65,8 +65,7 @@ export function exclude(): string[] {
     .split(',')
     .map(s => s.trim())
     .filter(Boolean)
-    .with(0, 'node_modules') // デフォルトで node_modules を含める
-    .reduce(uniqueString, []);
+    .reduce(uniqueString, ['node_modules']); // デフォルトで node_modules を含める
 }
 
 /** 変更対象のファイルが同階層の index.ts などから参照されている場合、その index.ts への依存ファイルも表示するかどうか */
