@@ -3,6 +3,7 @@ import { outputGraph } from './outputGraph';
 import github from '../github';
 
 github.commentToPR = jest.fn();
+github.deleteComment = jest.fn();
 
 const a: Node = {
   path: 'src/A.tsx',
