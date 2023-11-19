@@ -1,6 +1,6 @@
 # Delta TypeScript Graph Action
 
-This Action visualizes changes in file dependencies within the TypeScript codebase that occur in Pull Requests.
+This GitHub Action uses Mermaid to visualize in a diagram the files that were changed in a Pull Request and their related dependency files. This approach aims to reduce the initial cognitive load during the review process and assist in understanding the structure around the modified code.
 
 ### Sample Usage
 
