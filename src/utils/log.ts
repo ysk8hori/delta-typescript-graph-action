@@ -8,7 +8,7 @@ export function log(message?: any, ...optionalParams: any[]): void {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function stringifyObject(message: any) {
-  // message がオブジェクトの場合は JSON.stringify で文字列化する
+  // message がオブジェクトの場合は JSON.stringify で文字列化する あ
   if (message !== null && typeof message === 'object') {
     return JSON.stringify(message, null, 2);
   }
