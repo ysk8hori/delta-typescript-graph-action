@@ -63,34 +63,38 @@ export async function commentToPR(body: string) {
   const repo = github.context.repo.repo;
   const issue_number = github.context.payload.number;
   github.context.workflow;
-  // 1. 既存のコメントを取得する
-  const comments = await octokit.rest.issues.listComments({
-    owner,
-    repo,
-    issue_number,
-  });
-
-  // 2. 既存のコメントがあれば、そのコメントのIDを取得する
-  const existingComment = comments.data.find(
-    comment => comment.body?.trim().startsWith(getCommentTitle()),
-  );
-
-  if (existingComment) {
-    // 3. 既存のコメントがあれば、そのコメントを更新する
-    await octokit.rest.issues.updateComment({
-      owner,
-      repo,
-      comment_id: existingComment.id,
-      body,
-    });
-  } else {
-    // 4. 既存のコメントがなければ、新規にコメントを作成する
-    await octokit.rest.issues.createComment({
+  try {
+    // 1. 既存のコメントを取得する
+    const comments = await octokit.rest.issues.listComments({
       owner,
       repo,
       issue_number,
-      body,
     });
+
+    // 2. 既存のコメントがあれば、そのコメントのIDを取得する
+    const existingComment = comments.data.find(
+      comment => comment.body?.trim().startsWith(getCommentTitle()),
+    );
+
+    if (existingComment) {
+      // 3. 既存のコメントがあれば、そのコメントを更新する
+      await octokit.rest.issues.updateComment({
+        owner,
+        repo,
+        comment_id: existingComment.id,
+        body,
+      });
+    } else {
+      // 4. 既存のコメントがなければ、新規にコメントを作成する
+      await octokit.rest.issues.createComment({
+        owner,
+        repo,
+        issue_number,
+        body,
+      });
+    }
+  } catch (e) {
+    log(e);
   }
 }
 
