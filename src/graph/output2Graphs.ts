@@ -35,7 +35,7 @@ export async function output2Graphs(
 
   if (baseGraph.nodes.length === 0 && headGraph.nodes.length === 0) {
     // base と head のグラフが空の場合は表示しない
-    github.deleteComment();
+    await github.deleteComment();
     info('The graph is empty.');
     return;
   }
@@ -45,7 +45,7 @@ export async function output2Graphs(
     headGraph.nodes.length > getMaxSize()
   ) {
     // base または head のグラフが大きすぎる場合は表示しない
-    github.commentToPR(`
+    await github.commentToPR(`
 ${github.getCommentTitle()}
 
 ${outputIfInDetails(`
@@ -82,7 +82,7 @@ ${outputIfInDetails('</details>')}
     ...getOrientation(),
   });
 
-  github.commentToPR(`
+  await github.commentToPR(`
 ${github.getCommentTitle()}
 
 ${outputIfInDetails(`

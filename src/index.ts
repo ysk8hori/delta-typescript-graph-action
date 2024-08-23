@@ -19,7 +19,7 @@ async function makeGraph() {
 
   // .tsファイルの変更がある場合のみ Graph を生成する。コンパイル対象外の ts ファイルもあるかもしれないがわからないので気にしない
   if ([modified, created, deleted, renamed].flat().length === 0) {
-    github.deleteComment();
+    await github.deleteComment();
     info('No TypeScript files were changed.');
     return;
   }
@@ -34,9 +34,8 @@ async function makeGraph() {
   // head のグラフが空の場合は何もしない
   if (fullHeadGraph.nodes.length === 0) return;
 
-  const hasRenamed = fullHeadGraph.nodes.some(
-    headNode =>
-      renamed?.map(({ filename }) => filename).includes(headNode.path),
+  const hasRenamed = fullHeadGraph.nodes.some(headNode =>
+    renamed?.map(({ filename }) => filename).includes(headNode.path),
   );
 
   if (deleted.length !== 0 || hasRenamed) {

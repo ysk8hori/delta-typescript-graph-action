@@ -12,7 +12,7 @@ import github from './utils/github';
  *
  * また、処理に時間がかかるため Promise を返す。
  */
-export default async function getFullGraph() {
+export default function getFullGraph() {
   // head の Graph を生成するために head に checkout する
   execSync(`git fetch origin ${github.getHeadSha()}`);
   execSync(`git checkout ${github.getHeadSha()}`);

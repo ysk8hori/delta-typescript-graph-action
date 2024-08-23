@@ -71,8 +71,8 @@ export async function commentToPR(body: string) {
   });
 
   // 2. 既存のコメントがあれば、そのコメントのIDを取得する
-  const existingComment = comments.data.find(
-    comment => comment.body?.trim().startsWith(getCommentTitle()),
+  const existingComment = comments.data.find(comment =>
+    comment.body?.trim().startsWith(getCommentTitle()),
   );
 
   if (existingComment) {
@@ -110,8 +110,8 @@ export async function deleteComment() {
   });
 
   // 2. 既存のコメントがあれば、そのコメントのIDを取得する
-  const existingComment = comments.data.find(
-    comment => comment.body?.trim().startsWith(getCommentTitle()),
+  const existingComment = comments.data.find(comment =>
+    comment.body?.trim().startsWith(getCommentTitle()),
   );
 
   if (existingComment) {
@@ -124,7 +124,7 @@ export async function deleteComment() {
   }
 }
 
-export async function cloneRepo() {
+export function cloneRepo() {
   const repo = github.context.repo;
   // リポジトリのURLを取得
   const repoUrl = `https://github.com/${repo.owner}/${repo.repo}.git`;
