@@ -37,7 +37,7 @@ const e: Node = {
   changeStatus: 'not_modified',
 };
 
-test('出力可能なグラフがない場合は何も出力しない', () => {
+test('出力可能なグラフがない場合は何も出力しない', async () => {
   const graph = {
     nodes: [],
     relations: [],
@@ -45,7 +45,7 @@ test('出力可能なグラフがない場合は何も出力しない', () => {
   const meta = {
     rootDir: '',
   };
-  outputGraph(graph, graph, meta, {
+  await outputGraph(graph, graph, meta, {
     created: [],
     deleted: [],
     modified: [],
@@ -54,7 +54,7 @@ test('出力可能なグラフがない場合は何も出力しない', () => {
   expect(github.commentToPR).not.toHaveBeenCalled();
 });
 
-test('追加や依存の削除がある場合', () => {
+test('追加や依存の削除がある場合', async () => {
   const graphA: Graph = {
     nodes: [a, c, d, e],
     relations: [
@@ -110,7 +110,7 @@ test('追加や依存の削除がある場合', () => {
   const meta = {
     rootDir: '',
   };
-  outputGraph(graphA, graphB, meta, {
+  await outputGraph(graphA, graphB, meta, {
     created: [{ filename: b.path, previous_filename: undefined }],
     deleted: [],
     modified: [{ filename: a.path, previous_filename: undefined }],

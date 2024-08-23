@@ -10,7 +10,7 @@ type FileInfoList = {
   previous_filename: string | undefined;
 }[];
 
-export function outputGraph(
+export async function outputGraph(
   fullBaseGraph: Graph,
   fullHeadGraph: Graph,
   meta: Meta,
@@ -32,14 +32,14 @@ export function outputGraph(
 
   if (graph.nodes.length === 0) {
     // グラフが空の場合は表示しない
-    github.deleteComment();
+    await github.deleteComment();
     info('The graph is empty.');
     return;
   }
 
   if (graph.nodes.length > getMaxSize()) {
     // グラフが大きすぎる場合は表示しない
-    github.commentToPR(`
+    await github.commentToPR(`
 ${github.getCommentTitle()}
 
 ${outputIfInDetails(`
@@ -63,12 +63,12 @@ ${outputIfInDetails('</details>')}
   }
 
   const mermaidLines: string[] = [];
-  mermaidify((arg: string) => mermaidLines.push(arg), graph, {
+  await mermaidify((arg: string) => mermaidLines.push(arg), graph, {
     rootDir: meta.rootDir,
     ...getOrientation(),
   });
 
-  github.commentToPR(`
+  await github.commentToPR(`
 ${github.getCommentTitle()}
 
 ${outputIfInDetails(`
