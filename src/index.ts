@@ -1,9 +1,10 @@
 import getFullGraph from './getFullGraph';
 import { outputGraph, output2Graphs } from './graph';
 import { info, log } from './utils/log';
-import github from './utils/github';
+import GitHub from './utils/github';
 
 async function makeGraph() {
+  const github = new GitHub();
   // 以下の *_files は src/index.ts のようなパス文字列になっている
   const {
     created,
@@ -11,7 +12,7 @@ async function makeGraph() {
     modified,
     renamed,
     unchanged: _,
-  } = await github.getFiles();
+  } = await github.getTSFiles();
   log('modified:', modified);
   log('created:', created);
   log('deleted:', deleted);
@@ -34,8 +35,9 @@ async function makeGraph() {
   // head のグラフが空の場合は何もしない
   if (fullHeadGraph.nodes.length === 0) return;
 
-  const hasRenamed = fullHeadGraph.nodes.some(headNode =>
-    renamed?.map(({ filename }) => filename).includes(headNode.path),
+  const hasRenamed = fullHeadGraph.nodes.some(
+    headNode =>
+      renamed?.map(({ filename }) => filename).includes(headNode.path),
   );
 
   if (deleted.length !== 0 || hasRenamed) {

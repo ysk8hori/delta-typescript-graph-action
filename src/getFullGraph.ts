@@ -3,7 +3,7 @@ import { execSync } from 'child_process';
 import { log } from './utils/log';
 import { getTsconfigRoot } from './utils/config';
 import path from 'path';
-import github from './utils/github';
+import GitHub from './utils/github';
 
 /**
  * TypeScript Graph の createGraph を使い head と base の Graph を生成する
@@ -13,6 +13,7 @@ import github from './utils/github';
  * また、処理に時間がかかるため Promise を返す。
  */
 export default function getFullGraph() {
+  const github = new GitHub();
   // head の Graph を生成するために head に checkout する
   execSync(`git fetch origin ${github.getHeadSha()}`);
   execSync(`git checkout ${github.getHeadSha()}`);

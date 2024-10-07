@@ -2,7 +2,7 @@ import mermaidify from '@ysk8hori/typescript-graph/dist/src/mermaidify';
 import { Graph, Meta } from '@ysk8hori/typescript-graph/dist/src/models';
 import { getMaxSize, getOrientation, isInDetails } from '../utils/config';
 import applyMutualDifferences from './applyMutualDifferences';
-import github from '../utils/github';
+import GitHub from '../utils/github';
 import { info } from '../utils/log';
 
 type FileInfoList = {
@@ -32,6 +32,8 @@ export async function output2Graphs(
     fullBaseGraph,
     fullHeadGraph,
   );
+
+  const github = new GitHub();
 
   if (baseGraph.nodes.length === 0 && headGraph.nodes.length === 0) {
     // base と head のグラフが空の場合は表示しない
