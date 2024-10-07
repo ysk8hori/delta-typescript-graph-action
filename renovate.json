@@ -3,5 +3,6 @@
   "extends": [
     "config:recommended"
   ],
+  "ignoreDeps": ["ysk8hori/delta-typescript-graph-action"],
   "automerge": true
 }
