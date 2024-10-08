@@ -1,7 +1,27 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
-import { log } from './log';
+import { info, log } from './log';
 import { execSync } from 'child_process';
+import { retry } from './retry';
+
+/**
+ * 400、401、403、404、422、451を除く、サーバーの4xx/5xx応答の場合はエラーをスローする。
+ *
+ * @param e エラーオブジェクト
+ * @returns 400、401、403、404、422、451 の場合は undefined を返す。
+ * @see https://github.com/octokit/plugin-retry.js
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function throwUnexpectedError(e: any) {
+  // @see https://github.com/octokit/plugin-retry.js
+  if ([400, 401, 403, 404, 422, 451].includes(e?.status)) {
+    log(e);
+    return undefined;
+  }
+  const error = new Error();
+  error.cause = e;
+  throw error;
+}
 
 export default class GitHub {
   #octokit: ReturnType<typeof github.getOctokit>;
@@ -70,11 +90,20 @@ export default class GitHub {
     const issue_number = github.context.payload.number;
     github.context.workflow;
     // 1. 既存のコメントを取得する
-    const comments = await this.#octokit.rest.issues.listComments({
-      owner,
-      repo,
-      issue_number,
-    });
+    const comments = await retry(() =>
+      this.#octokit.rest.issues
+        .listComments({
+          owner,
+          repo,
+          issue_number,
+        })
+        .catch(throwUnexpectedError),
+    );
+
+    if (!comments) {
+      info('commentToPR:コメントの取得に失敗しました');
+      return;
+    }
 
     // 2. 既存のコメントがあれば、そのコメントのIDを取得する
     const existingComment = comments.data.find(
@@ -83,20 +112,28 @@ export default class GitHub {
 
     if (existingComment) {
       // 3. 既存のコメントがあれば、そのコメントを更新する
-      await this.#octokit.rest.issues.updateComment({
-        owner,
-        repo,
-        comment_id: existingComment.id,
-        body,
-      });
+      await retry(() =>
+        this.#octokit.rest.issues
+          .updateComment({
+            owner,
+            repo,
+            comment_id: existingComment.id,
+            body,
+          })
+          .catch(throwUnexpectedError),
+      );
     } else {
       // 4. 既存のコメントがなければ、新規にコメントを作成する
-      await this.#octokit.rest.issues.createComment({
-        owner,
-        repo,
-        issue_number,
-        body,
-      });
+      await retry(() =>
+        this.#octokit.rest.issues
+          .createComment({
+            owner,
+            repo,
+            issue_number,
+            body,
+          })
+          .catch(throwUnexpectedError),
+      );
     }
   }
 
@@ -108,11 +145,20 @@ export default class GitHub {
     const repo = github.context.repo.repo;
     const issue_number = github.context.payload.number;
     // 1. 既存のコメントを取得する
-    const comments = await this.#octokit.rest.issues.listComments({
-      owner,
-      repo,
-      issue_number,
-    });
+    const comments = await retry(() =>
+      this.#octokit.rest.issues
+        .listComments({
+          owner,
+          repo,
+          issue_number,
+        })
+        .catch(throwUnexpectedError),
+    );
+
+    if (!comments) {
+      info('deleteComment:コメントの取得に失敗しました');
+      return;
+    }
 
     // 2. 既存のコメントがあれば、そのコメントのIDを取得する
     const existingComment = comments.data.find(
@@ -121,11 +167,15 @@ export default class GitHub {
 
     if (existingComment) {
       // 3. 既存のコメントがあれば、そのコメントを削除する
-      await this.#octokit.rest.issues.deleteComment({
-        owner,
-        repo,
-        comment_id: existingComment.id,
-      });
+      await retry(() =>
+        this.#octokit.rest.issues
+          .deleteComment({
+            owner,
+            repo,
+            comment_id: existingComment.id,
+          })
+          .catch(throwUnexpectedError),
+      );
     }
   }
 
