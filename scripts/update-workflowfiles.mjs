@@ -1,14 +1,19 @@
 /**
- * This script updates the workflow files in the .github/workflows directory.
+ * GitHub Action を公開する際には、 /dist/index.js をビルドしてコミットする必要がある。それが Action の実体となる。
+ * それをコミットしたうえで、本リポジトリの CI のテストにおいてはそのコミットハッシュを使用するようワークフローファイルを更新してコミットする。
  *
- * workflow の中の ysk8hori/delta-typescript-graph-action のバージョンを、現在のブランチにおける最新のコミットハッシュに更新する。
+ * When publishing a GitHub Action, it is necessary to build and commit `/dist/index.js`, as it serves as the actual implementation of the Action.
+ * After committing that, in the CI test of this repository, update the workflow file to use the commit hash and commit the changes.
  */
 
 import fs from 'fs';
 import path from 'path';
-import { execSync } from 'child_process';
+import { $ } from 'zx';
 
-const headSha = execSync('git rev-parse HEAD').toString().trim();
+await $`npm run build`;
+await $`git commit -am "chore: update dist"`;
+
+const headSha = (await $`git rev-parse HEAD`).toString().trim();
 const files = fs.readdirSync(path.resolve('.github/workflows'));
 files.forEach(file => {
   const filePath = path.resolve('.github/workflows', file);
@@ -19,3 +24,5 @@ files.forEach(file => {
   );
   fs.writeFileSync(filePath, updatedContent);
 });
+
+await $`git commit -am "ci: update hash"`;
