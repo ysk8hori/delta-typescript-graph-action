@@ -15,12 +15,10 @@ import { retry } from './retry';
 function throwUnexpectedError(e: any) {
   // @see https://github.com/octokit/plugin-retry.js
   if ([400, 401, 403, 404, 422, 451].includes(e?.status)) {
-    log(e);
+    console.warn(e);
     return undefined;
   }
-  const error = new Error();
-  error.cause = e;
-  throw error;
+  throw new Error(e.message, { cause: e });
 }
 
 export default class GitHub {

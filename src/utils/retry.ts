@@ -4,7 +4,7 @@ export function retry<T>(
   interval = 1000,
 ): Promise<T | undefined> {
   return fn().catch(async (error: Error) => {
-    console.warn(error);
+    console.warn('\n', error);
     if (maxRetries <= 0) return undefined;
 
     await new Promise(resolve => setTimeout(resolve, interval));
