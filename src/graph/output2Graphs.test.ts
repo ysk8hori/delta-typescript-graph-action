@@ -1,12 +1,30 @@
 import { Graph, Node } from '@ysk8hori/typescript-graph/dist/src/models';
 import { output2Graphs } from './output2Graphs';
-import github from '../utils/github';
+import GitHub from '../utils/github';
 
-github.commentToPR = jest.fn();
-github.getCommentTitle = jest.fn();
-(github.getCommentTitle as jest.Mock).mockImplementation(
-  () => `## Delta TypeScript Graph<!--test-workflow.yml-->`,
-);
+const commentToPR = jest.fn();
+const deleteComment = jest.fn();
+const getCommentTitle = jest
+  .fn()
+  .mockImplementation(
+    () => `## Delta TypeScript Graph<!--test-workflow.yml-->`,
+  );
+jest.mock('../utils/github', () => {
+  return jest.fn().mockImplementation(() => {
+    return {
+      commentToPR,
+      deleteComment,
+      getCommentTitle,
+    };
+  });
+});
+const GitHubMock = GitHub as jest.Mock;
+beforeEach(() => {
+  GitHubMock.mockClear();
+  commentToPR.mockClear();
+  deleteComment.mockClear();
+  getCommentTitle.mockClear();
+});
 
 const a: Node = {
   path: 'src/A.tsx',
@@ -105,5 +123,5 @@ test('削除がある場合', async () => {
     modified: [{ filename: a.path, previous_filename: undefined }],
     renamed: [],
   });
-  expect((github.commentToPR as jest.Mock).mock.calls[0]).toMatchSnapshot();
+  expect((commentToPR as jest.Mock).mock.calls[0]).toMatchSnapshot();
 });
