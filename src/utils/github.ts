@@ -86,7 +86,7 @@ export default class GitHub {
    */
   public async commentToPR(body: string) {
     const owner = github.context.repo.owner;
-    const repo = github.context.repo.repo;
+    const repo = github.context.repo.repo + 'hoge';
     const issue_number = github.context.payload.number;
     github.context.workflow;
     // 1. 既存のコメントを取得する
