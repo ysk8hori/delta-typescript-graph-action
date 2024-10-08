@@ -6,9 +6,12 @@
 
 import fs from 'fs';
 import path from 'path';
-import { execSync } from 'child_process';
+import { $ } from 'zx';
 
-const headSha = execSync('git rev-parse HEAD').toString().trim();
+await $`npm run build`;
+await $`git commit -am "chore: update dist"`;
+
+const headSha = (await $`git rev-parse HEAD`).toString().trim();
 const files = fs.readdirSync(path.resolve('.github/workflows'));
 files.forEach(file => {
   const filePath = path.resolve('.github/workflows', file);
@@ -19,3 +22,5 @@ files.forEach(file => {
   );
   fs.writeFileSync(filePath, updatedContent);
 });
+
+await $`git commit -am "ci: update hash"`;
