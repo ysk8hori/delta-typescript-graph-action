@@ -25,7 +25,10 @@ export default class GitHub {
   #octokit: ReturnType<typeof github.getOctokit>;
 
   constructor() {
-    this.#octokit = github.getOctokit(core.getInput('access-token'));
+    const baseUrl = process.env.GITHUB_API_URL || 'https://api.github.com';
+    this.#octokit = github.getOctokit(core.getInput('access-token'), {
+      baseUrl,
+    });
   }
 
   public async getTSFiles() {
