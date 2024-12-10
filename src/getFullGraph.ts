@@ -1,7 +1,7 @@
 import { createGraph } from '@ysk8hori/typescript-graph/dist/src/graph/createGraph';
 import { execSync } from 'child_process';
 import { log } from './utils/log';
-import { getTsconfigRoot } from './utils/config';
+import { getTsconfigRoot, getTsconfigPath } from './utils/config';
 import path from 'path';
 import GitHub from './utils/github';
 
@@ -19,6 +19,7 @@ export default function getFullGraph() {
   execSync(`git checkout ${github.getHeadSha()}`);
   // head の Graph を生成
   const { graph: fullHeadGraph, meta } = createGraph({
+    tsconfig: getTsconfigPath(),
     dir: path.resolve(getTsconfigRoot()),
   });
   log('fullHeadGraph.nodes.length:', fullHeadGraph.nodes.length);
@@ -28,6 +29,7 @@ export default function getFullGraph() {
   execSync(`git checkout ${github.getBaseSha()}`);
   // base の Graph を生成
   const { graph: fullBaseGraph } = createGraph({
+    tsconfig: getTsconfigPath(),
     dir: path.resolve(getTsconfigRoot()),
   });
   log('fullBaseGraph.nodes.length:', fullBaseGraph.nodes.length);

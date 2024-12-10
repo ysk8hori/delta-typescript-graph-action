@@ -16,7 +16,7 @@ jobs:
         uses: ysk8hori/delta-typescript-graph-action@8a2cbbc7174f752bfcfb07466f1414cbc115ae12
         with:
           access-token: ${{ secrets.GITHUB_TOKEN }}
-          tsconfig-root: './dummy_project'
+          tsconfig-path: './dummy_project/tsconfig-dummy.json'
           max-size: 100
           orientation: LR
           debug: true

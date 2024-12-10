@@ -7,9 +7,12 @@ inputs:
     required: false
     default: ${{ github.token }}
   tsconfig-root:
-    description: 'Root directory of tsconfig to search'
+    description: '(Deprecated: Use tsconfig-path instead.) Specifies the root directory where tsconfig will be searched.'
     required: false
     default: './'
+  tsconfig-path:
+    description: 'Specifies the path to the tsconfig file.'
+    required: false
   max-size:
     description: 'Maximum number of nodes to display in the graph when there are many change files'
     required: false

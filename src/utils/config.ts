@@ -4,6 +4,8 @@ import { uniqueString } from './reducer';
 
 /** tsconfig のルートディレクトリ */
 const TSCONFIG_ROOT = 'tsconfig-root';
+/** tsconfig のパス */
+const TSCONFIG_PATH = 'tsconfig-path';
 /** 変更ファイル数が多い場合にグラフの表示を抑止するが、その際のノード数を指定する値 */
 const MAX_SIZE = 'max-size';
 /** グラフの方向を指定する */
@@ -24,6 +26,15 @@ const INCLUDE_INDEX_FILE_DEPENDENCIES = 'include-index-file-dependencies';
  */
 export function getTsconfigRoot(): string {
   return core.getInput(TSCONFIG_ROOT) ?? './';
+}
+
+/**
+ * tsconfig.json のパスを取得する。ファイル名が異なる場合などにはこちらを指定する。
+ *
+ * 指定したファイルが存在しない場合はグラフを0件として処理する。
+ */
+export function getTsconfigPath(): string | undefined {
+  return core.getInput(TSCONFIG_PATH) ?? undefined;
 }
 
 /** 変更ファイル数が多い場合にグラフの表示を抑止するが、その際のノード数を指定する値を取得する。 */
