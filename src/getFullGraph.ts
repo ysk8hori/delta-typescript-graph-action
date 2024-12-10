@@ -18,16 +18,18 @@ export default function getFullGraph() {
   execSync(`git fetch origin ${github.getHeadSha()}`);
   execSync(`git checkout ${github.getHeadSha()}`);
   // head の Graph を生成
-  const { graph: fullHeadGraph, meta } = createGraph(
-    path.resolve(getTsconfigRoot()),
-  );
+  const { graph: fullHeadGraph, meta } = createGraph({
+    dir: path.resolve(getTsconfigRoot()),
+  });
   log('fullHeadGraph.nodes.length:', fullHeadGraph.nodes.length);
   log('fullHeadGraph.relations.length:', fullHeadGraph.relations.length);
   // base の Graph を生成するために base に checkout する
   execSync(`git fetch origin ${github.getBaseSha()}`);
   execSync(`git checkout ${github.getBaseSha()}`);
   // base の Graph を生成
-  const { graph: fullBaseGraph } = createGraph(path.resolve(getTsconfigRoot()));
+  const { graph: fullBaseGraph } = createGraph({
+    dir: path.resolve(getTsconfigRoot()),
+  });
   log('fullBaseGraph.nodes.length:', fullBaseGraph.nodes.length);
   log('fullBaseGraph.relations.length:', fullBaseGraph.relations.length);
   return { fullHeadGraph, fullBaseGraph, meta };
