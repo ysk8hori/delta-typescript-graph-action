@@ -2,6 +2,9 @@ import getFullGraph from './getFullGraph';
 import { outputGraph, output2Graphs } from './graph';
 import { info, log } from './utils/log';
 import GitHub, { PullRequestFileInfo } from './utils/github';
+import { Graph, Node } from '@ysk8hori/typescript-graph/dist/src/models';
+import path from 'path';
+import { getTsconfigRoot } from './utils/config';
 
 async function makeGraph() {
   const github = new GitHub();
@@ -38,40 +41,76 @@ async function makeGraph() {
   // meta が返らない場合は解析できていないので何もしない
   if (!meta) return;
 
-  const hasRenamed = fullHeadGraph.nodes.some(headNode =>
-    renamed?.map(({ filename }) => filename).includes(headNode.path),
-  );
-
-  /**  パスの開始部分から meta の rootDir を除去する */
-  function removeRootDir(fileInfo: PullRequestFileInfo): PullRequestFileInfo {
-    return {
-      ...fileInfo,
-      filename: fileInfo.filename.replace(
-        new RegExp(`^${meta.rootDir.replace(/^.\//, '')}`),
-        '',
-      ),
-    };
-  }
-
-  if (deleted.length !== 0 || hasRenamed) {
+  if (deleted.length !== 0 || hasRenamedFiles(fullHeadGraph, renamed)) {
     // ファイルの削除またはリネームがある場合は Graph を2つ表示する
-    await output2Graphs(fullBaseGraph, fullHeadGraph, meta, {
-      created: created.map(removeRootDir),
-      deleted: deleted.map(removeRootDir),
-      modified: modified.map(removeRootDir),
-      renamed: renamed.map(removeRootDir),
-    });
+    await output2Graphs(
+      updateNodePathsToRelativeFromCurrentDir(
+        fullBaseGraph,
+        getTsconfigRoot() ?? meta.rootDir,
+      ),
+      updateNodePathsToRelativeFromCurrentDir(
+        fullHeadGraph,
+        getTsconfigRoot() ?? meta.rootDir,
+      ),
+      meta,
+      {
+        created: created,
+        deleted: deleted,
+        modified: modified,
+        renamed: renamed,
+      },
+    );
   } else {
-    await outputGraph(fullBaseGraph, fullHeadGraph, meta, {
-      // パスの開始部分から meta の rootDir を除去する
-      created: created.map(removeRootDir),
-      deleted: deleted.map(removeRootDir),
-      modified: modified.map(removeRootDir),
-      renamed: renamed.map(removeRootDir),
-    });
+    await outputGraph(
+      updateNodePathsToRelativeFromCurrentDir(
+        fullBaseGraph,
+        getTsconfigRoot() ?? meta.rootDir,
+      ),
+      updateNodePathsToRelativeFromCurrentDir(
+        fullHeadGraph,
+        getTsconfigRoot() ?? meta.rootDir,
+      ),
+      meta,
+      {
+        created: created,
+        deleted: deleted,
+        modified: modified,
+        renamed: renamed,
+      },
+    );
   }
 }
 
 makeGraph().catch(err => {
   info('Error in delta-typescript-graph-action: ', err);
 });
+
+function hasRenamedFiles(fullHeadGraph: Graph, renamed: PullRequestFileInfo[]) {
+  return fullHeadGraph.nodes.some(headNode =>
+    renamed?.map(({ filename }) => filename).includes(headNode.path),
+  );
+}
+
+function updateNodePathsToRelativeFromCurrentDir(
+  graph: Graph,
+  /** カレントディレクトリから解析対象の tsconfig のあるディレクトリへの相対パス。`./my-app/` などを想定 */
+  rootDir: string,
+): Graph {
+  function updateNodePath(node: Node): Node {
+    return {
+      ...node,
+      path: path.join(normalizedRootDir, node.path),
+    };
+  }
+
+  const normalizedRootDir = rootDir.replace(/^.\//, '');
+  return {
+    ...graph,
+    nodes: graph.nodes.map(updateNodePath),
+    relations: graph.relations.map(relation => ({
+      ...relation,
+      from: updateNodePath(relation.from),
+      to: updateNodePath(relation.to),
+    })),
+  };
+}
