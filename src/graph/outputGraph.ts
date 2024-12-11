@@ -65,6 +65,7 @@ ${outputIfInDetails('</details>')}
 
   const mermaidLines: string[] = [];
   await mermaidify((arg: string) => mermaidLines.push(arg), graph, {
+    // TODO: mermaidify の rootDir は意味がないのでそのうち消す
     rootDir: meta.rootDir,
     ...getOrientation(),
   });
