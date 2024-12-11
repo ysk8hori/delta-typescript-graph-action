@@ -52,7 +52,14 @@ async function makeGraph() {
     });
   } else {
     await outputGraph(fullBaseGraph, fullHeadGraph, meta, {
-      created,
+      // パスの開始部分から meta の rootDir を除去する
+      created: created.map(v => ({
+        ...v,
+        filename: v.filename.replace(
+          new RegExp(`^${meta.rootDir.replace(/^.\//, '')}`),
+          '',
+        ),
+      })),
       deleted,
       modified,
       renamed,
