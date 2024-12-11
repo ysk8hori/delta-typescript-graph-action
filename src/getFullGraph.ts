@@ -1,9 +1,7 @@
 import { createGraph } from '@ysk8hori/typescript-graph/dist/src/graph/createGraph';
 import { Graph, Meta } from '@ysk8hori/typescript-graph/dist/src/models';
 import { execSync } from 'child_process';
-import { log } from './utils/log';
 import { getTsconfigRoot, getTsconfigPath } from './utils/config';
-import path from 'path';
 import GitHub from './utils/github';
 import { getCreateGraphsArguments } from './tsg/getCreateGraphsArguments';
 
@@ -37,7 +35,7 @@ export default function getFullGraph() {
     tsconfigPath,
     tsconfigRoot,
   });
-  const { graph: fullHeadGraph, meta: headMeta } = argumentsForHeadBranch
+  const { graph: fullHeadGraph } = argumentsForHeadBranch
     ? createGraph(argumentsForHeadBranch)
     : emptyGraph;
 
@@ -50,9 +48,16 @@ export default function getFullGraph() {
     tsconfigPath,
     tsconfigRoot,
   });
-  const { graph: fullBaseGraph, meta: baseMeta } = argumentsForBaseBranch
+  const { graph: fullBaseGraph } = argumentsForBaseBranch
     ? createGraph(argumentsForBaseBranch)
     : emptyGraph;
 
-  return { fullHeadGraph, fullBaseGraph, meta: headMeta ?? baseMeta };
+  return {
+    fullHeadGraph,
+    fullBaseGraph,
+    meta: {
+      // TODO: meta の rootDir を本来の目的とは異なる用途で利用しているため、そのうち修正する
+      rootDir: (argumentsForHeadBranch ?? argumentsForBaseBranch)?.dir ?? './',
+    } satisfies Meta,
+  };
 }
