@@ -40,8 +40,6 @@ export default function getFullGraph() {
   const { graph: fullHeadGraph, meta: headMeta } = argumentsForHeadBranch
     ? createGraph(argumentsForHeadBranch)
     : emptyGraph;
-  log('fullHeadGraph.nodes.length:', fullHeadGraph.nodes.length);
-  log('fullHeadGraph.relations.length:', fullHeadGraph.relations.length);
 
   // base の Graph を生成するために base に checkout する
   execSync(`git fetch origin ${github.getBaseSha()}`);
@@ -56,7 +54,5 @@ export default function getFullGraph() {
     ? createGraph(argumentsForBaseBranch)
     : emptyGraph;
 
-  log('fullBaseGraph.nodes.length:', fullBaseGraph.nodes.length);
-  log('fullBaseGraph.relations.length:', fullBaseGraph.relations.length);
   return { fullHeadGraph, fullBaseGraph, meta: headMeta ?? baseMeta };
 }
