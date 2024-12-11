@@ -30,8 +30,6 @@ export function getTsconfigRoot(): string {
 
 /**
  * tsconfig.json のパスを取得する。ファイル名が異なる場合などにはこちらを指定する。
- *
- * 指定したファイルが存在しない場合はグラフを0件として処理する。
  */
 export function getTsconfigPath(): string | undefined {
   return core.getInput(TSCONFIG_PATH) ?? undefined;
