@@ -35,9 +35,11 @@ async function makeGraph() {
   // head のグラフが空の場合は何もしない
   if (fullHeadGraph.nodes.length === 0) return;
 
-  const hasRenamed = fullHeadGraph.nodes.some(
-    headNode =>
-      renamed?.map(({ filename }) => filename).includes(headNode.path),
+  // meta が返らない場合は解析できていないので何もしない
+  if (!meta) return;
+
+  const hasRenamed = fullHeadGraph.nodes.some(headNode =>
+    renamed?.map(({ filename }) => filename).includes(headNode.path),
   );
 
   if (deleted.length !== 0 || hasRenamed) {
