@@ -73,6 +73,7 @@ ${outputIfInDetails('</details>')}
   // base の書き出し
   const baseLines: string[] = [];
   await mermaidify((arg: string) => baseLines.push(arg), baseGraph, {
+    // TODO: mermaidify の rootDir は意味がないのでそのうち消す
     rootDir: meta.rootDir,
     ...getOrientation(),
   });
@@ -80,6 +81,7 @@ ${outputIfInDetails('</details>')}
   // head の書き出し
   const headLines: string[] = [];
   await mermaidify((arg: string) => headLines.push(arg), headGraph, {
+    // TODO: mermaidify の rootDir は意味がないのでそのうち消す
     rootDir: meta.rootDir,
     ...getOrientation(),
   });
