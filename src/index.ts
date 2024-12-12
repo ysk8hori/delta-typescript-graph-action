@@ -47,6 +47,7 @@ async function makeGraph() {
       updateNodePathsToRelativeFromCurrentDir(
         fullBaseGraph,
         getTsconfigRoot() ?? meta.rootDir,
+        // TODO: これあまり関係ないので除去する,
       ),
       updateNodePathsToRelativeFromCurrentDir(
         fullHeadGraph,
@@ -97,6 +98,7 @@ function updateNodePathsToRelativeFromCurrentDir(
   rootDir: string,
 ): Graph {
   function updateNodePath(node: Node): Node {
+    console.log(path.join(normalizedRootDir, node.path));
     return {
       ...node,
       path: path.join(normalizedRootDir, node.path),
