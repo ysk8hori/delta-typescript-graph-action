@@ -44,15 +44,8 @@ async function makeGraph() {
   if (deleted.length !== 0 || hasRenamedFiles(fullHeadGraph, renamed)) {
     // ファイルの削除またはリネームがある場合は Graph を2つ表示する
     await output2Graphs(
-      updateNodePathsToRelativeFromCurrentDir(
-        fullBaseGraph,
-        getTsconfigRoot() ?? meta.rootDir,
-        // TODO: これあまり関係ないので除去する,
-      ),
-      updateNodePathsToRelativeFromCurrentDir(
-        fullHeadGraph,
-        getTsconfigRoot() ?? meta.rootDir,
-      ),
+      updateNodePathsToRelativeFromCurrentDir(fullBaseGraph, meta.rootDir),
+      updateNodePathsToRelativeFromCurrentDir(fullHeadGraph, meta.rootDir),
       meta,
       {
         created: created,
@@ -63,14 +56,8 @@ async function makeGraph() {
     );
   } else {
     await outputGraph(
-      updateNodePathsToRelativeFromCurrentDir(
-        fullBaseGraph,
-        getTsconfigRoot() ?? meta.rootDir,
-      ),
-      updateNodePathsToRelativeFromCurrentDir(
-        fullHeadGraph,
-        getTsconfigRoot() ?? meta.rootDir,
-      ),
+      updateNodePathsToRelativeFromCurrentDir(fullBaseGraph, meta.rootDir),
+      updateNodePathsToRelativeFromCurrentDir(fullHeadGraph, meta.rootDir),
       meta,
       {
         created: created,
