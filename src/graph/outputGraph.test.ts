@@ -1,30 +1,7 @@
 import { Graph, Node } from '@ysk8hori/typescript-graph/dist/src/models';
 import { outputGraph } from './outputGraph';
 import GitHub from '../utils/github';
-
-const commentToPR = jest.fn();
-const deleteComment = jest.fn();
-const getCommentTitle = jest
-  .fn()
-  .mockImplementation(
-    () => `## Delta TypeScript Graph<!--test-workflow.yml-->`,
-  );
-jest.mock('../utils/github', () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      commentToPR,
-      deleteComment,
-      getCommentTitle,
-    };
-  });
-});
-const GitHubMock = GitHub as jest.Mock;
-beforeEach(() => {
-  GitHubMock.mockClear();
-  commentToPR.mockClear();
-  deleteComment.mockClear();
-  getCommentTitle.mockClear();
-});
+import { getDummyContext } from '../utils/dummyContext';
 
 const a: Node = {
   path: 'src/A.tsx',
@@ -62,13 +39,20 @@ test('出力可能なグラフがない場合は何も出力しない', async ()
   const meta = {
     rootDir: '',
   };
-  await outputGraph(graph, graph, meta, {
-    created: [],
-    deleted: [],
-    modified: [],
-    renamed: [],
-  });
-  expect(commentToPR).not.toHaveBeenCalled();
+  const context = getDummyContext();
+  await outputGraph(
+    graph,
+    graph,
+    meta,
+    {
+      created: [],
+      deleted: [],
+      modified: [],
+      renamed: [],
+    },
+    context,
+  );
+  expect(context.github.commentToPR).not.toHaveBeenCalled();
 });
 
 test('追加や依存の削除がある場合', async () => {
@@ -127,11 +111,21 @@ test('追加や依存の削除がある場合', async () => {
   const meta = {
     rootDir: '',
   };
-  await outputGraph(graphA, graphB, meta, {
-    created: [{ filename: b.path, previous_filename: undefined }],
-    deleted: [],
-    modified: [{ filename: a.path, previous_filename: undefined }],
-    renamed: [],
-  });
-  expect(commentToPR.mock.calls[0][0]).toMatchSnapshot();
+  const commentToPR = jest.fn();
+  const context = getDummyContext();
+  await outputGraph(
+    graphA,
+    graphB,
+    meta,
+    {
+      created: [{ filename: b.path, previous_filename: undefined }],
+      deleted: [],
+      modified: [{ filename: a.path, previous_filename: undefined }],
+      renamed: [],
+    },
+    context,
+  );
+  expect(
+    (context.github.commentToPR as jest.Mock).mock.calls[0][1],
+  ).toMatchSnapshot();
 });

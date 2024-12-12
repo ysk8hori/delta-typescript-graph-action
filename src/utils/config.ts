@@ -18,6 +18,8 @@ const IN_DETAILS = 'in-details';
 const EXCLUDE = 'exclude';
 /** 変更対象のファイルが同階層の index.ts などから参照されている場合、その index.ts への依存ファイルも表示するかどうか */
 const INCLUDE_INDEX_FILE_DEPENDENCIES = 'include-index-file-dependencies';
+/** コメントのタイトル */
+const COMMENT_TITLE = 'comment-title';
 
 /**
  * tsconfig を探索するディレクトリ情報を取得する。
@@ -80,4 +82,24 @@ export function exclude(): string[] {
 /** 変更対象のファイルが同階層の index.ts などから参照されている場合、その index.ts への依存ファイルも表示するかどうか */
 export function isIncludeIndexFileDependencies(): boolean {
   return core.getInput(INCLUDE_INDEX_FILE_DEPENDENCIES) === 'true';
+}
+
+/** コメントのタイトルを取得する */
+export function getCommentTitle(): string {
+  return core.getInput(COMMENT_TITLE) ?? 'Delta TypeScript Graph';
+}
+
+export function getConfig() {
+  return {
+    tsconfigRoot: getTsconfigRoot(),
+    tsconfigPath: getTsconfigPath(),
+    maxSize: getMaxSize(),
+    orientation: getOrientation(),
+    debugEnabled: isDebugEnabled(),
+    inDetails: isInDetails(),
+    exclude: exclude(),
+    includeIndexFileDependencies: isIncludeIndexFileDependencies(),
+    /** Action の parameter として指定された comment-title */
+    commentTitle: getCommentTitle(),
+  };
 }

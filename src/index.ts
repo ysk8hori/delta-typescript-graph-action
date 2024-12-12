@@ -1,13 +1,13 @@
 import getFullGraph from './getFullGraph';
 import { outputGraph, output2Graphs } from './graph';
 import { info, log } from './utils/log';
-import GitHub, { PullRequestFileInfo } from './utils/github';
+import { PullRequestFileInfo } from './utils/github';
 import { Graph, Node } from '@ysk8hori/typescript-graph/dist/src/models';
 import path from 'path';
-import { getTsconfigRoot } from './utils/config';
+import { createContext } from './utils/context';
 
 async function makeGraph() {
-  const github = new GitHub();
+  const context = createContext();
   // 以下の *_files は src/index.ts のようなパス文字列になっている
   const {
     created,
@@ -15,7 +15,7 @@ async function makeGraph() {
     modified,
     renamed,
     unchanged: _,
-  } = await github.getTSFiles();
+  } = await context.github.getTSFiles();
   log('modified:', modified);
   log('created:', created);
   log('deleted:', deleted);
@@ -23,7 +23,7 @@ async function makeGraph() {
 
   // .tsファイルの変更がある場合のみ Graph を生成する。コンパイル対象外の ts ファイルもあるかもしれないがわからないので気にしない
   if ([modified, created, deleted, renamed].flat().length === 0) {
-    await github.deleteComment();
+    await context.github.deleteComment(context.config.commentTitle);
     info('No TypeScript files were changed.');
     return;
   }
@@ -53,6 +53,7 @@ async function makeGraph() {
         modified: modified,
         renamed: renamed,
       },
+      context,
     );
   } else {
     await outputGraph(
@@ -65,6 +66,7 @@ async function makeGraph() {
         modified: modified,
         renamed: renamed,
       },
+      context,
     );
   }
 }

@@ -1,30 +1,6 @@
 import { Graph, Node } from '@ysk8hori/typescript-graph/dist/src/models';
 import { output2Graphs } from './output2Graphs';
-import GitHub from '../utils/github';
-
-const commentToPR = jest.fn();
-const deleteComment = jest.fn();
-const getCommentTitle = jest
-  .fn()
-  .mockImplementation(
-    () => `## Delta TypeScript Graph<!--test-workflow.yml-->`,
-  );
-jest.mock('../utils/github', () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      commentToPR,
-      deleteComment,
-      getCommentTitle,
-    };
-  });
-});
-const GitHubMock = GitHub as jest.Mock;
-beforeEach(() => {
-  GitHubMock.mockClear();
-  commentToPR.mockClear();
-  deleteComment.mockClear();
-  getCommentTitle.mockClear();
-});
+import { getDummyContext } from '../utils/dummyContext';
 
 const a: Node = {
   path: 'src/A.tsx',
@@ -117,11 +93,20 @@ test('削除がある場合', async () => {
   const meta = {
     rootDir: '',
   };
-  await output2Graphs(base, head, meta, {
-    created: [],
-    deleted: [{ filename: b.path, previous_filename: undefined }],
-    modified: [{ filename: a.path, previous_filename: undefined }],
-    renamed: [],
-  });
-  expect((commentToPR as jest.Mock).mock.calls[0]).toMatchSnapshot();
+  const context = getDummyContext();
+  await output2Graphs(
+    base,
+    head,
+    meta,
+    {
+      created: [],
+      deleted: [{ filename: b.path, previous_filename: undefined }],
+      modified: [{ filename: a.path, previous_filename: undefined }],
+      renamed: [],
+    },
+    context,
+  );
+  expect(
+    (context.github.commentToPR as jest.Mock).mock.calls[0],
+  ).toMatchSnapshot();
 });

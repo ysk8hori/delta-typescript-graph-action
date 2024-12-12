@@ -21,3 +21,4 @@ jobs:
           orientation: LR
           debug: true
           include-index-file-dependencies: true
+          comment-title: 'Dummy project dependency graph'

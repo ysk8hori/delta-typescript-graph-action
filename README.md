@@ -111,17 +111,18 @@ This basic setup will trigger the Action on every pull request. The Action will 
 
 This Action provides several parameters to customize its behavior. You can specify these parameters in your GitHub Actions workflow file.
 
-| Parameter                         | Type         | Default Value          | Description                                                                                                                |
-| --------------------------------- | ------------ | ---------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `access-token`                    | `string`     | `${{ github.token }}`  | Access token for the repo.                                                                                                 |
-| `tsconfig-root`                   | `string`     | `'./'`                 | **Deprecated**: Specifies the root directory where tsconfig will be searched. Ignored if `tsconfig-path` is specified.     |
-| `tsconfig-path`                   | `string`     |                        | Relative path from the codebase root to the tsconfig file to be used for TypeScript Graph analysis.                        |
-| `max-size`                        | `number`     | `30`                   | Limits the number of nodes to display in the graph when there are many changed files.                                      |
-| `orientation`                     | `TB` or `LR` | `'TB'`                 | Specifies the orientation (`TB` or `LR`) of the graph. Note: Mermaid may produce graphs in the opposite direction.         |
-| `debug`                           | `boolean`    | `false`                | Enables debug mode. Logs will be output in debug mode.                                                                     |
-| `in-details`                      | `boolean`    | `false`                | Specifies whether to enclose Mermaid in a `<details>` tag for collapsing.                                                  |
-| `exclude`                         | `string`     | `'node_modules, test'` | Specifies a comma-separated list of files to exclude from the graph.                                                       |
-| `include-index-file-dependencies` | `boolean`    | `false`                | Determines whether to display dependency files when the changed file is referenced from an index.ts in the same directory. |
+| Parameter                         | Type         | Default Value            | Description                                                                                                                |
+| --------------------------------- | ------------ | ------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| `access-token`                    | `string`     | `${{ github.token }}`    | Access token for the repo.                                                                                                 |
+| `tsconfig-root`                   | `string`     | `'./'`                   | **Deprecated**: Specifies the root directory where tsconfig will be searched. Ignored if `tsconfig-path` is specified.     |
+| `tsconfig-path`                   | `string`     |                          | Relative path from the codebase root to the tsconfig file to be used for TypeScript Graph analysis.                        |
+| `max-size`                        | `number`     | `30`                     | Limits the number of nodes to display in the graph when there are many changed files.                                      |
+| `orientation`                     | `TB` or `LR` | `'TB'`                   | Specifies the orientation (`TB` or `LR`) of the graph. Note: Mermaid may produce graphs in the opposite direction.         |
+| `debug`                           | `boolean`    | `false`                  | Enables debug mode. Logs will be output in debug mode.                                                                     |
+| `in-details`                      | `boolean`    | `false`                  | Specifies whether to enclose Mermaid in a `<details>` tag for collapsing.                                                  |
+| `exclude`                         | `string`     | `'node_modules, test'`   | Specifies a comma-separated list of files to exclude from the graph.                                                       |
+| `include-index-file-dependencies` | `boolean`    | `false`                  | Determines whether to display dependency files when the changed file is referenced from an index.ts in the same directory. |
+| `comment-title`                   | `string`     | `Delta TypeScript Graph` | Specifies the title of the comment posted on the PR. Useful for distinguishing analyses in monorepos or multiple CI runs.  |
 
 To use these parameters, include them under the `with` section of your workflow file when using this Action. For example:
 

@@ -92,10 +92,12 @@ export default class GitHub {
   }
 
   /**
-   * コメントのタイトルは同一コメントを探す際にも使用する
+   * ワークフロー名を取得する。
+   *
+   * @returns ワークフロー名
    */
-  public getCommentTitle() {
-    return `## Delta TypeScript Graph<!--${github.context.workflow}-->`;
+  public getWorkflowName() {
+    return github.context.workflow;
   }
 
   /**
@@ -103,7 +105,7 @@ export default class GitHub {
    *
    * 同一PR内では同一コメントを上書きし続ける。
    */
-  public async commentToPR(body: string) {
+  public async commentToPR(fullCommentTitle: string, body: string) {
     const owner = github.context.repo.owner;
     const repo = github.context.repo.repo;
     const issue_number = github.context.payload.number;
@@ -126,7 +128,7 @@ export default class GitHub {
 
     // 2. 既存のコメントがあれば、そのコメントのIDを取得する
     const existingComment = comments.data.find(comment =>
-      comment.body?.trim().startsWith(this.getCommentTitle()),
+      comment.body?.trim().startsWith(fullCommentTitle),
     );
 
     if (existingComment) {
@@ -159,7 +161,7 @@ export default class GitHub {
   /**
    * PRのコメントを削除する
    */
-  public async deleteComment() {
+  public async deleteComment(fullCommentTitle: string) {
     const owner = github.context.repo.owner;
     const repo = github.context.repo.repo;
     const issue_number = github.context.payload.number;
@@ -181,7 +183,7 @@ export default class GitHub {
 
     // 2. 既存のコメントがあれば、そのコメントのIDを取得する
     const existingComment = comments.data.find(comment =>
-      comment.body?.trim().startsWith(this.getCommentTitle()),
+      comment.body?.trim().startsWith(fullCommentTitle),
     );
 
     if (existingComment) {

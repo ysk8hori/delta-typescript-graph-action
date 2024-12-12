@@ -2,6 +2,7 @@
 
 exports[`削除がある場合 1`] = `
 [
+  "## Delta TypeScript Graph<!--test-workflow.yml-->",
   "
 ## Delta TypeScript Graph<!--test-workflow.yml-->
 

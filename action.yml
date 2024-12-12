@@ -37,6 +37,10 @@ inputs:
     description: 'Whether to display dependencies of index.ts files that refer to the change target files'
     required: false
     default: false
+  comment-title:
+    description: 'Specifies the title of the comment posted on the PR.'
+    required: false
+    default: 'Delta TypeScript Graph'
 runs:
   using: 'node20'
   main: 'dist/index.js'
