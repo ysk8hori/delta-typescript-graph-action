@@ -30,6 +30,7 @@ export async function outputGraph(
     files.deleted.map(({ filename }) => filename),
     files.modified.map(({ filename }) => filename),
     files.renamed,
+    context,
   );
 
   if (graph.nodes.length === 0) {

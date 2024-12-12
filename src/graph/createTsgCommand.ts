@@ -1,3 +1,5 @@
+import { Context } from '../utils/context';
+
 /**
  * コメントに出力する tsg コマンドを生成する
  *
@@ -5,20 +7,26 @@
  */
 export function createTsgCommand({
   includes,
-  excludes,
   abstractions,
+  context,
 }: {
   includes: string[];
-  excludes: string[];
   abstractions: string[];
+  context: Context;
 }) {
+  console.log('context.config', context.config);
   const includeOption =
     includes.length === 0 ? '' : ` --include ${includes.join(' ')}`;
   const highlightOption =
     includes.length === 0 ? '' : ` --highlight ${includes.join(' ')}`;
   const excludeOption =
-    excludes.length === 0 ? '' : ` --exclude ${excludes.join(' ')}`;
+    context.config.exclude.length === 0
+      ? ''
+      : ` --exclude ${context.config.exclude.join(' ')}`;
   const abstractionOption =
     abstractions.length === 0 ? '' : ` --abstraction ${abstractions.join(' ')}`;
+  const tsconfigPath = context.config.tsconfigPath
+    ? ` --tsconfig ${context.config.tsconfigPath}`
+    : '';
   return `tsg ${includeOption}${highlightOption}${excludeOption}${abstractionOption}`;
 }

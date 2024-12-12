@@ -10,7 +10,7 @@ export function getDummyContext(): Context {
       orientation: {},
       debugEnabled: false,
       inDetails: false,
-      exclude: [],
+      exclude: ['node_modules'],
       includeIndexFileDependencies: false,
       commentTitle: '',
     },

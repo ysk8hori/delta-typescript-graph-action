@@ -8,10 +8,10 @@ import extractAbstractionTarget from './extractAbstractionTarget';
 import extractNoAbstractionDirs from './extractNoAbstractionDirs';
 import updateRelationsStatus from './updateRelationsStatus';
 import { filterGraph } from '@ysk8hori/typescript-graph/dist/src/graph/filterGraph';
-import { exclude } from '../utils/config';
 import { extractAbstractionTargetFromGraphs } from './extractAbstractionTargetFromGraphs';
 import { createTsgCommand } from './createTsgCommand';
 import { createIncludeList } from './createIncludeList';
+import { Context } from '../utils/context';
 
 /** ２つのグラフからその差分を反映した１つのグラフを生成する */
 export default function mergeGraphsWithDifferences(
@@ -23,6 +23,7 @@ export default function mergeGraphsWithDifferences(
   renamed:
     | { filename: string; previous_filename: string | undefined }[]
     | undefined,
+  context: Context,
 ) {
   const { createdRelations, deletedRelations } = updateRelationsStatus(
     fullBaseGraph,
@@ -52,7 +53,7 @@ export default function mergeGraphsWithDifferences(
 
   const graph = pipe(
     mergedGraph,
-    graph => filterGraph(includes, exclude(), graph),
+    graph => filterGraph(includes, context.config.exclude, graph),
     graph => (
       log('filteredGraph.nodes.length:', graph.nodes.length),
       log('filteredGraph.relations.length:', graph.relations.length),
@@ -74,8 +75,8 @@ export default function mergeGraphsWithDifferences(
 
   const tsgCommand = createTsgCommand({
     includes,
-    excludes: exclude(),
     abstractions: extractAbstractionTargetFromGraphs(graph),
+    context,
   });
 
   return { graph, tsgCommand };

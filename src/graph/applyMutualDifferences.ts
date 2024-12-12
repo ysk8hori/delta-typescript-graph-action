@@ -6,10 +6,10 @@ import addStatus from './addStatus';
 import extractAbstractionTarget from './extractAbstractionTarget';
 import extractNoAbstractionDirs from './extractNoAbstractionDirs';
 import { filterGraph } from '@ysk8hori/typescript-graph/dist/src/graph/filterGraph';
-import { exclude } from '../utils/config';
 import { extractAbstractionTargetFromGraphs } from './extractAbstractionTargetFromGraphs';
 import { createTsgCommand } from './createTsgCommand';
 import { createIncludeList } from './createIncludeList';
+import { Context } from '../utils/context';
 
 /**
  * ２つのグラフの差分を互いに反映する。
@@ -25,6 +25,7 @@ export default function applyMutualDifferences(
     | undefined,
   fullBaseGraph: Graph,
   fullHeadGraph: Graph,
+  context: Context,
 ) {
   const includes = createIncludeList({
     created,
@@ -43,7 +44,7 @@ export default function applyMutualDifferences(
   log('abstractionTargetsForBase:', abstractionTargetsForBase);
   const baseGraph = pipe(
     fullBaseGraph,
-    graph => filterGraph(includes, exclude(), graph),
+    graph => filterGraph(includes, context.config.exclude, graph),
     graph => (
       log('filtered base graph.nodes.length:', graph.nodes.length),
       log('filtered base graph.relations.length:', graph.relations.length),
@@ -68,7 +69,7 @@ export default function applyMutualDifferences(
   log('abstractionTargetsForHead:', abstractionTargetsForHead);
   const headGraph = pipe(
     fullHeadGraph,
-    graph => filterGraph(includes, exclude(), graph),
+    graph => filterGraph(includes, context.config.exclude, graph),
     graph => (
       log('filtered head graph.nodes.length:', graph.nodes.length),
       log('filtered head graph.relations.length:', graph.relations.length),
@@ -87,8 +88,8 @@ export default function applyMutualDifferences(
 
   const tsgCommand = createTsgCommand({
     includes,
-    excludes: exclude(),
     abstractions: extractAbstractionTargetFromGraphs(baseGraph, headGraph),
+    context,
   });
 
   return { baseGraph, headGraph, tsgCommand };

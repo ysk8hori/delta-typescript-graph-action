@@ -32,6 +32,7 @@ export async function output2Graphs(
     files.renamed,
     fullBaseGraph,
     fullHeadGraph,
+    context,
   );
 
   const github = context.github;
