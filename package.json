@@ -34,7 +34,7 @@
   "dependencies": {
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.0",
-    "@ysk8hori/typescript-graph": "0.17.0",
+    "@ysk8hori/typescript-graph": "0.17.1",
     "remeda": "^2.0.0"
   }
 }
