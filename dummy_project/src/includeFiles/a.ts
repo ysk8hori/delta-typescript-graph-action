@@ -12,5 +12,6 @@ export default async function a() {
   childA();
   a2();
   b2();
+  // hoge
 }
 import { log } from '../utils';
