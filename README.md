@@ -114,8 +114,8 @@ This Action provides several parameters to customize its behavior. You can speci
 | Parameter                         | Type         | Default Value            | Description                                                                                                                |
 | --------------------------------- | ------------ | ------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
 | `access-token`                    | `string`     | `${{ github.token }}`    | Access token for the repo.                                                                                                 |
-| `tsconfig-root`                   | `string`     | `'./'`                   | **Deprecated**: Specifies the root directory where tsconfig will be searched. Ignored if `tsconfig-path` is specified.     |
-| `tsconfig-path`                   | `string`     |                          | Relative path from the codebase root to the tsconfig file to be used for TypeScript Graph analysis.                        |
+| `tsconfig-root`                   | `string`     | `'./'`                   | **Deprecated**: Specifies the root directory where tsconfig will be searched. Ignored if `tsconfig` is specified.          |
+| `tsconfig`                        | `string`     |                          | Relative path from the codebase root to the tsconfig file to be used for TypeScript Graph analysis.                        |
 | `max-size`                        | `number`     | `30`                     | Limits the number of nodes to display in the graph when there are many changed files.                                      |
 | `orientation`                     | `TB` or `LR` | `'TB'`                   | Specifies the orientation (`TB` or `LR`) of the graph. Note: Mermaid may produce graphs in the opposite direction.         |
 | `debug`                           | `boolean`    | `false`                  | Enables debug mode. Logs will be output in debug mode.                                                                     |
@@ -131,7 +131,7 @@ steps:
   - uses: ysk8hori/delta-typescript-graph-action@v # specify latest version
     with:
       access-token: ${{ secrets.GITHUB_TOKEN }}
-      tsconfig-path: './my-app/tsconfig.json'
+      tsconfig: './my-app/tsconfig.json'
       max-size: 20
       orientation: 'LR'
       debug: true

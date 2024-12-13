@@ -1,7 +1,7 @@
 import { createGraph } from '@ysk8hori/typescript-graph/dist/src/graph/createGraph';
 import { Graph, Meta } from '@ysk8hori/typescript-graph/dist/src/models';
 import { execSync } from 'child_process';
-import { getTsconfigRoot, getTsconfigPath } from './utils/config';
+import { getTsconfigRoot, getTsconfig } from './utils/config';
 import GitHub from './utils/github';
 import { getCreateGraphsArguments } from './tsg/getCreateGraphsArguments';
 
@@ -26,13 +26,13 @@ export default function getFullGraph() {
   execSync(`git fetch origin ${github.getHeadSha()}`);
   execSync(`git checkout ${github.getHeadSha()}`);
 
-  // - tsconfig-path が指定されているが、そのファイルが存在しない場合は空のグラフとする
+  // - tsconfig が指定されているが、そのファイルが存在しない場合は空のグラフとする
   //   （createGraph は指定された tsconfig がない場合、カレントディレクトリより上に向かって tsconfig.json を探すが、ここではそれをしたくない）
-  // - tsconfig-path が指定されていない場合は、tsconfig-root から tsconfig.json を探索する
-  const tsconfigPath = getTsconfigPath();
+  // - tsconfig が指定されていない場合は、tsconfig-root から tsconfig.json を探索する
+  const tsconfig = getTsconfig();
   const tsconfigRoot = getTsconfigRoot();
   const argumentsForHeadBranch = getCreateGraphsArguments({
-    tsconfigPath,
+    tsconfig,
     tsconfigRoot,
   });
   const { graph: fullHeadGraph } = argumentsForHeadBranch
@@ -45,7 +45,7 @@ export default function getFullGraph() {
   // base の Graph を生成
 
   const argumentsForBaseBranch = getCreateGraphsArguments({
-    tsconfigPath,
+    tsconfig,
     tsconfigRoot,
   });
   const { graph: fullBaseGraph } = argumentsForBaseBranch

@@ -7,10 +7,10 @@ inputs:
     required: false
     default: ${{ github.token }}
   tsconfig-root:
-    description: '(Deprecated: Use tsconfig-path instead.) Specifies the root directory where tsconfig will be searched.'
+    description: '(Deprecated: Use tsconfig instead.) Specifies the root directory where tsconfig will be searched.'
     required: false
     default: './'
-  tsconfig-path:
+  tsconfig:
     description: 'Specifies the path to the tsconfig file.'
     required: false
   max-size:

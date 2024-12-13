@@ -28,61 +28,61 @@ test('tsconfigRoot を指定するとそれが dir に設定される', () => {
 
 test.each([
   {
-    tsconfigPath: './tsconfig.json',
+    tsconfig: './tsconfig.json',
     expected: {
       tsconfig: './tsconfig.json',
       dir: './',
     },
   },
   {
-    tsconfigPath: './tsconfig.json5',
+    tsconfig: './tsconfig.json5',
     expected: {
       tsconfig: './tsconfig.json5',
       dir: './',
     },
   },
   {
-    tsconfigPath: './my_app/tsconfig.json',
+    tsconfig: './my_app/tsconfig.json',
     expected: {
       tsconfig: './my_app/tsconfig.json',
       dir: './my_app/',
     },
   },
 ])(
-  'tsconfigPath を指定するとそれが tsconfig に、tsconfig のあるディレクトリが dir に設定される',
-  ({ tsconfigPath, expected }) => {
+  'tsconfig を指定するとそれが tsconfig に、tsconfig のあるディレクトリが dir に設定される',
+  ({ tsconfig, expected }) => {
     const mockExistsSync = jest.fn();
     mockExistsSync.mockReturnValueOnce(true);
     fs.existsSync = mockExistsSync;
 
-    expect(getCreateGraphsArguments({ tsconfigPath })).toStrictEqual(expected);
+    expect(getCreateGraphsArguments({ tsconfig })).toStrictEqual(expected);
   },
 );
 
-test('tsconfigPath が存在しない場合は undefined を返す', () => {
+test('tsconfig が存在しない場合は undefined を返す', () => {
   const mockExistsSync = jest.fn();
   mockExistsSync.mockReturnValueOnce(false);
   fs.existsSync = mockExistsSync;
 
   expect(
-    getCreateGraphsArguments({ tsconfigPath: './tsconfig.json' }),
+    getCreateGraphsArguments({ tsconfig: './tsconfig.json' }),
   ).toBeUndefined();
 });
 
 test.each([
-  { tsconfigPath: './tsconfig' },
-  { tsconfigPath: './tsconfig/' },
-  { tsconfigPath: './tsconfig.yaml' },
-  { tsconfigPath: './tsconfig.json.js' },
-])('json でない場合は undefined を返す', ({ tsconfigPath }) => {
+  { tsconfig: './tsconfig' },
+  { tsconfig: './tsconfig/' },
+  { tsconfig: './tsconfig.yaml' },
+  { tsconfig: './tsconfig.json.js' },
+])('json でない場合は undefined を返す', ({ tsconfig }) => {
   const mockExistsSync = jest.fn();
   mockExistsSync.mockReturnValueOnce(true);
   fs.existsSync = mockExistsSync;
 
-  expect(getCreateGraphsArguments({ tsconfigPath })).toBeUndefined();
+  expect(getCreateGraphsArguments({ tsconfig })).toBeUndefined();
 });
 
-test('tsconfigRoot と tsconfigPath を指定すると tsconfigRoot は無視される', () => {
+test('tsconfigRoot と tsconfig を指定すると tsconfigRoot は無視される', () => {
   const mockExistsSync = jest.fn();
   mockExistsSync.mockReturnValueOnce(true);
   fs.existsSync = mockExistsSync;
@@ -90,7 +90,7 @@ test('tsconfigRoot と tsconfigPath を指定すると tsconfigRoot は無視さ
   expect(
     getCreateGraphsArguments({
       tsconfigRoot: './',
-      tsconfigPath: './my_app/tsconfig.json',
+      tsconfig: './my_app/tsconfig.json',
     }),
   ).toStrictEqual({
     tsconfig: './my_app/tsconfig.json',

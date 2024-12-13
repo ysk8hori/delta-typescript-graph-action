@@ -5,7 +5,7 @@ import GitHub from './github';
 export type Context = {
   config: {
     tsconfigRoot: string;
-    tsconfigPath: string | undefined;
+    tsconfig: string | undefined;
     maxSize: number;
     orientation: { TB: true } | { LR: true } | {};
     debugEnabled: boolean;

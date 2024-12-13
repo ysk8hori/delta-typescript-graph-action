@@ -3,12 +3,12 @@ import GitHub from './github';
 
 export function getDummyContext(context?: {
   configExclude?: string[];
-  configTsconfigPath?: string;
+  configTsconfig?: string;
 }): Context {
   return {
     config: {
       tsconfigRoot: '',
-      tsconfigPath: context?.configTsconfigPath ?? '',
+      tsconfig: context?.configTsconfig ?? '',
       maxSize: 0,
       orientation: {},
       debugEnabled: false,

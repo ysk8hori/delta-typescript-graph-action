@@ -41,26 +41,26 @@ test('exclude を指定した場合は `--exclude` を出力する', () => {
   ).toBe('tsg --exclude a.ts b.tsx');
 });
 
-test('tsconfigPath を指定した場合は `--tsconfig` を出力する', () => {
+test('tsconfig を指定した場合は `--tsconfig` を出力する', () => {
   expect(
     createTsgCommand({
       includes: [],
       abstractions: [],
       context: getDummyContext({
-        configTsconfigPath: './my-app/tsconfig.json',
+        configTsconfig: './my-app/tsconfig.json',
         configExclude: [],
       }),
     }),
   ).toBe('tsg --tsconfig ./my-app/tsconfig.json');
 });
 
-test('tsconfigPath を指定した場合は include 等のパスを tsconfig からの相対パスに変換する', () => {
+test('tsconfig を指定した場合は include 等のパスを tsconfig からの相対パスに変換する', () => {
   expect(
     createTsgCommand({
       includes: ['my-app/src/a.ts'],
       abstractions: ['my-app/src/c.ts'],
       context: getDummyContext({
-        configTsconfigPath: './my-app/tsconfig.json',
+        configTsconfig: './my-app/tsconfig.json',
         configExclude: ['my-app/src/e.ts'],
       }),
     }),

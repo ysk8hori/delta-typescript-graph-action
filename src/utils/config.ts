@@ -5,7 +5,7 @@ import { uniqueString } from './reducer';
 /** tsconfig のルートディレクトリ */
 const TSCONFIG_ROOT = 'tsconfig-root';
 /** tsconfig のパス */
-const TSCONFIG_PATH = 'tsconfig-path';
+const TSCONFIG_PATH = 'tsconfig';
 /** 変更ファイル数が多い場合にグラフの表示を抑止するが、その際のノード数を指定する値 */
 const MAX_SIZE = 'max-size';
 /** グラフの方向を指定する */
@@ -33,7 +33,7 @@ export function getTsconfigRoot(): string {
 /**
  * tsconfig.json のパスを取得する。ファイル名が異なる場合などにはこちらを指定する。
  */
-export function getTsconfigPath(): string | undefined {
+export function getTsconfig(): string | undefined {
   return core.getInput(TSCONFIG_PATH) ?? undefined;
 }
 
@@ -92,7 +92,7 @@ export function getCommentTitle(): string {
 export function getConfig() {
   return {
     tsconfigRoot: getTsconfigRoot(),
-    tsconfigPath: getTsconfigPath(),
+    tsconfig: getTsconfig(),
     maxSize: getMaxSize(),
     orientation: getOrientation(),
     debugEnabled: isDebugEnabled(),

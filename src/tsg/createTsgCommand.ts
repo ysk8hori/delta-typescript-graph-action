@@ -15,9 +15,9 @@ export function createTsgCommand({
   abstractions: string[];
   context: Context;
 }) {
-  const tsconfigRoot = context.config.tsconfigPath
+  const tsconfigRoot = context.config.tsconfig
     ? path
-        .relative('./', path.resolve(context.config.tsconfigPath))
+        .relative('./', path.resolve(context.config.tsconfig))
         ?.split('/')
         .slice(0, -1)
         .join('/')
@@ -48,8 +48,8 @@ export function createTsgCommand({
     abstractions.length === 0
       ? ''
       : `--abstraction ${abstractions.map(convertToRelatedPathFromTsconfig).join(' ')}`;
-  const tsconfigPath = context.config.tsconfigPath
-    ? `--tsconfig ${context.config.tsconfigPath}`
+  const tsconfig = context.config.tsconfig
+    ? `--tsconfig ${context.config.tsconfig}`
     : '';
   return [
     'tsg',
@@ -57,7 +57,7 @@ export function createTsgCommand({
     highlightOption,
     excludeOption,
     abstractionOption,
-    tsconfigPath,
+    tsconfig,
   ]
     .filter(Boolean)
     .join(' ')
