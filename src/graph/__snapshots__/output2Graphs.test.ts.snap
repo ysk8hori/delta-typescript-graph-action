@@ -9,7 +9,7 @@ exports[`削除がある場合 1`] = `
 
 
 \`\`\`bash
-tsg  --include src/B.tsx src/A.tsx --highlight src/B.tsx src/A.tsx --exclude node_modules --abstraction src/1
+tsg --include src/B.tsx src/A.tsx --highlight src/B.tsx src/A.tsx --exclude node_modules --abstraction src/1
 \`\`\`
 
 ### Base Branch

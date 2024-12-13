@@ -16,17 +16,28 @@ export function createTsgCommand({
 }) {
   console.log('context.config', context.config);
   const includeOption =
-    includes.length === 0 ? '' : ` --include ${includes.join(' ')}`;
+    includes.length === 0 ? '' : `--include ${includes.join(' ')}`;
   const highlightOption =
-    includes.length === 0 ? '' : ` --highlight ${includes.join(' ')}`;
+    includes.length === 0 ? '' : `--highlight ${includes.join(' ')}`;
   const excludeOption =
     context.config.exclude.length === 0
       ? ''
-      : ` --exclude ${context.config.exclude.join(' ')}`;
+      : `--exclude ${context.config.exclude.join(' ')}`;
   const abstractionOption =
-    abstractions.length === 0 ? '' : ` --abstraction ${abstractions.join(' ')}`;
+    abstractions.length === 0 ? '' : `--abstraction ${abstractions.join(' ')}`;
   const tsconfigPath = context.config.tsconfigPath
-    ? ` --tsconfig ${context.config.tsconfigPath}`
+    ? `--tsconfig ${context.config.tsconfigPath}`
     : '';
-  return `tsg ${includeOption}${highlightOption}${excludeOption}${abstractionOption}`;
+  return [
+    'tsg',
+    includeOption,
+    highlightOption,
+    excludeOption,
+    abstractionOption,
+    tsconfigPath,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .trim();
+  // return `tsg${includeOption}${highlightOption}${excludeOption}${abstractionOption}`.trim();
 }

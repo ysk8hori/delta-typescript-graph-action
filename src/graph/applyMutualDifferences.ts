@@ -7,7 +7,7 @@ import extractAbstractionTarget from './extractAbstractionTarget';
 import extractNoAbstractionDirs from './extractNoAbstractionDirs';
 import { filterGraph } from '@ysk8hori/typescript-graph/dist/src/graph/filterGraph';
 import { extractAbstractionTargetFromGraphs } from './extractAbstractionTargetFromGraphs';
-import { createTsgCommand } from './createTsgCommand';
+import { createTsgCommand } from '../tsg/createTsgCommand';
 import { createIncludeList } from './createIncludeList';
 import { Context } from '../utils/context';
 

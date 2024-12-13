@@ -1,16 +1,19 @@
 import { Context } from './context';
 import GitHub from './github';
 
-export function getDummyContext(): Context {
+export function getDummyContext(context?: {
+  configExclude?: string[];
+  configTsconfigPath?: string;
+}): Context {
   return {
     config: {
       tsconfigRoot: '',
-      tsconfigPath: '',
+      tsconfigPath: context?.configTsconfigPath ?? '',
       maxSize: 0,
       orientation: {},
       debugEnabled: false,
       inDetails: false,
-      exclude: ['node_modules'],
+      exclude: context?.configExclude ?? ['node_modules'],
       includeIndexFileDependencies: false,
       commentTitle: '',
     },
