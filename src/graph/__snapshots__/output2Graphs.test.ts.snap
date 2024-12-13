@@ -2,13 +2,14 @@
 
 exports[`削除がある場合 1`] = `
 [
+  "## Delta TypeScript Graph<!--test-workflow.yml-->",
   "
 ## Delta TypeScript Graph<!--test-workflow.yml-->
 
 
 
 \`\`\`bash
-tsg  --include src/B.tsx src/A.tsx --highlight src/B.tsx src/A.tsx --exclude node_modules --abstraction src/1
+tsg --include src/B.tsx src/A.tsx --highlight src/B.tsx src/A.tsx --exclude node_modules --abstraction src/1
 \`\`\`
 
 ### Base Branch

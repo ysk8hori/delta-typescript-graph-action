@@ -7,9 +7,12 @@ inputs:
     required: false
     default: ${{ github.token }}
   tsconfig-root:
-    description: 'Root directory of tsconfig to search'
+    description: '(Deprecated: Use tsconfig instead.) Specifies the root directory where tsconfig will be searched.'
     required: false
     default: './'
+  tsconfig:
+    description: 'Specifies the path to the tsconfig file.'
+    required: false
   max-size:
     description: 'Maximum number of nodes to display in the graph when there are many change files'
     required: false
@@ -34,6 +37,10 @@ inputs:
     description: 'Whether to display dependencies of index.ts files that refer to the change target files'
     required: false
     default: false
+  comment-title:
+    description: 'Specifies the title of the comment posted on the PR.'
+    required: false
+    default: 'Delta TypeScript Graph'
 runs:
   using: 'node20'
   main: 'dist/index.js'

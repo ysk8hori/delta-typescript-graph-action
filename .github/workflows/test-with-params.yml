@@ -13,13 +13,14 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Delta Typescript Graph
         id: tsg
-        uses: ysk8hori/delta-typescript-graph-action@79d3037357a9f971e7787fab3700c11d2c1d2f83
+        uses: ysk8hori/delta-typescript-graph-action@d316cd3fce9aed2c8069d071ca2e6062c9e87117
         with:
           access-token: ${{ secrets.GITHUB_TOKEN }}
-          tsconfig-root: './src'
+          tsconfig-root: './'
           max-size: 3
           orientation: LR
           debug: true
           in-details: true
           exclude: 'test'
           include-index-file-dependencies: true
+          comment-title: 'Delta TSG with params'

@@ -4,6 +4,8 @@ import { uniqueString } from './reducer';
 
 /** tsconfig のルートディレクトリ */
 const TSCONFIG_ROOT = 'tsconfig-root';
+/** tsconfig のパス */
+const TSCONFIG_PATH = 'tsconfig';
 /** 変更ファイル数が多い場合にグラフの表示を抑止するが、その際のノード数を指定する値 */
 const MAX_SIZE = 'max-size';
 /** グラフの方向を指定する */
@@ -16,6 +18,8 @@ const IN_DETAILS = 'in-details';
 const EXCLUDE = 'exclude';
 /** 変更対象のファイルが同階層の index.ts などから参照されている場合、その index.ts への依存ファイルも表示するかどうか */
 const INCLUDE_INDEX_FILE_DEPENDENCIES = 'include-index-file-dependencies';
+/** コメントのタイトル */
+const COMMENT_TITLE = 'comment-title';
 
 /**
  * tsconfig を探索するディレクトリ情報を取得する。
@@ -24,6 +28,13 @@ const INCLUDE_INDEX_FILE_DEPENDENCIES = 'include-index-file-dependencies';
  */
 export function getTsconfigRoot(): string {
   return core.getInput(TSCONFIG_ROOT) ?? './';
+}
+
+/**
+ * tsconfig.json のパスを取得する。ファイル名が異なる場合などにはこちらを指定する。
+ */
+export function getTsconfig(): string | undefined {
+  return core.getInput(TSCONFIG_PATH) ?? undefined;
 }
 
 /** 変更ファイル数が多い場合にグラフの表示を抑止するが、その際のノード数を指定する値を取得する。 */
@@ -71,4 +82,24 @@ export function exclude(): string[] {
 /** 変更対象のファイルが同階層の index.ts などから参照されている場合、その index.ts への依存ファイルも表示するかどうか */
 export function isIncludeIndexFileDependencies(): boolean {
   return core.getInput(INCLUDE_INDEX_FILE_DEPENDENCIES) === 'true';
+}
+
+/** コメントのタイトルを取得する */
+export function getCommentTitle(): string {
+  return core.getInput(COMMENT_TITLE) ?? 'Delta TypeScript Graph';
+}
+
+export function getConfig() {
+  return {
+    tsconfigRoot: getTsconfigRoot(),
+    tsconfig: getTsconfig(),
+    maxSize: getMaxSize(),
+    orientation: getOrientation(),
+    debugEnabled: isDebugEnabled(),
+    inDetails: isInDetails(),
+    exclude: exclude(),
+    includeIndexFileDependencies: isIncludeIndexFileDependencies(),
+    /** Action の parameter として指定された comment-title */
+    commentTitle: getCommentTitle(),
+  };
 }

@@ -1,9 +1,17 @@
 import { createGraph } from '@ysk8hori/typescript-graph/dist/src/graph/createGraph';
+import { Graph, Meta } from '@ysk8hori/typescript-graph/dist/src/models';
 import { execSync } from 'child_process';
-import { log } from './utils/log';
-import { getTsconfigRoot } from './utils/config';
-import path from 'path';
+import { getTsconfigRoot, getTsconfig } from './utils/config';
 import GitHub from './utils/github';
+import { getCreateGraphsArguments } from './tsg/getCreateGraphsArguments';
+
+const emptyGraph = {
+  graph: {
+    nodes: [],
+    relations: [],
+  } as Graph,
+  meta: undefined,
+} as const;
 
 /**
  * TypeScript Graph の createGraph を使い head と base の Graph を生成する
@@ -17,20 +25,39 @@ export default function getFullGraph() {
   // head の Graph を生成するために head に checkout する
   execSync(`git fetch origin ${github.getHeadSha()}`);
   execSync(`git checkout ${github.getHeadSha()}`);
-  // head の Graph を生成
-  const { graph: fullHeadGraph, meta } = createGraph({
-    dir: path.resolve(getTsconfigRoot()),
+
+  // - tsconfig が指定されているが、そのファイルが存在しない場合は空のグラフとする
+  //   （createGraph は指定された tsconfig がない場合、カレントディレクトリより上に向かって tsconfig.json を探すが、ここではそれをしたくない）
+  // - tsconfig が指定されていない場合は、tsconfig-root から tsconfig.json を探索する
+  const tsconfig = getTsconfig();
+  const tsconfigRoot = getTsconfigRoot();
+  const argumentsForHeadBranch = getCreateGraphsArguments({
+    tsconfig,
+    tsconfigRoot,
   });
-  log('fullHeadGraph.nodes.length:', fullHeadGraph.nodes.length);
-  log('fullHeadGraph.relations.length:', fullHeadGraph.relations.length);
+  const { graph: fullHeadGraph } = argumentsForHeadBranch
+    ? createGraph(argumentsForHeadBranch)
+    : emptyGraph;
+
   // base の Graph を生成するために base に checkout する
   execSync(`git fetch origin ${github.getBaseSha()}`);
   execSync(`git checkout ${github.getBaseSha()}`);
   // base の Graph を生成
-  const { graph: fullBaseGraph } = createGraph({
-    dir: path.resolve(getTsconfigRoot()),
+
+  const argumentsForBaseBranch = getCreateGraphsArguments({
+    tsconfig,
+    tsconfigRoot,
   });
-  log('fullBaseGraph.nodes.length:', fullBaseGraph.nodes.length);
-  log('fullBaseGraph.relations.length:', fullBaseGraph.relations.length);
-  return { fullHeadGraph, fullBaseGraph, meta };
+  const { graph: fullBaseGraph } = argumentsForBaseBranch
+    ? createGraph(argumentsForBaseBranch)
+    : emptyGraph;
+
+  return {
+    fullHeadGraph,
+    fullBaseGraph,
+    meta: {
+      // TODO: meta の rootDir を本来の目的とは異なる用途で利用しているため、そのうち修正する
+      rootDir: (argumentsForHeadBranch ?? argumentsForBaseBranch)?.dir ?? './',
+    } satisfies Meta,
+  };
 }

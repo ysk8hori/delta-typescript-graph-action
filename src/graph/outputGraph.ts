@@ -2,8 +2,8 @@ import mermaidify from '@ysk8hori/typescript-graph/dist/src/mermaidify';
 import { Graph, Meta } from '@ysk8hori/typescript-graph/dist/src/models';
 import { getMaxSize, getOrientation, isInDetails } from '../utils/config';
 import mergeGraphsWithDifferences from './mergeGraphsWithDifferences';
-import GitHub from '../utils/github';
 import { info } from '../utils/log';
+import { Context } from '../utils/context';
 
 type FileInfoList = {
   filename: string;
@@ -20,8 +20,9 @@ export async function outputGraph(
     modified: FileInfoList;
     renamed: FileInfoList;
   },
+  context: Context,
 ) {
-  const github = new GitHub();
+  const github = context.github;
   const { graph, tsgCommand } = mergeGraphsWithDifferences(
     fullBaseGraph,
     fullHeadGraph,
@@ -29,19 +30,22 @@ export async function outputGraph(
     files.deleted.map(({ filename }) => filename),
     files.modified.map(({ filename }) => filename),
     files.renamed,
+    context,
   );
 
   if (graph.nodes.length === 0) {
     // グラフが空の場合は表示しない
-    await github.deleteComment();
+    await github.deleteComment(context.fullCommentTitle);
     info('The graph is empty.');
     return;
   }
 
   if (graph.nodes.length > getMaxSize()) {
     // グラフが大きすぎる場合は表示しない
-    await github.commentToPR(`
-${github.getCommentTitle()}
+    await github.commentToPR(
+      context.fullCommentTitle,
+      `
+${context.fullCommentTitle}
 
 ${outputIfInDetails(`
 <details>
@@ -59,18 +63,22 @@ ${tsgCommand}
 \`\`\`
 
 ${outputIfInDetails('</details>')}
-`);
+`,
+    );
     return;
   }
 
   const mermaidLines: string[] = [];
   await mermaidify((arg: string) => mermaidLines.push(arg), graph, {
+    // TODO: mermaidify の rootDir は意味がないのでそのうち消す
     rootDir: meta.rootDir,
     ...getOrientation(),
   });
 
-  await github.commentToPR(`
-${github.getCommentTitle()}
+  await github.commentToPR(
+    context.fullCommentTitle,
+    `
+${context.fullCommentTitle}
 
 ${outputIfInDetails(`
 <details>
@@ -86,7 +94,8 @@ ${mermaidLines.join('')}
 \`\`\`
 
 ${outputIfInDetails('</details>')}
-`);
+`,
+  );
 }
 
 /** isMermaidInDetails() の結果が true ならば与えられた文字列を返し、そうでなければ空文字を返す関数。 */
