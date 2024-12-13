@@ -1,9 +1,10 @@
+import path from 'path';
 import { Context } from '../utils/context';
 
 /**
  * コメントに出力する tsg コマンドを生成する
  *
- * このコマンドは、コメント中に出力するグラフとは異なる結果となるものであるが、あると便利と思われるので出力している。
+ * このコマンドは、厳密にはコメント中に出力するグラフとは異なる結果となるものであるが、あると便利と思われるので出力している。
  */
 export function createTsgCommand({
   includes,
@@ -14,17 +15,39 @@ export function createTsgCommand({
   abstractions: string[];
   context: Context;
 }) {
-  console.log('context.config', context.config);
+  const tsconfigRoot = context.config.tsconfigPath
+    ? path
+        .relative('./', path.resolve(context.config.tsconfigPath))
+        ?.split('/')
+        .slice(0, -1)
+        .join('/')
+        .concat('/')
+    : undefined; // context.config.tsconfigRoot は一旦考えない
+  // TODO: tsg は tsconfig から相対パスでファイルパスを出力しないようになったら、以下の関数は使用しないようにする。
+  // 現状、tsg コマンドで指定可能なファイルのパスは、--tsconfig からの相対パスとなる。
+  // しかし、Delta TypeScript Graph Action においてはリポジトリのルートからの相対パスで指定になっている。
+  // そのため、ここで入力された includes 等々のパスは tsg に合わせて tsconfig からの相対パスに変換する。
+  function convertToRelatedPathFromTsconfig(path: string) {
+    if (!tsconfigRoot) return path;
+    return path.replace(new RegExp(`^${tsconfigRoot}`), '');
+  }
+
   const includeOption =
-    includes.length === 0 ? '' : `--include ${includes.join(' ')}`;
+    includes.length === 0
+      ? ''
+      : `--include ${includes.map(convertToRelatedPathFromTsconfig).join(' ')}`;
   const highlightOption =
-    includes.length === 0 ? '' : `--highlight ${includes.join(' ')}`;
+    includes.length === 0
+      ? ''
+      : `--highlight ${includes.map(convertToRelatedPathFromTsconfig).join(' ')}`;
   const excludeOption =
     context.config.exclude.length === 0
       ? ''
-      : `--exclude ${context.config.exclude.join(' ')}`;
+      : `--exclude ${context.config.exclude.map(convertToRelatedPathFromTsconfig).join(' ')}`;
   const abstractionOption =
-    abstractions.length === 0 ? '' : `--abstraction ${abstractions.join(' ')}`;
+    abstractions.length === 0
+      ? ''
+      : `--abstraction ${abstractions.map(convertToRelatedPathFromTsconfig).join(' ')}`;
   const tsconfigPath = context.config.tsconfigPath
     ? `--tsconfig ${context.config.tsconfigPath}`
     : '';
@@ -39,5 +62,4 @@ export function createTsgCommand({
     .filter(Boolean)
     .join(' ')
     .trim();
-  // return `tsg${includeOption}${highlightOption}${excludeOption}${abstractionOption}`.trim();
 }

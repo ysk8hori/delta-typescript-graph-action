@@ -53,3 +53,18 @@ test('tsconfigPath を指定した場合は `--tsconfig` を出力する', () =>
     }),
   ).toBe('tsg --tsconfig ./my-app/tsconfig.json');
 });
+
+test('tsconfigPath を指定した場合は include 等のパスを tsconfig からの相対パスに変換する', () => {
+  expect(
+    createTsgCommand({
+      includes: ['my-app/src/a.ts'],
+      abstractions: ['my-app/src/c.ts'],
+      context: getDummyContext({
+        configTsconfigPath: './my-app/tsconfig.json',
+        configExclude: ['my-app/src/e.ts'],
+      }),
+    }),
+  ).toBe(
+    'tsg --include src/a.ts --highlight src/a.ts --exclude src/e.ts --abstraction src/c.ts --tsconfig ./my-app/tsconfig.json',
+  );
+});
