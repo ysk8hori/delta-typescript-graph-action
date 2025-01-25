@@ -1,13 +1,13 @@
-import { abstraction } from '@ysk8hori/typescript-graph/dist/src/graph/abstraction';
-import { mergeGraph } from '@ysk8hori/typescript-graph/dist/src/graph/utils';
-import { Graph } from '@ysk8hori/typescript-graph/dist/src/models';
+import { abstraction } from '@ysk8hori/typescript-graph';
+import { mergeGraph } from '@ysk8hori/typescript-graph';
+import { Graph } from '@ysk8hori/typescript-graph';
 import { pipe } from 'remeda';
 import { log } from '../utils/log';
 import addStatus from './addStatus';
 import extractAbstractionTarget from './extractAbstractionTarget';
 import extractNoAbstractionDirs from './extractNoAbstractionDirs';
 import updateRelationsStatus from './updateRelationsStatus';
-import { filterGraph } from '@ysk8hori/typescript-graph/dist/src/graph/filterGraph';
+import { filterGraph } from '@ysk8hori/typescript-graph';
 import { extractAbstractionTargetFromGraphs } from './extractAbstractionTargetFromGraphs';
 import { createTsgCommand } from '../tsg/createTsgCommand';
 import { createIncludeList } from './createIncludeList';
@@ -33,7 +33,7 @@ export default function mergeGraphsWithDifferences(
   log('deletedRelations:', deletedRelations);
 
   // base と head のグラフをマージする
-  const mergedGraph = mergeGraph(fullHeadGraph, fullBaseGraph);
+  const mergedGraph = mergeGraph([fullHeadGraph, fullBaseGraph]);
   log('mergedGraph.nodes.length:', mergedGraph.nodes.length);
   log('mergedGraph.relations.length:', mergedGraph.relations.length);
 

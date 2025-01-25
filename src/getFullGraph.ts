@@ -1,17 +1,26 @@
-import { createGraph } from '@ysk8hori/typescript-graph/dist/src/graph/createGraph';
-import { Graph, Meta } from '@ysk8hori/typescript-graph/dist/src/models';
+import {
+  Graph,
+  GraphAnalyzer,
+  mergeGraph,
+  Meta,
+  ProjectTraverser,
+  resolveTsconfig,
+} from '@ysk8hori/typescript-graph';
 import { execSync } from 'child_process';
-import { getTsconfigRoot, getTsconfig } from './utils/config';
+import { getTsconfigRoot, getTsconfigPath } from './utils/config';
 import GitHub from './utils/github';
 import { getCreateGraphsArguments } from './tsg/getCreateGraphsArguments';
+import { isNot, map, pipe } from 'remeda';
+import { Context } from './utils/context';
 
-const emptyGraph = {
-  graph: {
-    nodes: [],
-    relations: [],
-  } as Graph,
-  meta: undefined,
-} as const;
+/** word に該当するか */
+const bindMatchFunc = (word: string) => (filePath: string) =>
+  filePath.toLowerCase().includes(word.toLowerCase());
+/** 抽象的な判定関数 */
+const judge = (filePath: string) => (f: (filePath: string) => boolean) =>
+  f(filePath);
+const matchSome = (words: string[]) => (filePath: string) =>
+  words.map(bindMatchFunc).some(judge(filePath));
 
 /**
  * TypeScript Graph の createGraph を使い head と base の Graph を生成する
@@ -20,44 +29,48 @@ const emptyGraph = {
  *
  * また、処理に時間がかかるため Promise を返す。
  */
-export default function getFullGraph() {
+export default function getFullGraph(context: Context) {
+  const isNotMatchSomeExclude = isNot(matchSome(context.config.exclude ?? []));
   const github = new GitHub();
   // head の Graph を生成するために head に checkout する
   execSync(`git fetch origin ${github.getHeadSha()}`);
   execSync(`git checkout ${github.getHeadSha()}`);
 
-  // - tsconfig が指定されているが、そのファイルが存在しない場合は空のグラフとする
-  //   （createGraph は指定された tsconfig がない場合、カレントディレクトリより上に向かって tsconfig.json を探すが、ここではそれをしたくない）
-  // - tsconfig が指定されていない場合は、tsconfig-root から tsconfig.json を探索する
-  const tsconfig = getTsconfig();
-  const tsconfigRoot = getTsconfigRoot();
-  const argumentsForHeadBranch = getCreateGraphsArguments({
-    tsconfig,
-    tsconfigRoot,
-  });
-  const { graph: fullHeadGraph } = argumentsForHeadBranch
-    ? createGraph(argumentsForHeadBranch)
-    : emptyGraph;
+  const fullHeadGraph = getGraph(context);
 
   // base の Graph を生成するために base に checkout する
   execSync(`git fetch origin ${github.getBaseSha()}`);
   execSync(`git checkout ${github.getBaseSha()}`);
   // base の Graph を生成
 
-  const argumentsForBaseBranch = getCreateGraphsArguments({
-    tsconfig,
-    tsconfigRoot,
-  });
-  const { graph: fullBaseGraph } = argumentsForBaseBranch
-    ? createGraph(argumentsForBaseBranch)
-    : emptyGraph;
+  const fullBaseGraph = getGraph(context);
 
   return {
     fullHeadGraph,
     fullBaseGraph,
-    meta: {
-      // TODO: meta の rootDir を本来の目的とは異なる用途で利用しているため、そのうち修正する
-      rootDir: (argumentsForHeadBranch ?? argumentsForBaseBranch)?.dir ?? './',
-    } satisfies Meta,
   };
+}
+
+function getGraph(context: Context) {
+  const tsconfigInfo = getCreateGraphsArguments(context.config);
+  // - tsconfig が指定されているが、そのファイルが存在しない場合は空のグラフとする
+  //   （createGraph は指定された tsconfig がない場合、カレントディレクトリより上に向かって tsconfig.json を探すが、ここではそれをしたくない）
+  // - tsconfig が指定されていない場合は、tsconfig-root から tsconfig.json を探索する
+  if (!tsconfigInfo) {
+    return {
+      nodes: [],
+      relations: [],
+    } satisfies Graph;
+  }
+
+  const tsConfig = resolveTsconfig(tsconfigInfo);
+  const traverserForHead = new ProjectTraverser(tsConfig);
+  return pipe(
+    traverserForHead.traverse(
+      isNot(matchSome(context.config.exclude ?? [])),
+      GraphAnalyzer.create,
+    ),
+    map(([analyzer]) => analyzer.generateGraph()),
+    mergeGraph,
+  );
 }

@@ -1,7 +1,4 @@
-import {
-  Graph,
-  ChangeStatus,
-} from '@ysk8hori/typescript-graph/dist/src/models';
+import { Graph, ChangeStatus } from '@ysk8hori/typescript-graph';
 
 export default function addStatus(
   {

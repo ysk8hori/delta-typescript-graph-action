@@ -1,4 +1,4 @@
-import { Graph, Node } from '@ysk8hori/typescript-graph/dist/src/models';
+import { Graph, Node } from '@ysk8hori/typescript-graph';
 import { outputGraph } from './outputGraph';
 import GitHub from '../utils/github';
 import { getDummyContext } from '../utils/dummyContext';
@@ -36,14 +36,10 @@ test('出力可能なグラフがない場合は何も出力しない', async ()
     nodes: [],
     relations: [],
   };
-  const meta = {
-    rootDir: '',
-  };
   const context = getDummyContext();
   await outputGraph(
     graph,
     graph,
-    meta,
     {
       created: [],
       deleted: [],
@@ -63,21 +59,18 @@ test('追加や依存の削除がある場合', async () => {
         from: a,
         to: c,
         kind: 'depends_on',
-        fullText: '',
         changeStatus: 'not_modified',
       },
       {
         from: a,
         to: d,
         kind: 'depends_on',
-        fullText: '',
         changeStatus: 'not_modified',
       },
       {
         from: d,
         to: e,
         kind: 'depends_on',
-        fullText: '',
         changeStatus: 'not_modified',
       },
     ],
@@ -89,34 +82,27 @@ test('追加や依存の削除がある場合', async () => {
         from: a,
         to: b,
         kind: 'depends_on',
-        fullText: '',
         changeStatus: 'not_modified',
       },
       {
         from: a,
         to: d,
         kind: 'depends_on',
-        fullText: '',
         changeStatus: 'not_modified',
       },
       {
         from: d,
         to: e,
         kind: 'depends_on',
-        fullText: '',
         changeStatus: 'not_modified',
       },
     ],
-  };
-  const meta = {
-    rootDir: '',
   };
   const commentToPR = jest.fn();
   const context = getDummyContext();
   await outputGraph(
     graphA,
     graphB,
-    meta,
     {
       created: [{ filename: b.path, previous_filename: undefined }],
       deleted: [],

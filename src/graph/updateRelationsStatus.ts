@@ -3,7 +3,7 @@ import {
   RelationOfDependsOn,
   isSameRelation,
   Relation,
-} from '@ysk8hori/typescript-graph/dist/src/models';
+} from '@ysk8hori/typescript-graph';
 import { pipe, filter, forEach } from 'remeda';
 
 /** 削除された Relation にマークをつける */

@@ -1,6 +1,5 @@
 import fs from 'fs';
 import { log } from '../utils/log';
-import { createGraph } from '@ysk8hori/typescript-graph/dist/src/graph/createGraph';
 
 export function getCreateGraphsArguments({
   tsconfig,
@@ -8,7 +7,12 @@ export function getCreateGraphsArguments({
 }: {
   tsconfig?: string;
   tsconfigRoot?: string;
-}): Parameters<typeof createGraph>[0] | undefined {
+}):
+  | {
+      dir: string | undefined;
+      tsconfig?: string;
+    }
+  | undefined {
   // 基本、root も path もないことはない
   if (!tsconfigRoot && !tsconfig) return undefined;
   if (tsconfig) {

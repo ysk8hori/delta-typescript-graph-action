@@ -1,4 +1,4 @@
-import { Graph, Node } from '@ysk8hori/typescript-graph/dist/src/models';
+import { Graph, Node } from '@ysk8hori/typescript-graph';
 import { output2Graphs } from './output2Graphs';
 import { getDummyContext } from '../utils/dummyContext';
 
@@ -38,28 +38,24 @@ test('削除がある場合', async () => {
         from: a,
         to: b,
         kind: 'depends_on',
-        fullText: '',
         changeStatus: 'not_modified',
       },
       {
         from: a,
         to: c,
         kind: 'depends_on',
-        fullText: '',
         changeStatus: 'not_modified',
       },
       {
         from: a,
         to: d,
         kind: 'depends_on',
-        fullText: '',
         changeStatus: 'not_modified',
       },
       {
         from: d,
         to: e,
         kind: 'depends_on',
-        fullText: '',
         changeStatus: 'not_modified',
       },
     ],
@@ -71,33 +67,26 @@ test('削除がある場合', async () => {
         from: a,
         to: c,
         kind: 'depends_on',
-        fullText: '',
         changeStatus: 'not_modified',
       },
       {
         from: a,
         to: d,
         kind: 'depends_on',
-        fullText: '',
         changeStatus: 'not_modified',
       },
       {
         from: d,
         to: e,
         kind: 'depends_on',
-        fullText: '',
         changeStatus: 'not_modified',
       },
     ],
-  };
-  const meta = {
-    rootDir: '',
   };
   const context = getDummyContext();
   await output2Graphs(
     base,
     head,
-    meta,
     {
       created: [],
       deleted: [{ filename: b.path, previous_filename: undefined }],

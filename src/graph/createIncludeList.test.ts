@@ -1,4 +1,4 @@
-import { Node, Relation } from '@ysk8hori/typescript-graph/dist/src/models';
+import { Node, Relation } from '@ysk8hori/typescript-graph';
 import { createIncludeList } from './createIncludeList';
 import { isIncludeIndexFileDependencies } from '../utils/config';
 
@@ -54,7 +54,6 @@ test('TSG_INCLUDE_INDEX_FILE_DEPENDENCIES が false の場合は include 対象�
                 path: 'src/a.ts',
               } satisfies Node,
               changeStatus: 'not_modified',
-              fullText: '',
               kind: 'depends_on',
             } satisfies Relation,
           ],
@@ -94,7 +93,6 @@ test('TSG_INCLUDE_INDEX_FILE_DEPENDENCIES が true の場合は include 対象�
                 path: 'src/a.ts',
               } satisfies Node,
               changeStatus: 'not_modified',
-              fullText: '',
               kind: 'depends_on',
             } satisfies Relation,
           ],
