@@ -1,4 +1,4 @@
-import { Graph, Node } from '@ysk8hori/typescript-graph/dist/src/models';
+import { Graph, Node } from '@ysk8hori/typescript-graph';
 import updateRelationsStatus from './updateRelationsStatus';
 
 test('updateRelationsStatus は削除されたリレーションに deleted のステータスを付与する', () => {
@@ -25,14 +25,12 @@ test('updateRelationsStatus は削除されたリレーションに deleted の�
         to: b,
         kind: 'depends_on',
         changeStatus: 'not_modified',
-        fullText: '',
       },
       {
         from: a,
         to: c,
         kind: 'depends_on',
         changeStatus: 'not_modified',
-        fullText: '',
       },
     ],
   };
@@ -44,7 +42,6 @@ test('updateRelationsStatus は削除されたリレーションに deleted の�
         to: b,
         kind: 'depends_on',
         changeStatus: 'not_modified',
-        fullText: '',
       },
     ],
   };
@@ -81,7 +78,6 @@ test('updateRelationsStatus は削除されたリレーションに deleted の�
             "name": "A",
             "path": "src/A.tsx",
           },
-          "fullText": "",
           "kind": "depends_on",
           "to": {
             "changeStatus": "not_modified",
@@ -96,7 +92,6 @@ test('updateRelationsStatus は削除されたリレーションに deleted の�
             "name": "A",
             "path": "src/A.tsx",
           },
-          "fullText": "",
           "kind": "depends_on",
           "to": {
             "changeStatus": "not_modified",
@@ -111,7 +106,6 @@ test('updateRelationsStatus は削除されたリレーションに deleted の�
     {
       changeStatus: 'deleted',
       from: a,
-      fullText: '',
       kind: 'depends_on',
       to: c,
     },
@@ -143,7 +137,6 @@ test('updateRelationsStatus は作成されたリレーションに created の�
         to: b,
         kind: 'depends_on',
         changeStatus: 'not_modified',
-        fullText: '',
       },
     ],
   };
@@ -155,14 +148,12 @@ test('updateRelationsStatus は作成されたリレーションに created の�
         to: b,
         kind: 'depends_on',
         changeStatus: 'not_modified',
-        fullText: '',
       },
       {
         from: a,
         to: c,
         kind: 'depends_on',
         changeStatus: 'not_modified',
-        fullText: '',
       },
     ],
   };
@@ -199,7 +190,6 @@ test('updateRelationsStatus は作成されたリレーションに created の�
             "name": "A",
             "path": "src/A.tsx",
           },
-          "fullText": "",
           "kind": "depends_on",
           "to": {
             "changeStatus": "not_modified",
@@ -214,7 +204,6 @@ test('updateRelationsStatus は作成されたリレーションに created の�
             "name": "A",
             "path": "src/A.tsx",
           },
-          "fullText": "",
           "kind": "depends_on",
           "to": {
             "changeStatus": "not_modified",
@@ -230,7 +219,6 @@ test('updateRelationsStatus は作成されたリレーションに created の�
     {
       changeStatus: 'created',
       from: a,
-      fullText: '',
       kind: 'depends_on',
       to: c,
     },

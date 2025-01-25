@@ -1,4 +1,4 @@
-import { Graph } from '@ysk8hori/typescript-graph/dist/src/models';
+import { Graph } from '@ysk8hori/typescript-graph';
 import { isIncludeIndexFileDependencies } from '../utils/config';
 import { extractIndexFileDependencies } from './extractIndexFileDependencies';
 

@@ -1,11 +1,11 @@
-import { abstraction } from '@ysk8hori/typescript-graph/dist/src/graph/abstraction';
-import { Graph } from '@ysk8hori/typescript-graph/dist/src/models';
+import { abstraction } from '@ysk8hori/typescript-graph';
+import { Graph } from '@ysk8hori/typescript-graph';
 import { pipe } from 'remeda';
 import { log } from '../utils/log';
 import addStatus from './addStatus';
 import extractAbstractionTarget from './extractAbstractionTarget';
 import extractNoAbstractionDirs from './extractNoAbstractionDirs';
-import { filterGraph } from '@ysk8hori/typescript-graph/dist/src/graph/filterGraph';
+import { filterGraph } from '@ysk8hori/typescript-graph';
 import { extractAbstractionTargetFromGraphs } from './extractAbstractionTargetFromGraphs';
 import { createTsgCommand } from '../tsg/createTsgCommand';
 import { createIncludeList } from './createIncludeList';

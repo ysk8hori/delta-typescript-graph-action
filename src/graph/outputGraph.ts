@@ -1,5 +1,5 @@
-import mermaidify from '@ysk8hori/typescript-graph/dist/src/mermaidify';
-import { Graph, Meta } from '@ysk8hori/typescript-graph/dist/src/models';
+import { mermaidify } from '@ysk8hori/typescript-graph';
+import { Graph, Meta } from '@ysk8hori/typescript-graph';
 import { getMaxSize, getOrientation, isInDetails } from '../utils/config';
 import mergeGraphsWithDifferences from './mergeGraphsWithDifferences';
 import { info } from '../utils/log';
@@ -13,7 +13,6 @@ type FileInfoList = {
 export async function outputGraph(
   fullBaseGraph: Graph,
   fullHeadGraph: Graph,
-  meta: Meta,
   files: {
     created: FileInfoList;
     deleted: FileInfoList;
@@ -69,11 +68,11 @@ ${outputIfInDetails('</details>')}
   }
 
   const mermaidLines: string[] = [];
-  await mermaidify((arg: string) => mermaidLines.push(arg), graph, {
-    // TODO: mermaidify の rootDir は意味がないのでそのうち消す
-    rootDir: meta.rootDir,
-    ...getOrientation(),
-  });
+  await mermaidify(
+    (arg: string) => mermaidLines.push(arg),
+    graph,
+    getOrientation(),
+  );
 
   await github.commentToPR(
     context.fullCommentTitle,

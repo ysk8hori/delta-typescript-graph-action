@@ -1,4 +1,4 @@
-import { Node, Relation } from '@ysk8hori/typescript-graph/dist/src/models';
+import { Node, Relation } from '@ysk8hori/typescript-graph';
 import { extractIndexFileDependencies } from './extractIndexFileDependencies';
 
 test('すべて空配列でもエラーとならない', () => {
@@ -47,7 +47,6 @@ function relation(from: Node, to: Node): Relation {
     from: from,
     to: to,
     changeStatus: 'not_modified',
-    fullText: '',
     kind: 'depends_on',
   };
 }

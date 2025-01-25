@@ -1,4 +1,4 @@
-import type mermaidify from '@ysk8hori/typescript-graph/dist/src/mermaidify';
+import type { mermaidify } from '@ysk8hori/typescript-graph';
 import * as core from '@actions/core';
 import { uniqueString } from './reducer';
 
@@ -33,7 +33,7 @@ export function getTsconfigRoot(): string {
 /**
  * tsconfig.json のパスを取得する。ファイル名が異なる場合などにはこちらを指定する。
  */
-export function getTsconfig(): string | undefined {
+export function getTsconfigPath(): string | undefined {
   return core.getInput(TSCONFIG_PATH) ?? undefined;
 }
 
@@ -92,7 +92,7 @@ export function getCommentTitle(): string {
 export function getConfig() {
   return {
     tsconfigRoot: getTsconfigRoot(),
-    tsconfig: getTsconfig(),
+    tsconfig: getTsconfigPath(),
     maxSize: getMaxSize(),
     orientation: getOrientation(),
     debugEnabled: isDebugEnabled(),

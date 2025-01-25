@@ -69,7 +69,6 @@ it('グラフと、抽象化してはいけないファイルのパスから、�
               name: 'getAnswerClass.ts',
               changeStatus: 'not_modified',
             },
-            fullText: 'getAnswerClass',
             changeStatus: 'not_modified',
           },
           {
@@ -84,7 +83,6 @@ it('グラフと、抽象化してはいけないファイルのパスから、�
               name: 'MemoLayer.tsx',
               changeStatus: 'not_modified',
             },
-            fullText: 'MemoLayer, { Props as MemoLayerProps }',
             changeStatus: 'not_modified',
           },
           {
@@ -99,7 +97,6 @@ it('グラフと、抽象化してはいけないファイルのパスから、�
               name: 'atoms.ts',
               changeStatus: 'not_modified',
             },
-            fullText: '{ AnswerImageVariant }',
             changeStatus: 'not_modified',
           },
           {
@@ -114,7 +111,6 @@ it('グラフと、抽象化してはいけないファイルのパスから、�
               name: 'Hoge.ts',
               changeStatus: 'not_modified',
             },
-            fullText: 'hoge',
             changeStatus: 'not_modified',
           },
           {
@@ -129,7 +125,6 @@ it('グラフと、抽象化してはいけないファイルのパスから、�
               name: 'Cell.tsx',
               changeStatus: 'not_modified',
             },
-            fullText: 'Cell',
             changeStatus: 'not_modified',
           },
           {
@@ -144,7 +139,6 @@ it('グラフと、抽象化してはいけないファイルのパスから、�
               name: 'Cell.tsx',
               changeStatus: 'not_modified',
             },
-            fullText: 'Cell',
             changeStatus: 'not_modified',
           },
           {
@@ -159,7 +153,6 @@ it('グラフと、抽象化してはいけないファイルのパスから、�
               name: 'Cell.tsx',
               changeStatus: 'not_modified',
             },
-            fullText: 'Cell',
             changeStatus: 'not_modified',
           },
         ],

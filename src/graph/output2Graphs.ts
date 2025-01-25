@@ -1,5 +1,4 @@
-import mermaidify from '@ysk8hori/typescript-graph/dist/src/mermaidify';
-import { Graph, Meta } from '@ysk8hori/typescript-graph/dist/src/models';
+import { mermaidify, Graph, Meta } from '@ysk8hori/typescript-graph';
 import { getMaxSize, getOrientation, isInDetails } from '../utils/config';
 import applyMutualDifferences from './applyMutualDifferences';
 import { info } from '../utils/log';
@@ -16,7 +15,6 @@ type FileInfoList = {
 export async function output2Graphs(
   fullBaseGraph: Graph,
   fullHeadGraph: Graph,
-  meta: Meta,
   files: {
     created: FileInfoList;
     deleted: FileInfoList;
@@ -77,19 +75,20 @@ ${outputIfInDetails('</details>')}
 
   // base の書き出し
   const baseLines: string[] = [];
-  await mermaidify((arg: string) => baseLines.push(arg), baseGraph, {
-    // TODO: mermaidify の rootDir は意味がないのでそのうち消す
-    rootDir: meta.rootDir,
-    ...getOrientation(),
-  });
+  const orientation = getOrientation();
+  await mermaidify(
+    (arg: string) => baseLines.push(arg),
+    baseGraph,
+    orientation,
+  );
 
   // head の書き出し
   const headLines: string[] = [];
-  await mermaidify((arg: string) => headLines.push(arg), headGraph, {
-    // TODO: mermaidify の rootDir は意味がないのでそのうち消す
-    rootDir: meta.rootDir,
-    ...getOrientation(),
-  });
+  await mermaidify(
+    (arg: string) => headLines.push(arg),
+    headGraph,
+    orientation,
+  );
 
   await github.commentToPR(
     context.fullCommentTitle,
