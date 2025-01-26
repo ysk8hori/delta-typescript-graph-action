@@ -1,10 +1,9 @@
 import type {
   Graph,
   RelationOfDependsOn,
-  Relation} from '@ysk8hori/typescript-graph';
-import {
-  isSameRelation
+  Relation,
 } from '@ysk8hori/typescript-graph';
+import { isSameRelation } from '@ysk8hori/typescript-graph';
 import { pipe, filter, forEach } from 'remeda';
 
 /** 削除された Relation にマークをつける */
