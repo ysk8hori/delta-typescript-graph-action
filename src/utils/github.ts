@@ -1,10 +1,10 @@
+import { execSync } from 'child_process';
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { info, log } from './log';
-import { execSync } from 'child_process';
 import { retry } from './retry';
 
-export type PullRequestFileInfo = {
+export interface PullRequestFileInfo {
   filename: string;
   status:
     | 'added'
@@ -15,15 +15,15 @@ export type PullRequestFileInfo = {
     | 'changed'
     | 'unchanged';
   previous_filename: string | undefined;
-};
+}
 
-export type PullRequestFilesInfo = {
+export interface PullRequestFilesInfo {
   created: PullRequestFileInfo[];
   deleted: PullRequestFileInfo[];
   modified: PullRequestFileInfo[];
   renamed: PullRequestFileInfo[];
   unchanged: PullRequestFileInfo[];
-};
+}
 
 /**
  * 400、401、403、404、422、451を除く、サーバーの4xx/5xx応答の場合はエラーをスローする。
@@ -109,7 +109,6 @@ export default class GitHub {
     const owner = github.context.repo.owner;
     const repo = github.context.repo.repo;
     const issue_number = github.context.payload.number;
-    github.context.workflow;
     // 1. 既存のコメントを取得する
     const comments = await retry(() =>
       this.#octokit.rest.issues

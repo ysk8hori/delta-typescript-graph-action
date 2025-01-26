@@ -1,17 +1,15 @@
-import { abstraction } from '@ysk8hori/typescript-graph';
-import { mergeGraph } from '@ysk8hori/typescript-graph';
-import { Graph } from '@ysk8hori/typescript-graph';
+import type { Graph } from '@ysk8hori/typescript-graph';
+import { abstraction , mergeGraph  , filterGraph } from '@ysk8hori/typescript-graph';
 import { pipe } from 'remeda';
 import { log } from '../utils/log';
+import { createTsgCommand } from '../tsg/createTsgCommand';
+import type { Context } from '../utils/context';
 import addStatus from './addStatus';
 import extractAbstractionTarget from './extractAbstractionTarget';
 import extractNoAbstractionDirs from './extractNoAbstractionDirs';
 import updateRelationsStatus from './updateRelationsStatus';
-import { filterGraph } from '@ysk8hori/typescript-graph';
 import { extractAbstractionTargetFromGraphs } from './extractAbstractionTargetFromGraphs';
-import { createTsgCommand } from '../tsg/createTsgCommand';
 import { createIncludeList } from './createIncludeList';
-import { Context } from '../utils/context';
 
 /** ２つのグラフからその差分を反映した１つのグラフを生成する */
 export default function mergeGraphsWithDifferences(

@@ -1,17 +1,16 @@
+import { execSync } from 'child_process';
+import type {
+  Graph} from '@ysk8hori/typescript-graph';
 import {
-  Graph,
   GraphAnalyzer,
   mergeGraph,
-  Meta,
   ProjectTraverser,
   resolveTsconfig,
 } from '@ysk8hori/typescript-graph';
-import { execSync } from 'child_process';
-import { getTsconfigRoot, getTsconfigPath } from './utils/config';
+import { isNot, map, pipe } from 'remeda';
 import GitHub from './utils/github';
 import { getCreateGraphsArguments } from './tsg/getCreateGraphsArguments';
-import { isNot, map, pipe } from 'remeda';
-import { Context } from './utils/context';
+import type { Context } from './utils/context';
 
 /** word に該当するか */
 const bindMatchFunc = (word: string) => (filePath: string) =>
@@ -30,7 +29,6 @@ const matchSome = (words: string[]) => (filePath: string) =>
  * また、処理に時間がかかるため Promise を返す。
  */
 export default function getFullGraph(context: Context) {
-  const isNotMatchSomeExclude = isNot(matchSome(context.config.exclude ?? []));
   const github = new GitHub();
   // head の Graph を生成するために head に checkout する
   execSync(`git fetch origin ${github.getHeadSha()}`);

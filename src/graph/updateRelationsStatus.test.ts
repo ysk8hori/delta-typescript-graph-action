@@ -1,4 +1,4 @@
-import { Graph, Node } from '@ysk8hori/typescript-graph';
+import type { Graph, Node } from '@ysk8hori/typescript-graph';
 import updateRelationsStatus from './updateRelationsStatus';
 
 test('updateRelationsStatus は削除されたリレーションに deleted のステータスを付与する', () => {

@@ -1,5 +1,5 @@
-import { Context } from './context';
-import GitHub from './github';
+import type { Context } from './context';
+import type GitHub from './github';
 
 export function getDummyContext(context?: {
   configExclude?: string[];

@@ -1,4 +1,4 @@
-import { Graph } from '@ysk8hori/typescript-graph';
+import type { Graph } from '@ysk8hori/typescript-graph';
 import { uniqueString } from '../../utils/reducer';
 
 /**

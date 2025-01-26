@@ -1,6 +1,6 @@
-import { Node, Relation } from '@ysk8hori/typescript-graph';
-import { createIncludeList } from './createIncludeList';
+import type { Node, Relation } from '@ysk8hori/typescript-graph';
 import { isIncludeIndexFileDependencies } from '../utils/config';
+import { createIncludeList } from './createIncludeList';
 
 jest.mock('../utils/config', () => ({
   isIncludeIndexFileDependencies: jest.fn(),
