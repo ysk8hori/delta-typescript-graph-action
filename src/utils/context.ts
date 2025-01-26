@@ -1,4 +1,4 @@
-import { createCommentTitle } from '../graph/createCommentTitle';
+import { createCommentTitle } from './createCommentTitle';
 import { getConfig } from './config';
 import type { FilesChanged } from './github';
 import GitHub from './github';
