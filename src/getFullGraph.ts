@@ -1,6 +1,5 @@
 import { execSync } from 'child_process';
-import type {
-  Graph} from '@ysk8hori/typescript-graph';
+import type { Graph } from '@ysk8hori/typescript-graph';
 import {
   GraphAnalyzer,
   mergeGraph,
@@ -28,7 +27,7 @@ const matchSome = (words: string[]) => (filePath: string) =>
  *
  * また、処理に時間がかかるため Promise を返す。
  */
-export default function getFullGraph(context: Context) {
+export default function getFullGraph(context: Pick<Context, 'config'>) {
   const github = new GitHub();
   // head の Graph を生成するために head に checkout する
   execSync(`git fetch origin ${github.getHeadSha()}`);
@@ -49,7 +48,7 @@ export default function getFullGraph(context: Context) {
   };
 }
 
-function getGraph(context: Context) {
+function getGraph(context: Pick<Context, 'config'>) {
   const tsconfigInfo = getCreateGraphsArguments(context.config);
   // - tsconfig が指定されているが、そのファイルが存在しない場合は空のグラフとする
   //   （createGraph は指定された tsconfig がない場合、カレントディレクトリより上に向かって tsconfig.json を探すが、ここではそれをしたくない）
@@ -65,7 +64,7 @@ function getGraph(context: Context) {
   const traverserForHead = new ProjectTraverser(tsConfig);
   return pipe(
     traverserForHead.traverse(
-      isNot(matchSome(context.config.exclude ?? [])),
+      isNot(matchSome(context.config.exclude)),
       GraphAnalyzer.create,
     ),
     map(([analyzer]) => analyzer.generateGraph()),

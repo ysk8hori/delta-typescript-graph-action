@@ -27,5 +27,11 @@ export function getDummyContext(context?: {
       cloneRepo: jest.fn(),
     } as unknown as GitHub,
     fullCommentTitle: '## Delta TypeScript Graph<!--test-workflow.yml-->',
+    filesChanged: {
+      created: [],
+      deleted: [],
+      modified: [],
+      renamed: [],
+    },
   };
 }

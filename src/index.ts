@@ -6,10 +6,9 @@ import type { PullRequestFileInfo } from './utils/github';
 import { createContext } from './utils/context';
 
 async function makeGraph() {
-  const context = createContext();
+  const context = await createContext();
+  const { modified, created, deleted, renamed } = context.filesChanged;
   // 以下の *_files は src/index.ts のようなパス文字列になっている
-  const { created, deleted, modified, renamed } =
-    await context.github.getTSFiles();
   log('modified:', modified);
   log('created:', created);
   log('deleted:', deleted);
@@ -33,33 +32,9 @@ async function makeGraph() {
 
   if (deleted.length !== 0 || hasRenamedFiles(fullHeadGraph, renamed)) {
     // ファイルの削除またはリネームがある場合は Graph を2つ表示する
-    await output2Graphs(
-      fullBaseGraph,
-      // updateNodePathsToRelativeFromCurrentDir(fullBaseGraph),
-      fullHeadGraph,
-      // updateNodePathsToRelativeFromCurrentDir(fullHeadGraph),
-      {
-        created: created,
-        deleted: deleted,
-        modified: modified,
-        renamed: renamed,
-      },
-      context,
-    );
+    await output2Graphs(fullBaseGraph, fullHeadGraph, context);
   } else {
-    await outputGraph(
-      fullBaseGraph,
-      // updateNodePathsToRelativeFromCurrentDir(fullBaseGraph),
-      fullHeadGraph,
-      // updateNodePathsToRelativeFromCurrentDir(fullHeadGraph),
-      {
-        created: created,
-        deleted: deleted,
-        modified: modified,
-        renamed: renamed,
-      },
-      context,
-    );
+    await outputGraph(fullBaseGraph, fullHeadGraph, context);
   }
 }
 

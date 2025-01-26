@@ -3,23 +3,21 @@ import { mermaidify } from '@ysk8hori/typescript-graph';
 import { getMaxSize, getOrientation, isInDetails } from '../utils/config';
 import { info } from '../utils/log';
 import type { Context } from '../utils/context';
-import type { PullRequestFilesInfo } from '../utils/github';
 import mergeGraphsWithDifferences from './mergeGraphsWithDifferences';
 
 export async function outputGraph(
   fullBaseGraph: Graph,
   fullHeadGraph: Graph,
-  files: Omit<PullRequestFilesInfo, 'unchanged'>,
   context: Context,
 ) {
   const github = context.github;
   const { graph, tsgCommand } = mergeGraphsWithDifferences(
     fullBaseGraph,
     fullHeadGraph,
-    files.created.map(({ filename }) => filename),
-    files.deleted.map(({ filename }) => filename),
-    files.modified.map(({ filename }) => filename),
-    files.renamed,
+    context.filesChanged.created.map(({ filename }) => filename),
+    context.filesChanged.deleted.map(({ filename }) => filename),
+    context.filesChanged.modified.map(({ filename }) => filename),
+    context.filesChanged.renamed,
     context,
   );
 

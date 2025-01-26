@@ -36,17 +36,7 @@ test('出力可能なグラフがない場合は何も出力しない', async ()
     relations: [],
   };
   const context = getDummyContext();
-  await outputGraph(
-    graph,
-    graph,
-    {
-      created: [],
-      deleted: [],
-      modified: [],
-      renamed: [],
-    },
-    context,
-  );
+  await outputGraph(graph, graph, context);
   expect(context.github.commentToPR).not.toHaveBeenCalled();
 });
 
@@ -98,17 +88,19 @@ test('追加や依存の削除がある場合', async () => {
     ],
   };
   const context = getDummyContext();
-  await outputGraph(
-    graphA,
-    graphB,
-    {
-      created: [{ filename: b.path, previous_filename: undefined }],
+  await outputGraph(graphA, graphB, {
+    ...context,
+    filesChanged: {
+      created: [
+        { filename: b.path, previous_filename: undefined, status: 'added' },
+      ],
       deleted: [],
-      modified: [{ filename: a.path, previous_filename: undefined }],
+      modified: [
+        { filename: a.path, previous_filename: undefined, status: 'modified' },
+      ],
       renamed: [],
     },
-    context,
-  );
+  });
   expect(
     (context.github.commentToPR as jest.Mock).mock.calls[0][1],
   ).toMatchSnapshot();
