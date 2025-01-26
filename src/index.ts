@@ -8,13 +8,8 @@ import { createContext } from './utils/context';
 async function makeGraph() {
   const context = createContext();
   // 以下の *_files は src/index.ts のようなパス文字列になっている
-  const {
-    created,
-    deleted,
-    modified,
-    renamed,
-    unchanged: _,
-  } = await context.github.getTSFiles();
+  const { created, deleted, modified, renamed } =
+    await context.github.getTSFiles();
   log('modified:', modified);
   log('created:', created);
   log('deleted:', deleted);
