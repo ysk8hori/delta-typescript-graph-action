@@ -58,6 +58,7 @@ export default class GitHub {
       });
     const files = compareResult.data.files
       ?.filter(file =>
+        // TODO: tsg の isTsFile を使用する
         /\.ts$|\.tsx$|\.vue$|\.astro$|\.svelte$/.test(file.filename),
       )
       .map(file => ({
