@@ -1,9 +1,9 @@
-import { mermaidify } from '@ysk8hori/typescript-graph';
-import { Graph, Meta } from '@ysk8hori/typescript-graph';
+import type { Graph } from '@ysk8hori/typescript-graph';
+import { mermaidify  } from '@ysk8hori/typescript-graph';
 import { getMaxSize, getOrientation, isInDetails } from '../utils/config';
-import mergeGraphsWithDifferences from './mergeGraphsWithDifferences';
 import { info } from '../utils/log';
-import { Context } from '../utils/context';
+import type { Context } from '../utils/context';
+import mergeGraphsWithDifferences from './mergeGraphsWithDifferences';
 
 type FileInfoList = {
   filename: string;

@@ -1,4 +1,4 @@
-import { Node, Relation } from '@ysk8hori/typescript-graph';
+import type { Node, Relation } from '@ysk8hori/typescript-graph';
 import { extractIndexFileDependencies } from './extractIndexFileDependencies';
 
 test('すべて空配列でもエラーとならない', () => {

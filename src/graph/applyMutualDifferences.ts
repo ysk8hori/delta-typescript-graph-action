@@ -1,15 +1,14 @@
-import { abstraction } from '@ysk8hori/typescript-graph';
-import { Graph } from '@ysk8hori/typescript-graph';
+import type { Graph } from '@ysk8hori/typescript-graph';
+import { abstraction  , filterGraph } from '@ysk8hori/typescript-graph';
 import { pipe } from 'remeda';
 import { log } from '../utils/log';
+import { createTsgCommand } from '../tsg/createTsgCommand';
+import type { Context } from '../utils/context';
 import addStatus from './addStatus';
 import extractAbstractionTarget from './extractAbstractionTarget';
 import extractNoAbstractionDirs from './extractNoAbstractionDirs';
-import { filterGraph } from '@ysk8hori/typescript-graph';
 import { extractAbstractionTargetFromGraphs } from './extractAbstractionTargetFromGraphs';
-import { createTsgCommand } from '../tsg/createTsgCommand';
 import { createIncludeList } from './createIncludeList';
-import { Context } from '../utils/context';
 
 /**
  * ２つのグラフの差分を互いに反映する。

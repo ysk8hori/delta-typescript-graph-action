@@ -1,8 +1,9 @@
-import {
+import type {
   Graph,
   RelationOfDependsOn,
-  isSameRelation,
-  Relation,
+  Relation} from '@ysk8hori/typescript-graph';
+import {
+  isSameRelation
 } from '@ysk8hori/typescript-graph';
 import { pipe, filter, forEach } from 'remeda';
 

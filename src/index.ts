@@ -1,9 +1,8 @@
+import type { Graph } from '@ysk8hori/typescript-graph';
 import getFullGraph from './getFullGraph';
 import { outputGraph, output2Graphs } from './graph';
 import { info, log } from './utils/log';
-import { PullRequestFileInfo } from './utils/github';
-import { Graph, Node } from '@ysk8hori/typescript-graph';
-import path from 'path';
+import type { PullRequestFileInfo } from './utils/github';
 import { createContext } from './utils/context';
 
 async function makeGraph() {
@@ -77,28 +76,4 @@ function hasRenamedFiles(fullHeadGraph: Graph, renamed: PullRequestFileInfo[]) {
   return fullHeadGraph.nodes.some(headNode =>
     renamed?.map(({ filename }) => filename).includes(headNode.path),
   );
-}
-
-function updateNodePathsToRelativeFromCurrentDir(
-  graph: Graph,
-  /** カレントディレクトリから解析対象の tsconfig のあるディレクトリへの相対パス。`./my-app/` などを想定 */
-  rootDir: string,
-): Graph {
-  function updateNodePath(node: Node): Node {
-    return {
-      ...node,
-      path: path.join(normalizedRootDir, node.path),
-    };
-  }
-
-  const normalizedRootDir = rootDir.replace(/^.\//, '');
-  return {
-    ...graph,
-    nodes: graph.nodes.map(updateNodePath),
-    relations: graph.relations.map(relation => ({
-      ...relation,
-      from: updateNodePath(relation.from),
-      to: updateNodePath(relation.to),
-    })),
-  };
 }

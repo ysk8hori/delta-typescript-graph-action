@@ -1,5 +1,5 @@
 import path from 'path';
-import { Context } from '../utils/context';
+import type { Context } from '../utils/context';
 
 /**
  * コメントに出力する tsg コマンドを生成する

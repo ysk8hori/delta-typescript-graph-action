@@ -1,7 +1,6 @@
-import { Graph, Node } from '@ysk8hori/typescript-graph';
-import { outputGraph } from './outputGraph';
-import GitHub from '../utils/github';
+import type { Graph, Node } from '@ysk8hori/typescript-graph';
 import { getDummyContext } from '../utils/dummyContext';
+import { outputGraph } from './outputGraph';
 
 const a: Node = {
   path: 'src/A.tsx',
@@ -98,7 +97,6 @@ test('追加や依存の削除がある場合', async () => {
       },
     ],
   };
-  const commentToPR = jest.fn();
   const context = getDummyContext();
   await outputGraph(
     graphA,

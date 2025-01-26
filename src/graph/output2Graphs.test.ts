@@ -1,6 +1,6 @@
-import { Graph, Node } from '@ysk8hori/typescript-graph';
-import { output2Graphs } from './output2Graphs';
+import type { Graph, Node } from '@ysk8hori/typescript-graph';
 import { getDummyContext } from '../utils/dummyContext';
+import { output2Graphs } from './output2Graphs';
 
 const a: Node = {
   path: 'src/A.tsx',

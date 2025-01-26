@@ -1,5 +1,5 @@
-import { Graph } from '@ysk8hori/typescript-graph';
 import path from 'path';
+import type { Graph } from '@ysk8hori/typescript-graph';
 
 /** グラフと、抽象化してはいけないファイルのパスから、抽象化して良いディレクトリのパスを取得する */
 export default function extractAbstractionTarget(
