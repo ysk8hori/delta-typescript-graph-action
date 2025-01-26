@@ -14,10 +14,6 @@ export async function output2Graphs(
   context: Context,
 ) {
   const { baseGraph, headGraph, tsgCommand } = applyMutualDifferences(
-    context.filesChanged.created.map(({ filename }) => filename),
-    context.filesChanged.deleted.map(({ filename }) => filename),
-    context.filesChanged.modified.map(({ filename }) => filename),
-    context.filesChanged.renamed,
     fullBaseGraph,
     fullHeadGraph,
     context,

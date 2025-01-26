@@ -14,10 +14,6 @@ export async function outputGraph(
   const { graph, tsgCommand } = mergeGraphsWithDifferences(
     fullBaseGraph,
     fullHeadGraph,
-    context.filesChanged.created.map(({ filename }) => filename),
-    context.filesChanged.deleted.map(({ filename }) => filename),
-    context.filesChanged.modified.map(({ filename }) => filename),
-    context.filesChanged.renamed,
     context,
   );
 

@@ -13,7 +13,7 @@ export function createTsgCommand({
 }: {
   includes: string[];
   abstractions: string[];
-  context: Context;
+  context: Pick<Context, 'config'>;
 }) {
   const tsconfigRoot = context.config.tsconfig
     ? path
