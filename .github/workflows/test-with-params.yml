@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Delta Typescript Graph
         id: tsg
-        uses: ysk8hori/delta-typescript-graph-action@f7280ec67f94b084e1b79d071cf8e472cc3266fb
+        uses: ysk8hori/delta-typescript-graph-action@7d17376b59ac5d63b67aabd79c614535da4ebbfd
         with:
           access-token: ${{ secrets.GITHUB_TOKEN }}
           tsconfig-root: './'
