@@ -9,7 +9,7 @@ export function getDummyContext(context?: {
     config: {
       tsconfigRoot: '',
       tsconfig: context?.configTsconfig ?? '',
-      maxSize: 0,
+      maxSize: 100,
       orientation: {},
       debugEnabled: false,
       inDetails: false,
