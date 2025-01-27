@@ -5,7 +5,19 @@ import tseslint from 'typescript-eslint';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-  { files: ['**/*.{js,mjs,cjs,ts}'] },
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  { files: ['**/*.{ts}'] },
+  {
+    files: ['**/*.{js,mjs,cjs}'],
+    extends: [tseslint.configs.disableTypeChecked],
+  },
   { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
   pluginImportFlatConfigs.recommended,
@@ -28,6 +40,7 @@ export default [
         'error',
         { args: 'all', argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
+      '@typescript-eslint/no-floating-promises': 'error',
     },
   },
 ];
