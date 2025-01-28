@@ -6,6 +6,7 @@ import type {
 } from '@ysk8hori/typescript-graph/feature/metric/metricsModels.js';
 import { zip } from 'remeda';
 import { getIconByState } from '@ysk8hori/typescript-graph/feature/metric/functions/getIconByState.js';
+import { writeMetrics } from '@ysk8hori/typescript-graph/usecase/generateTsg/writeMetricsTable.js';
 import getFullGraph from './getFullGraph';
 import { info, log } from './utils/log';
 import type { PullRequestFileInfo } from './utils/github';
@@ -63,6 +64,8 @@ async function makeGraph() {
       filePath => allModifiedFiles.map(v => v.filename).includes(filePath),
     );
     const scoreTitles = headMetrics[0].scores.map(score => score.name);
+
+    writeMetrics(str => (message += str), headMetrics);
 
     // メトリクスの差分を計算
     const metricsMap = createScoreDiff(headMetrics, baseMetrics);
