@@ -147,6 +147,7 @@ function createScoreDiff(
       };
     });
 
+    console.log('headData.key:', headData.key);
     scoresWithDiffMap.set(headData.key, {
       ...headData,
       scores,
