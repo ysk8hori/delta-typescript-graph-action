@@ -7,13 +7,13 @@ import type {
 import { pipe, zip } from 'remeda';
 import { getIconByState } from '@ysk8hori/typescript-graph/feature/metric/functions/getIconByState.js';
 import { writeMetrics } from '@ysk8hori/typescript-graph/usecase/generateTsg/writeMetricsTable.js';
+import { unTree } from '@ysk8hori/typescript-graph/utils/Tree.js';
 import getFullGraph from './getFullGraph';
 import { info, log } from './utils/log';
 import type { PullRequestFileInfo } from './utils/github';
 import { createContext } from './utils/context';
 import { build2GraphsMessage } from './graph/build2GraphsMessage';
 import { buildGraphMessage } from './graph/buildGraphMessage';
-import { unTree } from '@ysk8hori/typescript-graph/utils/Tree.js';
 
 async function makeGraph() {
   const context = await createContext();
@@ -58,6 +58,7 @@ async function makeGraph() {
         allModifiedFiles.map(v => v.filename).includes(filePath),
       ),
       unTree,
+      toScoreFilteredMetrics,
     );
 
     const headMetrics = pipe(
@@ -65,6 +66,7 @@ async function makeGraph() {
         allModifiedFiles.map(v => v.filename).includes(filePath),
       ),
       unTree,
+      toScoreFilteredMetrics,
     );
     const scoreTitles = headMetrics[0].scores.map(score => score.name);
 
@@ -75,7 +77,6 @@ async function makeGraph() {
 
     // メトリクスの差分をファイルごとに表示
     for (const [filePath, metrics] of metricsMap) {
-      console.log('metrics:', metrics.length, filePath);
       message += `### ${filePath}\n\n`;
       // メトリクスのヘッダー
       message += `name | scope | ` + scoreTitles.join(' | ') + '\n';
@@ -127,11 +128,6 @@ function createScoreDiff(
     ...data,
     key: data.filePath + data.name,
   }));
-  console.log(
-    '▼▼▼ headFileData ▼▼▼\n',
-    JSON.stringify(headFileDataWithKey, null, 2),
-    '\n▲▲▲ headFileData ▲▲▲',
-  );
   const baseFileDataWithKey = baseFileData.map(data => ({
     ...data,
     key: data.filePath + data.name,
@@ -158,7 +154,6 @@ function createScoreDiff(
       };
     });
 
-    console.log('headData.key:', headData.key);
     scoresWithDiffMap.set(headData.key, {
       ...headData,
       scores,
@@ -176,10 +171,8 @@ function createScoreDiff(
   return array.reduce((map, currentValue) => {
     const filePath = currentValue.filePath;
     if (!map.has(filePath)) {
-      console.log('new file found:', filePath);
       map.set(filePath, []);
     }
-    console.log('push:', filePath, currentValue.name);
     map.get(filePath)?.push(currentValue);
     return map;
   }, new Map<string, FlattenMatericsWithDiff[]>());
@@ -187,4 +180,17 @@ function createScoreDiff(
 
 function round(value: number) {
   return Math.round(value * 100) / 100;
+}
+
+function toScoreFilteredMetrics(metrics: CodeMetrics[]): CodeMetrics[] {
+  return metrics.map(metric => ({
+    ...metric,
+    scores: metric.scores.filter(score =>
+      [
+        'Maintainability Index',
+        'Cognitive Complexity',
+        'semantic syntax volume',
+      ].includes(score.name),
+    ),
+  }));
 }
