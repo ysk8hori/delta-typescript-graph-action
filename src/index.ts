@@ -4,7 +4,7 @@ import type {
   CodeMetrics,
   Score,
 } from '@ysk8hori/typescript-graph/feature/metric/metricsModels.js';
-import { zip } from 'remeda';
+import { pipe, zip } from 'remeda';
 import { getIconByState } from '@ysk8hori/typescript-graph/feature/metric/functions/getIconByState.js';
 import { writeMetrics } from '@ysk8hori/typescript-graph/usecase/generateTsg/writeMetricsTable.js';
 import getFullGraph from './getFullGraph';
@@ -13,6 +13,7 @@ import type { PullRequestFileInfo } from './utils/github';
 import { createContext } from './utils/context';
 import { build2GraphsMessage } from './graph/build2GraphsMessage';
 import { buildGraphMessage } from './graph/buildGraphMessage';
+import { unTree } from '@ysk8hori/typescript-graph/utils/Tree.js';
 
 async function makeGraph() {
   const context = await createContext();
@@ -52,16 +53,18 @@ async function makeGraph() {
 
   if (traverserForHead && traverserForBase && allModifiedFiles.length !== 0) {
     message += '## Metrics\n\n';
-    const baseMetrics = calculateCodeMetrics(
-      { metrics: true },
-      traverserForBase,
-      filePath => allModifiedFiles.map(v => v.filename).includes(filePath),
+    const baseMetrics = pipe(
+      calculateCodeMetrics({ metrics: true }, traverserForBase, filePath =>
+        allModifiedFiles.map(v => v.filename).includes(filePath),
+      ),
+      unTree,
     );
 
-    const headMetrics = calculateCodeMetrics(
-      { metrics: true },
-      traverserForHead,
-      filePath => allModifiedFiles.map(v => v.filename).includes(filePath),
+    const headMetrics = pipe(
+      calculateCodeMetrics({ metrics: true }, traverserForHead, filePath =>
+        allModifiedFiles.map(v => v.filename).includes(filePath),
+      ),
+      unTree,
     );
     const scoreTitles = headMetrics[0].scores.map(score => score.name);
 
