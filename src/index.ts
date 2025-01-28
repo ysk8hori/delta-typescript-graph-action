@@ -6,7 +6,6 @@ import type {
 } from '@ysk8hori/typescript-graph/feature/metric/metricsModels.js';
 import { pipe, zip } from 'remeda';
 import { getIconByState } from '@ysk8hori/typescript-graph/feature/metric/functions/getIconByState.js';
-import { writeMetrics } from '@ysk8hori/typescript-graph/usecase/generateTsg/writeMetricsTable.js';
 import { unTree } from '@ysk8hori/typescript-graph/utils/Tree.js';
 import getFullGraph from './getFullGraph';
 import { info, log } from './utils/log';
@@ -70,8 +69,6 @@ async function makeGraph() {
     );
     const scoreTitles = headMetrics[0].scores.map(score => score.name);
 
-    writeMetrics(str => (message += str), headMetrics);
-
     // メトリクスの差分を計算
     const metricsMap = createScoreDiff(headMetrics, baseMetrics);
 
@@ -82,17 +79,21 @@ async function makeGraph() {
       message += `name | scope | ` + scoreTitles.join(' | ') + '\n';
 
       // メトリクスのヘッダーの区切り
-      message +=
-        `--- | --- | ` + scoreTitles.map(() => '---').join(' | ') + '\n';
+      message += `-- | -- | ` + scoreTitles.map(() => '--:').join(' | ') + '\n';
 
       // メトリクスの本体
       for (const metric of metrics) {
         message +=
-          `${metric.name} | ${metric.scope} | ` +
+          `${metric.scope === 'file' ? '~' : metric.name} | ${metric.scope} | ` +
           metric.scores
             .map(
               score =>
-                `${getIconByState(score.state)}${score.value}${score.diff ? `<br>(${score.diff})` : ''}`,
+                `${getIconByState(score.state)}${score.value}${
+                  score.diff
+                    ? // 全角カッコを使うことで余白を取っている
+                      `<br>（${0 < score.diff ? `+${score.diff}` : score.diff}）`
+                    : ''
+                }`,
             )
             .join(' | ') +
           '\n';
