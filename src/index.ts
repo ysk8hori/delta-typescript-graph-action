@@ -69,6 +69,7 @@ async function makeGraph() {
 
     // メトリクスの差分をファイルごとに表示
     for (const [filePath, metrics] of metricsMap) {
+      console.log('metrics:', metrics.length, filePath);
       message += `### ${filePath}\n\n`;
       // メトリクスのヘッダー
       message += `name | scope | ` + scoreTitles.join(' | ') + '\n';
@@ -141,6 +142,7 @@ function createScoreDiff(
     const scores = zipped.map(([headScore, baseScore]) => {
       return {
         ...headScore,
+        value: round(headScore.value),
         diff: round(round(headScore.value) - round(baseScore.value)),
       };
     });
@@ -159,13 +161,15 @@ function createScoreDiff(
   }
 
   const array = Array.from(scoresWithDiffMap.values());
-  return array.reduce((previousValue, currentValue) => {
+  return array.reduce((map, currentValue) => {
     const filePath = currentValue.filePath;
-    if (!previousValue.has(filePath)) {
-      previousValue.set(filePath, []);
+    if (!map.has(filePath)) {
+      console.log('new file found:', filePath);
+      map.set(filePath, []);
     }
-    previousValue.get(filePath)?.push(currentValue);
-    return previousValue;
+    console.log('push:', filePath, currentValue.name);
+    map.get(filePath)?.push(currentValue);
+    return map;
   }, new Map<string, FlattenMatericsWithDiff[]>());
 }
 
