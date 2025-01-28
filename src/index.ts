@@ -1,9 +1,10 @@
 import type { Graph } from '@ysk8hori/typescript-graph';
 import getFullGraph from './getFullGraph';
-import { outputGraph, output2Graphs } from './graph';
 import { info, log } from './utils/log';
 import type { PullRequestFileInfo } from './utils/github';
 import { createContext } from './utils/context';
+import { build2GraphsMessage } from './graph/build2GraphsMessage';
+import { buildGraphMessage } from './graph/buildGraphMessage';
 
 async function makeGraph() {
   const context = await createContext();
@@ -30,12 +31,16 @@ async function makeGraph() {
   // head のグラフが空の場合は何もしない
   if (fullHeadGraph.nodes.length === 0) return;
 
+  let message = '';
+
   if (deleted.length !== 0 || hasRenamedFiles(fullHeadGraph, renamed)) {
     // ファイルの削除またはリネームがある場合は Graph を2つ表示する
-    await output2Graphs(fullBaseGraph, fullHeadGraph, context);
+    message += await build2GraphsMessage(fullBaseGraph, fullHeadGraph, context);
   } else {
-    await outputGraph(fullBaseGraph, fullHeadGraph, context);
+    message += await buildGraphMessage(fullBaseGraph, fullHeadGraph, context);
   }
+
+  await context.github.commentToPR(context.fullCommentTitle, message);
 }
 
 makeGraph().catch(err => {
