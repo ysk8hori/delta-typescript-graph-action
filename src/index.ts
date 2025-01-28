@@ -121,6 +121,11 @@ function createScoreDiff(
     ...data,
     key: data.filePath + data.name,
   }));
+  console.log(
+    '▼▼▼ headFileData ▼▼▼\n',
+    JSON.stringify(headFileDataWithKey, null, 2),
+    '\n▲▲▲ headFileData ▲▲▲',
+  );
   const baseFileDataWithKey = baseFileData.map(data => ({
     ...data,
     key: data.filePath + data.name,
