@@ -33,41 +33,51 @@ export default function getFullGraph(context: Pick<Context, 'config'>) {
   execSync(`git fetch origin ${github.getHeadSha()}`);
   execSync(`git checkout ${github.getHeadSha()}`);
 
-  const fullHeadGraph = getGraph(context);
+  const [fullHeadGraph, traverserForHead] = getGraph(context);
 
   // base の Graph を生成するために base に checkout する
   execSync(`git fetch origin ${github.getBaseSha()}`);
   execSync(`git checkout ${github.getBaseSha()}`);
   // base の Graph を生成
 
-  const fullBaseGraph = getGraph(context);
+  const [fullBaseGraph, traverserForBase] = getGraph(context);
 
   return {
     fullHeadGraph,
     fullBaseGraph,
+    traverserForHead,
+    traverserForBase,
   };
 }
 
-function getGraph(context: Pick<Context, 'config'>) {
+function getGraph(
+  context: Pick<Context, 'config'>,
+): [Graph, ProjectTraverser | undefined] {
   const tsconfigInfo = getCreateGraphsArguments(context.config);
   // - tsconfig が指定されているが、そのファイルが存在しない場合は空のグラフとする
   //   （createGraph は指定された tsconfig がない場合、カレントディレクトリより上に向かって tsconfig.json を探すが、ここではそれをしたくない）
   // - tsconfig が指定されていない場合は、tsconfig-root から tsconfig.json を探索する
   if (!tsconfigInfo) {
-    return {
-      nodes: [],
-      relations: [],
-    } satisfies Graph;
+    return [
+      {
+        nodes: [],
+        relations: [],
+      } satisfies Graph,
+      undefined,
+    ];
   }
 
   const tsConfig = resolveTsconfig(tsconfigInfo);
-  const traverserForHead = new ProjectTraverser(tsConfig);
-  return pipe(
-    traverserForHead.traverse(
-      isNot(matchSome(context.config.exclude)),
-      GraphAnalyzer.create,
+  const traverser = new ProjectTraverser(tsConfig);
+  return [
+    pipe(
+      traverser.traverse(
+        isNot(matchSome(context.config.exclude)),
+        GraphAnalyzer.create,
+      ),
+      map(([analyzer]) => analyzer.generateGraph()),
+      mergeGraph,
     ),
-    map(([analyzer]) => analyzer.generateGraph()),
-    mergeGraph,
-  );
+    traverser,
+  ] as const;
 }

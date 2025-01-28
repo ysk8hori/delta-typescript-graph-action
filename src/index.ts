@@ -1,4 +1,6 @@
 import type { Graph } from '@ysk8hori/typescript-graph';
+import { calculateCodeMetrics } from '@ysk8hori/typescript-graph/feature/metric/calculateCodeMetrics.js';
+import { writeMetrics } from '@ysk8hori/typescript-graph/usecase/generateTsg/writeMetricsTable.js';
 import getFullGraph from './getFullGraph';
 import { info, log } from './utils/log';
 import type { PullRequestFileInfo } from './utils/github';
@@ -14,15 +16,17 @@ async function makeGraph() {
   log('created:', created);
   log('deleted:', deleted);
   log('renamed:', renamed);
+  const allModifiedFiles = [modified, created, deleted, renamed].flat();
 
   // .tsファイルの変更がある場合のみ Graph を生成する。コンパイル対象外の ts ファイルもあるかもしれないがわからないので気にしない
-  if ([modified, created, deleted, renamed].flat().length === 0) {
+  if (allModifiedFiles.length === 0) {
     await context.github.deleteComment(context.config.commentTitle);
     info('No TypeScript files were changed.');
     return;
   }
 
-  const { fullHeadGraph, fullBaseGraph } = await getFullGraph(context);
+  const { fullHeadGraph, fullBaseGraph, traverserForHead, traverserForBase } =
+    await getFullGraph(context);
   log('fullBaseGraph.nodes.length:', fullBaseGraph.nodes.length);
   log('fullBaseGraph.relations.length:', fullBaseGraph.relations.length);
   log('fullHeadGraph.nodes.length:', fullHeadGraph.nodes.length);
@@ -38,6 +42,24 @@ async function makeGraph() {
     message += await build2GraphsMessage(fullBaseGraph, fullHeadGraph, context);
   } else {
     message += await buildGraphMessage(fullBaseGraph, fullHeadGraph, context);
+  }
+
+  if (traverserForHead && traverserForBase) {
+    const baseMetrics = calculateCodeMetrics(
+      { metrics: true },
+      traverserForBase,
+      filePath => allModifiedFiles.map(v => v.filename).includes(filePath),
+    );
+    message += '## Metrics Base\n\n';
+    writeMetrics(str => (message += str), baseMetrics);
+
+    const metrics = calculateCodeMetrics(
+      { metrics: true },
+      traverserForHead,
+      filePath => allModifiedFiles.map(v => v.filename).includes(filePath),
+    );
+    message += '## Metrics Head\n\n';
+    writeMetrics(str => (message += str), metrics);
   }
 
   await context.github.commentToPR(context.fullCommentTitle, message);
