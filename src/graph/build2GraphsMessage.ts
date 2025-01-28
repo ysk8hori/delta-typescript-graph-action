@@ -20,7 +20,7 @@ export async function build2GraphsMessage(
 
   if (baseGraph.nodes.length === 0 && headGraph.nodes.length === 0) {
     // base と head のグラフが空の場合は表示しない
-    return 'The graph is empty.';
+    return 'The graph is empty.\n\n';
   }
 
   if (
@@ -79,6 +79,7 @@ ${headLines.join('')}
 \`\`\`
 
 ${outputIfInDetails('</details>')}
+
 `;
 }
 
@@ -104,6 +105,7 @@ ${tsgCommand}
 \`\`\`
 
 ${outputIfInDetails('</details>')}
+
 `;
 }
 

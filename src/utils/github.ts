@@ -137,7 +137,7 @@ export default class GitHub {
             owner,
             repo,
             comment_id: existingComment.id,
-            body,
+            body: fullCommentTitle + '\n\n' + body,
           })
           .catch(throwUnexpectedError),
       );
@@ -149,7 +149,7 @@ export default class GitHub {
             owner,
             repo,
             issue_number,
-            body,
+            body: fullCommentTitle + '\n\n' + body,
           })
           .catch(throwUnexpectedError),
       );

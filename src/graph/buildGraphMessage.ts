@@ -16,7 +16,7 @@ export function buildGraphMessage(
   );
 
   if (graph.nodes.length === 0) {
-    return 'The graph is empty.';
+    return 'The graph is empty.\n\n';
   }
 
   if (graph.nodes.length > context.config.maxSize) {
@@ -53,6 +53,7 @@ ${mermaidLines.join('')}
 \`\`\`
 
 ${outputIfInDetails('</details>')}
+
 `;
 }
 
@@ -78,6 +79,7 @@ ${tsgCommand}
 \`\`\`
 
 ${outputIfInDetails('</details>')}
+
 `;
 }
 
