@@ -73,9 +73,13 @@ async function makeGraph() {
 
     // メトリクスの差分を計算
     const metricsMap = createScoreDiff(headMetrics, baseMetrics);
+    const sortedKeys = getSortedKeys(metricsMap);
 
     // メトリクスの差分をファイルごとに表示
-    for (const [filePath, metrics] of metricsMap) {
+    // for (const [filePath, metrics] of metricsMap) {
+    for (const filePath of sortedKeys) {
+      const metrics = metricsMap.get(filePath);
+      if (!metrics) continue;
       const isNewFile = metrics[0]?.status === 'added';
       message += `### ${isNewFile ? '🆕 ' : ''}${filePath}\n\n`;
 
@@ -185,6 +189,20 @@ function createScoreDiff(
     map.get(filePath)?.push(currentValue);
     return map;
   }, new Map<string, FlattenMatericsWithDiff[]>());
+}
+
+function getSortedKeys(map: Map<string, FlattenMatericsWithDiff[]>) {
+  const keys = Array.from(map.keys());
+  const sortedKeys = keys
+    .map(key => map.get(key))
+    .filter(Boolean)
+    .map(fileGroupedMetrics => fileGroupedMetrics.find(m => m.scope === 'file'))
+    .filter(Boolean)
+    .toSorted((a, b) =>
+      a.status === 'added' ? -1 : b.status === 'added' ? 1 : 0,
+    )
+    .map(m => m?.filePath);
+  return sortedKeys;
 }
 
 function calculateScoreDifferences(
