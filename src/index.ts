@@ -96,7 +96,7 @@ async function makeGraph() {
           `${
             metric.scope === 'file'
               ? '~'
-              : `${metric.status === 'added' && isNewFile ? `🆕 ${metric.name}` : metric.status === 'deleted' ? `🗑️  ~~${metric.name}~~` : metric.name}`
+              : `${metric.status === 'added' && !isNewFile ? `🆕 ${metric.name}` : metric.status === 'deleted' ? `🗑️  ~~${metric.name}~~` : metric.name}`
           } | ${metric.scope} | ` +
           metric.scores
             .map(
