@@ -93,7 +93,7 @@ async function makeGraph() {
                 `${getIconByState(score.state)}${score.value}${
                   score.diffStr
                     ? // 全角カッコを使うことで余白を取っている
-                      `<br>（${score.diffStr}）`
+                      `（${score.diffStr}）`
                     : ''
                 }`,
             )
