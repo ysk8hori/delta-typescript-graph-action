@@ -198,9 +198,7 @@ function getSortedKeys(map: Map<string, FlattenMatericsWithDiff[]>) {
     .filter(Boolean)
     .map(fileGroupedMetrics => fileGroupedMetrics.find(m => m.scope === 'file'))
     .filter(Boolean)
-    .toSorted((a, b) =>
-      a.status === 'added' ? -1 : b.status === 'added' ? 1 : 0,
-    )
+    .toSorted((a, b) => (a.scores[0]?.value ?? 0) - (b.scores[0]?.value ?? 0))
     .map(m => m?.filePath);
   return sortedKeys;
 }
