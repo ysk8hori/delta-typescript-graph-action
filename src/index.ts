@@ -58,6 +58,7 @@ async function makeGraph() {
       ),
       unTree,
       toScoreFilteredMetrics,
+      toScoreRoundedMetrics,
     );
 
     const headMetrics = pipe(
@@ -66,6 +67,7 @@ async function makeGraph() {
       ),
       unTree,
       toScoreFilteredMetrics,
+      toScoreRoundedMetrics,
     );
     const scoreTitles = headMetrics[0].scores.map(score => score.name);
 
@@ -89,9 +91,9 @@ async function makeGraph() {
             .map(
               score =>
                 `${getIconByState(score.state)}${score.value}${
-                  score.diff
+                  score.diffStr
                     ? // 全角カッコを使うことで余白を取っている
-                      `<br>（${0 < score.diff ? `+${score.diff}` : score.diff}）`
+                      `<br>（${score.diffStr}）`
                     : ''
                 }`,
             )
@@ -116,6 +118,7 @@ function hasRenamedFiles(fullHeadGraph: Graph, renamed: PullRequestFileInfo[]) {
 
 type ScoreWithDiff = Score & {
   diff?: number;
+  diffStr?: string;
 };
 type FlattenMatericsWithDiff = Omit<CodeMetrics, 'scores'> & {
   scores: ScoreWithDiff[];
@@ -148,10 +151,11 @@ function createScoreDiff(
     // scores の中身は同じ順番であることが前提
     const zipped = zip(headData.scores, baseData.scores);
     const scores = zipped.map(([headScore, baseScore]) => {
+      const diff = headScore.value - baseScore.value;
       return {
         ...headScore,
-        value: round(headScore.value),
-        diff: round(round(headScore.value) - round(baseScore.value)),
+        diff,
+        diffStr: getChalkedDiff(headScore.betterDirection, diff),
       };
     });
 
@@ -194,4 +198,29 @@ function toScoreFilteredMetrics(metrics: CodeMetrics[]): CodeMetrics[] {
       ].includes(score.name),
     ),
   }));
+}
+
+function toScoreRoundedMetrics(metrics: CodeMetrics[]): CodeMetrics[] {
+  return metrics.map(metric => ({
+    ...metric,
+    scores: metric.scores.map(
+      score =>
+        ({
+          ...score,
+          value: round(score.value),
+        }) satisfies Score,
+    ),
+  }));
+}
+
+function getChalkedDiff(
+  betterDirection: Score['betterDirection'],
+  diff: number | undefined,
+): string | undefined {
+  if (diff === undefined) return '';
+  if (betterDirection === 'lower' && diff < 0) return `${diff}`;
+  if (betterDirection === 'lower' && 0 < diff) return `🔴+${diff}`;
+  if (betterDirection === 'higher' && diff < 0) return `🔴${diff}`;
+  if (betterDirection === 'higher' && 0 < diff) return `+${diff}`;
+  return '0';
 }
