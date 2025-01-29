@@ -90,12 +90,12 @@ async function makeGraph() {
           metric.scores
             .map(
               score =>
-                `${getIconByState(score.state)}${score.value}${
+                `${
                   score.diffStr
                     ? // 全角カッコを使うことで余白を取っている
                       `（${score.diffStr}）`
                     : ''
-                }`,
+                }${getIconByState(score.state)}${score.value}`,
             )
             .join(' | ') +
           '\n';
