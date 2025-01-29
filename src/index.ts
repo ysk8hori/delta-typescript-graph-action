@@ -151,7 +151,7 @@ function createScoreDiff(
     // scores の中身は同じ順番であることが前提
     const zipped = zip(headData.scores, baseData.scores);
     const scores = zipped.map(([headScore, baseScore]) => {
-      const diff = headScore.value - baseScore.value;
+      const diff = round(round(headScore.value) - round(baseScore.value));
       return {
         ...headScore,
         diff,
@@ -222,5 +222,5 @@ function getChalkedDiff(
   if (betterDirection === 'lower' && 0 < diff) return `🔴+${diff}`;
   if (betterDirection === 'higher' && diff < 0) return `🔴${diff}`;
   if (betterDirection === 'higher' && 0 < diff) return `+${diff}`;
-  return '0';
+  return undefined;
 }
