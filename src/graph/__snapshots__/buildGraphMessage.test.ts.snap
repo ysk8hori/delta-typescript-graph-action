@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`グラフが大きすぎる場合はその旨を出力する 1`] = `
+"
+
+
+> 表示ノード数が多いため、グラフを表示しません。
+> 表示ノード数の上限を変更したい場合はアクションのパラメータ \`max-size\` を設定してください。
+>
+> 本PRでの表示ノード数: 4
+> 最大表示ノード数: 1
+
+\`\`\`bash
+tsg --include src/B.tsx src/A.tsx --highlight src/B.tsx src/A.tsx --exclude node_modules --abstraction src/1
+\`\`\`
+
+
+
+"
+`;
+
+exports[`追加や依存の削除がある場合 1`] = `
+"
+
+
+\`\`\`bash
+tsg --include src/B.tsx src/A.tsx --highlight src/B.tsx src/A.tsx --exclude node_modules --abstraction src/1
+\`\`\`
+
+\`\`\`mermaid
+flowchart
+    classDef created fill:cyan,stroke:#999,color:black
+    classDef modified fill:yellow,stroke:#999,color:black
+    subgraph src["src"]
+        src/A.tsx["A"]:::modified
+        src/B.tsx["B"]:::created
+        src/1["/1"]:::dir
+        src/C.tsx["C"]
+    end
+    src/A.tsx-->src/B.tsx
+    src/A.tsx-->src/1
+    src/A.tsx-.->src/C.tsx
+
+\`\`\`
+
+
+
+"
+`;

@@ -5,30 +5,15 @@ import { info } from '../utils/log';
 import type { Context } from '../utils/context';
 import applyMutualDifferences from './applyMutualDifferences';
 
-type FileInfoList = {
-  filename: string;
-  previous_filename: string | undefined;
-}[];
-
 /**
  * ファイルの削除またはリネームがある場合は Graph を2つ表示する
  */
 export async function output2Graphs(
   fullBaseGraph: Graph,
   fullHeadGraph: Graph,
-  files: {
-    created: FileInfoList;
-    deleted: FileInfoList;
-    modified: FileInfoList;
-    renamed: FileInfoList;
-  },
   context: Context,
 ) {
   const { baseGraph, headGraph, tsgCommand } = applyMutualDifferences(
-    files.created.map(({ filename }) => filename),
-    files.deleted.map(({ filename }) => filename),
-    files.modified.map(({ filename }) => filename),
-    files.renamed,
     fullBaseGraph,
     fullHeadGraph,
     context,

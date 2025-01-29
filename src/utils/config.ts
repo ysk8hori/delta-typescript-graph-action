@@ -20,6 +20,8 @@ const EXCLUDE = 'exclude';
 const INCLUDE_INDEX_FILE_DEPENDENCIES = 'include-index-file-dependencies';
 /** コメントのタイトル */
 const COMMENT_TITLE = 'comment-title';
+/** メトリクスを表示するかどうか */
+const SHOW_METRICS = 'show-metrics';
 
 /**
  * tsconfig を探索するディレクトリ情報を取得する。
@@ -70,6 +72,10 @@ export function isInDetails(): boolean {
   return core.getInput(IN_DETAILS) === 'true';
 }
 
+export function getShowMetrics(): boolean {
+  return core.getInput(SHOW_METRICS) === 'true';
+}
+
 export function exclude(): string[] {
   return core
     .getInput(EXCLUDE)
@@ -101,5 +107,6 @@ export function getConfig() {
     includeIndexFileDependencies: isIncludeIndexFileDependencies(),
     /** Action の parameter として指定された comment-title */
     commentTitle: getCommentTitle(),
+    showMetrics: getShowMetrics(),
   };
 }

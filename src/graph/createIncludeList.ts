@@ -1,26 +1,21 @@
 import type { Graph } from '@ysk8hori/typescript-graph';
 import { isIncludeIndexFileDependencies } from '../utils/config';
+import type { Context } from '../utils/context';
 import { extractIndexFileDependencies } from './extractIndexFileDependencies';
 
 export function createIncludeList({
-  created,
-  deleted,
-  modified,
-  renamed,
+  context: {
+    filesChanged: { created, deleted, modified, renamed },
+  },
   graphs,
 }: {
-  created: string[];
-  deleted: string[];
-  modified: string[];
-  renamed:
-    | { filename: string; previous_filename: string | undefined }[]
-    | undefined;
+  context: Pick<Context, 'filesChanged'>;
   graphs: Graph[];
 }) {
   const tmp = [
-    ...created,
-    ...deleted,
-    ...modified,
+    ...created.map(({ filename }) => filename),
+    ...deleted.map(({ filename }) => filename),
+    ...modified.map(({ filename }) => filename),
     ...(renamed
       ?.flatMap(diff => [diff.previous_filename, diff.filename])
       .filter(Boolean) ?? []),

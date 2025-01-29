@@ -1,5 +1,6 @@
-import { createCommentTitle } from '../graph/createCommentTitle';
+import { createCommentTitle } from './createCommentTitle';
 import { getConfig } from './config';
+import type { FilesChanged } from './github';
 import GitHub from './github';
 
 export interface Context {
@@ -13,13 +14,16 @@ export interface Context {
     exclude: string[];
     includeIndexFileDependencies: boolean;
     commentTitle: string;
+    showMetrics: boolean;
   };
   github: GitHub;
   fullCommentTitle: string;
+  filesChanged: FilesChanged;
 }
 
-export function createContext(): Context {
+export async function createContext(): Promise<Context> {
   const github = new GitHub();
+  const filesChanged = await github.getTSFiles();
   const config = getConfig();
   return {
     config,
@@ -28,5 +32,6 @@ export function createContext(): Context {
       config.commentTitle,
       github.getWorkflowName(),
     ),
+    filesChanged,
   };
 }

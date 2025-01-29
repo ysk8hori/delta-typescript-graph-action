@@ -84,17 +84,19 @@ test('削除がある場合', async () => {
     ],
   };
   const context = getDummyContext();
-  await output2Graphs(
-    base,
-    head,
-    {
+  await output2Graphs(base, head, {
+    ...context,
+    filesChanged: {
       created: [],
-      deleted: [{ filename: b.path, previous_filename: undefined }],
-      modified: [{ filename: a.path, previous_filename: undefined }],
+      deleted: [
+        { filename: b.path, previous_filename: undefined, status: 'removed' },
+      ],
+      modified: [
+        { filename: a.path, previous_filename: undefined, status: 'modified' },
+      ],
       renamed: [],
     },
-    context,
-  );
+  });
   expect(
     (context.github.commentToPR as jest.Mock).mock.calls[0],
   ).toMatchSnapshot();

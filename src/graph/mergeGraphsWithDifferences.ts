@@ -1,5 +1,9 @@
 import type { Graph } from '@ysk8hori/typescript-graph';
-import { abstraction , mergeGraph  , filterGraph } from '@ysk8hori/typescript-graph';
+import {
+  abstraction,
+  mergeGraph,
+  filterGraph,
+} from '@ysk8hori/typescript-graph';
 import { pipe } from 'remeda';
 import { log } from '../utils/log';
 import { createTsgCommand } from '../tsg/createTsgCommand';
@@ -15,13 +19,7 @@ import { createIncludeList } from './createIncludeList';
 export default function mergeGraphsWithDifferences(
   fullBaseGraph: Graph,
   fullHeadGraph: Graph,
-  created: string[],
-  deleted: string[],
-  modified: string[],
-  renamed:
-    | { filename: string; previous_filename: string | undefined }[]
-    | undefined,
-  context: Context,
+  context: Pick<Context, 'filesChanged' | 'config'>,
 ) {
   const { createdRelations, deletedRelations } = updateRelationsStatus(
     fullBaseGraph,
@@ -35,13 +33,7 @@ export default function mergeGraphsWithDifferences(
   log('mergedGraph.nodes.length:', mergedGraph.nodes.length);
   log('mergedGraph.relations.length:', mergedGraph.relations.length);
 
-  const includes = createIncludeList({
-    created,
-    deleted,
-    modified,
-    renamed,
-    graphs: [mergedGraph],
-  });
+  const includes = createIncludeList({ context, graphs: [mergedGraph] });
   log('includes:', includes);
 
   const abstractionTarget = pipe(includes, extractNoAbstractionDirs, dirs =>
@@ -63,7 +55,7 @@ export default function mergeGraphsWithDifferences(
       log('abstractedGraph.relations.length:', graph.relations.length),
       graph
     ),
-    graph => addStatus({ modified, created, deleted }, graph),
+    graph => addStatus(context, graph),
     graph => (
       log('graph.nodes.length:', graph.nodes.length),
       log('graph.relations.length:', graph.relations.length),

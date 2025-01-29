@@ -17,12 +17,11 @@ export interface PullRequestFileInfo {
   previous_filename: string | undefined;
 }
 
-export interface PullRequestFilesInfo {
+export interface FilesChanged {
   created: PullRequestFileInfo[];
   deleted: PullRequestFileInfo[];
   modified: PullRequestFileInfo[];
   renamed: PullRequestFileInfo[];
-  unchanged: PullRequestFileInfo[];
 }
 
 /**
@@ -49,7 +48,7 @@ export default class GitHub {
     this.#octokit = github.getOctokit(core.getInput('access-token'));
   }
 
-  public async getTSFiles(): Promise<PullRequestFilesInfo> {
+  public async getTSFiles(): Promise<FilesChanged> {
     const compareResult =
       await this.#octokit.rest.repos.compareCommitsWithBasehead({
         owner: github.context.repo.owner,
@@ -58,6 +57,7 @@ export default class GitHub {
       });
     const files = compareResult.data.files
       ?.filter(file =>
+        // TODO: tsg の isTsFile を使用する
         /\.ts$|\.tsx$|\.vue$|\.astro$|\.svelte$/.test(file.filename),
       )
       .map(file => ({
@@ -79,7 +79,6 @@ export default class GitHub {
           file => file.status === 'modified' || file.status === 'changed',
         ) ?? [],
       renamed: files?.filter(file => file.status === 'renamed') ?? [],
-      unchanged: files?.filter(file => file.status === 'unchanged') ?? [],
     };
   }
 
@@ -138,7 +137,7 @@ export default class GitHub {
             owner,
             repo,
             comment_id: existingComment.id,
-            body,
+            body: fullCommentTitle + '\n\n' + body,
           })
           .catch(throwUnexpectedError),
       );
@@ -150,7 +149,7 @@ export default class GitHub {
             owner,
             repo,
             issue_number,
-            body,
+            body: fullCommentTitle + '\n\n' + body,
           })
           .catch(throwUnexpectedError),
       );

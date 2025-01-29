@@ -1,34 +1,19 @@
 import type { Graph } from '@ysk8hori/typescript-graph';
-import { mermaidify  } from '@ysk8hori/typescript-graph';
+import { mermaidify } from '@ysk8hori/typescript-graph';
 import { getMaxSize, getOrientation, isInDetails } from '../utils/config';
 import { info } from '../utils/log';
 import type { Context } from '../utils/context';
 import mergeGraphsWithDifferences from './mergeGraphsWithDifferences';
 
-type FileInfoList = {
-  filename: string;
-  previous_filename: string | undefined;
-}[];
-
 export async function outputGraph(
   fullBaseGraph: Graph,
   fullHeadGraph: Graph,
-  files: {
-    created: FileInfoList;
-    deleted: FileInfoList;
-    modified: FileInfoList;
-    renamed: FileInfoList;
-  },
   context: Context,
 ) {
   const github = context.github;
   const { graph, tsgCommand } = mergeGraphsWithDifferences(
     fullBaseGraph,
     fullHeadGraph,
-    files.created.map(({ filename }) => filename),
-    files.deleted.map(({ filename }) => filename),
-    files.modified.map(({ filename }) => filename),
-    files.renamed,
     context,
   );
 

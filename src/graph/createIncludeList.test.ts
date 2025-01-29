@@ -9,10 +9,42 @@ jest.mock('../utils/config', () => ({
 test('新規作成、更新、削除、リネーム前後のファイルが include 対象となる', () => {
   expect(
     createIncludeList({
-      created: ['created.ts'],
-      deleted: ['deleted.ts'],
-      modified: ['modified.ts'],
-      renamed: [{ previous_filename: 'before.ts', filename: 'after.ts' }],
+      context: {
+        filesChanged: {
+          created: [
+            {
+              filename: 'created.ts',
+              status: 'added',
+              previous_filename: undefined,
+            },
+          ],
+          deleted: [
+            {
+              filename: 'deleted.ts',
+              status: 'removed',
+              previous_filename: undefined,
+            },
+          ],
+          modified: [
+            {
+              filename: 'modified.ts',
+              status: 'modified',
+              previous_filename: undefined,
+            },
+          ],
+          renamed: [
+            {
+              previous_filename: 'before.ts',
+              filename: 'after.ts',
+              status: 'renamed',
+            },
+          ],
+        },
+      },
+      // created: ['created.ts'],
+      // deleted: ['deleted.ts'],
+      // modified: ['modified.ts'],
+      // renamed: [{ previous_filename: 'before.ts', filename: 'after.ts' }],
       graphs: [],
     }),
   ).toEqual([
@@ -28,10 +60,24 @@ test('TSG_INCLUDE_INDEX_FILE_DEPENDENCIES が false の場合は include 対象�
   (isIncludeIndexFileDependencies as jest.Mock).mockImplementation(() => false);
   expect(
     createIncludeList({
-      created: [],
-      deleted: [],
-      modified: ['src/a.ts'],
-      renamed: [],
+      context: {
+        filesChanged: {
+          created: [],
+          deleted: [],
+          modified: [
+            {
+              filename: 'src/a.ts',
+              status: 'modified',
+              previous_filename: undefined,
+            },
+          ],
+          renamed: [],
+        },
+      },
+      // created: [],
+      // deleted: [],
+      // modified: ['src/a.ts'],
+      // renamed: [],
       graphs: [
         {
           nodes: [
@@ -67,10 +113,20 @@ test('TSG_INCLUDE_INDEX_FILE_DEPENDENCIES が true の場合は include 対象�
   (isIncludeIndexFileDependencies as jest.Mock).mockImplementation(() => true);
   expect(
     createIncludeList({
-      created: [],
-      deleted: [],
-      modified: ['src/a.ts'],
-      renamed: [],
+      context: {
+        filesChanged: {
+          created: [],
+          deleted: [],
+          modified: [
+            {
+              filename: 'src/a.ts',
+              status: 'modified',
+              previous_filename: undefined,
+            },
+          ],
+          renamed: [],
+        },
+      },
       graphs: [
         {
           nodes: [

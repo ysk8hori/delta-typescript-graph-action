@@ -9,13 +9,14 @@ export function getDummyContext(context?: {
     config: {
       tsconfigRoot: '',
       tsconfig: context?.configTsconfig ?? '',
-      maxSize: 0,
+      maxSize: 100,
       orientation: {},
       debugEnabled: false,
       inDetails: false,
       exclude: context?.configExclude ?? ['node_modules'],
       includeIndexFileDependencies: false,
       commentTitle: '',
+      showMetrics: false,
     },
     github: {
       getWorkflowName: jest.fn(),
@@ -27,5 +28,11 @@ export function getDummyContext(context?: {
       cloneRepo: jest.fn(),
     } as unknown as GitHub,
     fullCommentTitle: '## Delta TypeScript Graph<!--test-workflow.yml-->',
+    filesChanged: {
+      created: [],
+      deleted: [],
+      modified: [],
+      renamed: [],
+    },
   };
 }
