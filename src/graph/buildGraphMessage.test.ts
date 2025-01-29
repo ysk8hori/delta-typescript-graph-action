@@ -37,7 +37,7 @@ test('出力可能なグラフがない場合は何も出力しない', async ()
   };
   const context = getDummyContext();
   const message = await buildGraphMessage(graph, graph, context);
-  expect(message).toBe('The graph is empty.');
+  expect(message).toBe('The graph is empty.\n\n');
 });
 
 test('グラフが大きすぎる場合はその旨を出力する', async () => {
