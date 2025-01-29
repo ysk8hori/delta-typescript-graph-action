@@ -41,6 +41,10 @@ inputs:
     description: 'Specifies the title of the comment posted on the PR.'
     required: false
     default: 'Delta TypeScript Graph'
+  show-metrics:
+    description: 'Calculate and display metrics for the graph'
+    required: false
+    default: false
 runs:
   using: 'node20'
   main: 'dist/index.js'

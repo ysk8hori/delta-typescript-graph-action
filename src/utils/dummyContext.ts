@@ -16,6 +16,7 @@ export function getDummyContext(context?: {
       exclude: context?.configExclude ?? ['node_modules'],
       includeIndexFileDependencies: false,
       commentTitle: '',
+      showMetrics: false,
     },
     github: {
       getWorkflowName: jest.fn(),

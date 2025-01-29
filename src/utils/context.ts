@@ -14,6 +14,7 @@ export interface Context {
     exclude: string[];
     includeIndexFileDependencies: boolean;
     commentTitle: string;
+    showMetrics: boolean;
   };
   github: GitHub;
   fullCommentTitle: string;

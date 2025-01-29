@@ -17,10 +17,11 @@ jobs:
         with:
           access-token: ${{ secrets.GITHUB_TOKEN }}
           tsconfig-root: './'
-          max-size: 3
+          max-size: 50
           orientation: LR
           debug: true
           in-details: true
           exclude: 'test'
           include-index-file-dependencies: true
           comment-title: 'Delta TSG with params'
+          show-metrics: true

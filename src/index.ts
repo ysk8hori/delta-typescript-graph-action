@@ -50,7 +50,12 @@ async function makeGraph() {
     message += await buildGraphMessage(fullBaseGraph, fullHeadGraph, context);
   }
 
-  if (traverserForHead && traverserForBase && allModifiedFiles.length !== 0) {
+  if (
+    context.config.showMetrics &&
+    traverserForHead &&
+    traverserForBase &&
+    allModifiedFiles.length !== 0
+  ) {
     message += '## Metrics\n\n';
     const baseMetrics = pipe(
       calculateCodeMetrics({ metrics: true }, traverserForBase, filePath =>
