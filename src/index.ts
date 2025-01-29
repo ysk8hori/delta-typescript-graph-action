@@ -156,21 +156,7 @@ function createScoreDiff(
     );
 
     if (!baseData) {
-      // 新規追加されたファイルの場合、 diff は Maintainability Index は 100 と、それ以外は 0 と比較する
-      const initialData: FlattenMatericsWithDiff = {
-        ...headData,
-        scores: headData.scores.map(score => ({
-          ...score,
-          // TODO: 脱ハードコーディング
-          value: score.name === 'Maintainability Index' ? 100 : 0,
-        })),
-        status: 'added', // これは適当
-      };
-      scoresWithDiffMap.set(headData.key, {
-        ...headData,
-        scores: calculateScoreDifferences(headData, initialData),
-        status: 'added',
-      });
+      scoresWithDiffMap.set(headData.key, { ...headData, status: 'added' });
       continue;
     }
 
