@@ -76,7 +76,8 @@ async function makeGraph() {
 
     // メトリクスの差分をファイルごとに表示
     for (const [filePath, metrics] of metricsMap) {
-      message += `### ${metrics[0]?.status === 'added' ? ' 🆕 ' : ''}${filePath}\n\n`;
+      const isNewFile = metrics[0]?.status === 'added';
+      message += `### ${isNewFile ? '🆕 ' : ''}${filePath}\n\n`;
 
       if (metrics.length === 0 || metrics[0].status === 'deleted') {
         message += '🗑️ This file has been deleted.\n\n';
@@ -95,7 +96,7 @@ async function makeGraph() {
           `${
             metric.scope === 'file'
               ? '~'
-              : `${metric.status === 'added' ? `🆕 ` : metric.status === 'deleted' ? `🗑️  ` : ''}${metric.name}`
+              : `${metric.status === 'added' && isNewFile ? `🆕 ${metric.name}` : metric.status === 'deleted' ? `🗑️  ~~${metric.name}~~` : metric.name}`
           } | ${metric.scope} | ` +
           metric.scores
             .map(
@@ -155,20 +156,26 @@ function createScoreDiff(
     );
 
     if (!baseData) {
-      scoresWithDiffMap.set(headData.key, { ...headData, status: 'added' });
+      // 新規追加されたファイルの場合、 diff は Maintainability Index は 100 と、それ以外は 0 と比較する
+      const initialData: FlattenMatericsWithDiff = {
+        ...headData,
+        scores: headData.scores.map(score => ({
+          ...score,
+          // TODO: 脱ハードコーディング
+          value: score.name === 'Maintainability Index' ? 100 : 0,
+        })),
+        status: 'added', // これは適当
+      };
+      scoresWithDiffMap.set(headData.key, {
+        ...headData,
+        scores: calculateScoreDifferences(headData, initialData),
+        status: 'added',
+      });
       continue;
     }
 
     // scores の中身は同じ順番であることが前提
-    const zipped = zip(headData.scores, baseData.scores);
-    const scores = zipped.map(([headScore, baseScore]) => {
-      const diff = round(round(headScore.value) - round(baseScore.value));
-      return {
-        ...headScore,
-        diff,
-        diffStr: getChalkedDiff(headScore.betterDirection, diff),
-      };
-    });
+    const scores = calculateScoreDifferences(headData, baseData);
 
     scoresWithDiffMap.set(headData.key, {
       ...headData,
@@ -192,6 +199,22 @@ function createScoreDiff(
     map.get(filePath)?.push(currentValue);
     return map;
   }, new Map<string, FlattenMatericsWithDiff[]>());
+}
+
+function calculateScoreDifferences(
+  headData: CodeMetrics,
+  baseData: CodeMetrics,
+): ScoreWithDiff[] {
+  const zipped = zip(headData.scores, baseData.scores);
+  const scores = zipped.map(([headScore, baseScore]) => {
+    const diff = round(round(headScore.value) - round(baseScore.value));
+    return {
+      ...headScore,
+      diff,
+      diffStr: getChalkedDiff(headScore.betterDirection, diff),
+    };
+  });
+  return scores;
 }
 
 function round(value: number) {
@@ -230,8 +253,8 @@ function getChalkedDiff(
 ): string | undefined {
   if (diff === undefined) return '';
   if (betterDirection === 'lower' && diff < 0) return `${diff}`;
-  if (betterDirection === 'lower' && 0 < diff) return `🔴+${diff}`;
-  if (betterDirection === 'higher' && diff < 0) return `🔴${diff}`;
+  if (betterDirection === 'lower' && 0 < diff) return `🔺+${diff}`;
+  if (betterDirection === 'higher' && diff < 0) return `🔻${diff}`;
   if (betterDirection === 'higher' && 0 < diff) return `+${diff}`;
   return undefined;
 }
