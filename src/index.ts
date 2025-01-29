@@ -76,7 +76,13 @@ async function makeGraph() {
 
     // メトリクスの差分をファイルごとに表示
     for (const [filePath, metrics] of metricsMap) {
-      message += `### ${filePath}\n\n`;
+      message += `### ${metrics[0]?.status === 'added' ? ' 🆕 ' : ''}${filePath}\n\n`;
+
+      if (metrics.length === 0 || metrics[0].status === 'deleted') {
+        message += '🗑️ This file has been deleted.\n\n';
+        continue;
+      }
+
       // メトリクスのヘッダー
       message += `name | scope | ` + scoreTitles.join(' | ') + '\n';
 
@@ -86,7 +92,11 @@ async function makeGraph() {
       // メトリクスの本体
       for (const metric of metrics) {
         message +=
-          `${metric.scope === 'file' ? '~' : metric.name} | ${metric.scope} | ` +
+          `${
+            metric.scope === 'file'
+              ? '~'
+              : `${metric.status === 'added' ? `🆕 ` : metric.status === 'deleted' ? `🗑️  ` : ''}${metric.name}`
+          } | ${metric.scope} | ` +
           metric.scores
             .map(
               score =>
@@ -100,6 +110,7 @@ async function makeGraph() {
             .join(' | ') +
           '\n';
       }
+      message += '\n\n';
     }
   }
 
