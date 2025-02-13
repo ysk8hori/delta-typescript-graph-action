@@ -9,7 +9,9 @@ type ScoreWithDiff = Score & {
   diff?: number;
   diffStr?: string;
 };
-type FlattenMatericsWithDiff = Omit<CodeMetrics, 'scores'> & {
+
+/** visible for testing */
+export type FlattenMatericsWithDiff = Omit<CodeMetrics, 'scores'> & {
   scores: ScoreWithDiff[];
   status: 'added' | 'deleted' | 'updated';
 };
