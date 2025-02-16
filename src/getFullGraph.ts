@@ -6,40 +6,47 @@ import {
   ProjectTraverser,
   resolveTsconfig,
 } from '@ysk8hori/typescript-graph';
-import { isNot, map, pipe } from 'remeda';
-import GitHub from './utils/github';
+import { anyPass, isNot, map, pipe } from 'remeda';
 import { getCreateGraphsArguments } from './tsg/getCreateGraphsArguments';
 import type { Context } from './utils/context';
 
 /** word に該当するか */
 const bindMatchFunc = (word: string) => (filePath: string) =>
   filePath.toLowerCase().includes(word.toLowerCase());
+/** word に完全一致するか */
+const bindExactMatchFunc = (word: string) => (filePath: string) =>
+  filePath === word;
 /** 抽象的な判定関数 */
 const judge = (filePath: string) => (f: (filePath: string) => boolean) =>
   f(filePath);
+/** いずれかの word に該当するか */
 const matchSome = (words: string[]) => (filePath: string) =>
   words.map(bindMatchFunc).some(judge(filePath));
+/** いずれかの word に完全一致するか */
+const isExactMatchSome = (words: string[]) => (filePath: string) =>
+  words.map(bindExactMatchFunc).some(judge(filePath));
 
 /**
  * TypeScript Graph の createGraph を使い head と base の Graph を生成する
  *
  * 内部的に git fetch と git checkout を実行するので、テストで実行する際には execSync を mock すること。
- *
- * また、処理に時間がかかるため Promise を返す。
  */
-export default function getFullGraph(context: Pick<Context, 'config'>) {
-  const github = new GitHub();
+export function getFullGraph(
+  context: Pick<Context, 'config' | 'filesChanged' | 'github'>,
+): {
+  fullHeadGraph: Graph;
+  fullBaseGraph: Graph;
+  traverserForHead: ProjectTraverser | undefined;
+  traverserForBase: ProjectTraverser | undefined;
+} {
   // head の Graph を生成するために head に checkout する
-  execSync(`git fetch origin ${github.getHeadSha()}`);
-  execSync(`git checkout ${github.getHeadSha()}`);
-
+  execSync(`git fetch origin ${context.github.getHeadSha()}`);
+  execSync(`git checkout ${context.github.getHeadSha()}`);
   const [fullHeadGraph, traverserForHead] = getGraph(context);
 
   // base の Graph を生成するために base に checkout する
-  execSync(`git fetch origin ${github.getBaseSha()}`);
-  execSync(`git checkout ${github.getBaseSha()}`);
-  // base の Graph を生成
-
+  execSync(`git fetch origin ${context.github.getBaseSha()}`);
+  execSync(`git checkout ${context.github.getBaseSha()}`);
   const [fullBaseGraph, traverserForBase] = getGraph(context);
 
   return {
@@ -51,8 +58,12 @@ export default function getFullGraph(context: Pick<Context, 'config'>) {
 }
 
 function getGraph(
-  context: Pick<Context, 'config'>,
+  context: Pick<Context, 'config' | 'filesChanged'>,
 ): [Graph, ProjectTraverser | undefined] {
+  const { modified, created, deleted, renamed } = context.filesChanged;
+  const includeFiles = [modified, created, deleted, renamed]
+    .flat()
+    .map(v => v.filename);
   const tsconfigInfo = getCreateGraphsArguments(context.config);
   // - tsconfig が指定されているが、そのファイルが存在しない場合は空のグラフとする
   //   （createGraph は指定された tsconfig がない場合、カレントディレクトリより上に向かって tsconfig.json を探すが、ここではそれをしたくない）
@@ -72,7 +83,10 @@ function getGraph(
   return [
     pipe(
       traverser.traverse(
-        isNot(matchSome(context.config.exclude)),
+        anyPass([
+          isExactMatchSome(includeFiles),
+          isNot(matchSome(context.config.exclude)),
+        ]),
         GraphAnalyzer.create,
       ),
       map(([analyzer]) => analyzer.generateGraph()),
