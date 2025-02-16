@@ -47,11 +47,11 @@ export function buildMetricsMessage({
 }
 
 function generateScoreMetrics(
-  traverserForBase: ProjectTraverser,
+  traverser: ProjectTraverser,
   allModifiedFiles: PullRequestFileInfo[],
 ) {
   return pipe(
-    calculateCodeMetrics({ metrics: true }, traverserForBase, filePath =>
+    calculateCodeMetrics({ metrics: true }, traverser, filePath =>
       allModifiedFiles.map(v => v.filename).includes(filePath),
     ),
     unTree,
