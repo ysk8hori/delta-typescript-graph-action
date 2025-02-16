@@ -1,7 +1,7 @@
 import type { Graph, Node } from '@ysk8hori/typescript-graph';
 import { getDummyContext } from '../utils/dummyContext';
 import { build2GraphsMessage } from './build2GraphsMessage';
-
+//hoge
 const a: Node = {
   path: 'src/A.tsx',
   name: 'A',
