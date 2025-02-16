@@ -25,7 +25,7 @@ async function makeGraph() {
   }
 
   const { fullHeadGraph, fullBaseGraph, traverserForHead, traverserForBase } =
-    await getFullGraph(context);
+    getFullGraph(context);
   log('fullBaseGraph.nodes.length:', fullBaseGraph.nodes.length);
   log('fullBaseGraph.relations.length:', fullBaseGraph.relations.length);
   log('fullHeadGraph.nodes.length:', fullHeadGraph.nodes.length);
@@ -38,9 +38,9 @@ async function makeGraph() {
 
   if (deleted.length !== 0 || hasRenamedFiles(fullHeadGraph, renamed)) {
     // ファイルの削除またはリネームがある場合は Graph を2つ表示する
-    message += await build2GraphsMessage(fullBaseGraph, fullHeadGraph, context);
+    message += build2GraphsMessage(fullBaseGraph, fullHeadGraph, context);
   } else {
-    message += await buildGraphMessage(fullBaseGraph, fullHeadGraph, context);
+    message += buildGraphMessage(fullBaseGraph, fullHeadGraph, context);
   }
 
   buildMetricsMessage({
