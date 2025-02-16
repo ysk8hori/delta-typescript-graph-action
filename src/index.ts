@@ -1,5 +1,5 @@
 import type { Graph } from '@ysk8hori/typescript-graph';
-import getFullGraph from './getFullGraph';
+import { getFullGraph } from './getFullGraph';
 import { info, log } from './utils/log';
 import type { PullRequestFileInfo } from './utils/github';
 import { createContext } from './utils/context';
