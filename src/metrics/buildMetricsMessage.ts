@@ -34,24 +34,27 @@ export function buildMetricsMessage({
     return;
   }
 
-  write('## Metrics\n\n');
   const baseMetrics = generateScoreMetrics(traverserForBase, allModifiedFiles);
   const headMetrics = generateScoreMetrics(traverserForHead, allModifiedFiles);
 
   // メトリクスの差分を計算
   const { metricsMap, sortedKeys } = createScoreDiff(headMetrics, baseMetrics);
 
+  // 変更対象ファイルがトラバース対象に含まれない場合はメトリクスを出力しない
+  if (sortedKeys.length === 0) return;
+
+  write('## Metrics\n\n');
   // メトリクスの差分をファイルごとに書き込む
   formatAndOutputMetrics(sortedKeys, metricsMap, write);
   return;
 }
 
 function generateScoreMetrics(
-  traverserForBase: ProjectTraverser,
+  traverser: ProjectTraverser,
   allModifiedFiles: PullRequestFileInfo[],
 ) {
   return pipe(
-    calculateCodeMetrics({ metrics: true }, traverserForBase, filePath =>
+    calculateCodeMetrics({ metrics: true }, traverser, filePath =>
       allModifiedFiles.map(v => v.filename).includes(filePath),
     ),
     unTree,
