@@ -30,7 +30,7 @@ const e: Node = {
   changeStatus: 'not_modified',
 };
 
-test('削除がある場合', async () => {
+test('削除がある場合', () => {
   const base: Graph = {
     nodes: [a, b, c, d, e],
     relations: [
@@ -84,7 +84,7 @@ test('削除がある場合', async () => {
     ],
   };
   const context = getDummyContext();
-  const result = await build2GraphsMessage(base, head, {
+  const result = build2GraphsMessage(base, head, {
     ...context,
     filesChanged: {
       created: [],
