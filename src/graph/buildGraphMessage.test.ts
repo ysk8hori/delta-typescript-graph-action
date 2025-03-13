@@ -30,17 +30,17 @@ const e: Node = {
   changeStatus: 'not_modified',
 };
 
-test('出力可能なグラフがない場合は何も出力しない', async () => {
+test('出力可能なグラフがない場合は何も出力しない', () => {
   const graph = {
     nodes: [],
     relations: [],
   };
   const context = getDummyContext();
-  const message = await buildGraphMessage(graph, graph, context);
+  const message = buildGraphMessage(graph, graph, context);
   expect(message).toBe('The graph is empty.\n\n');
 });
 
-test('グラフが大きすぎる場合はその旨を出力する', async () => {
+test('グラフが大きすぎる場合はその旨を出力する', () => {
   const graphA: Graph = {
     nodes: [a, c, d, e],
     relations: [
@@ -88,7 +88,7 @@ test('グラフが大きすぎる場合はその旨を出力する', async () =>
     ],
   };
   const context = getDummyContext();
-  const message = await buildGraphMessage(graphA, graphB, {
+  const message = buildGraphMessage(graphA, graphB, {
     ...context,
     config: { ...context.config, maxSize: 1 },
     filesChanged: {
@@ -105,7 +105,7 @@ test('グラフが大きすぎる場合はその旨を出力する', async () =>
   expect(message).toMatchSnapshot();
 });
 
-test('追加や依存の削除がある場合', async () => {
+test('追加や依存の削除がある場合', () => {
   const graphA: Graph = {
     nodes: [a, c, d, e],
     relations: [
@@ -153,7 +153,7 @@ test('追加や依存の削除がある場合', async () => {
     ],
   };
   const context = getDummyContext();
-  const message = await buildGraphMessage(graphA, graphB, {
+  const message = buildGraphMessage(graphA, graphB, {
     ...context,
     filesChanged: {
       created: [

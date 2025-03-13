@@ -7,11 +7,11 @@ import applyMutualDifferences from './applyMutualDifferences';
 /**
  * ファイルの削除またはリネームがある場合は Graph を2つ表示する
  */
-export async function build2GraphsMessage(
+export function build2GraphsMessage(
   fullBaseGraph: Graph,
   fullHeadGraph: Graph,
   context: Context,
-): Promise<string> {
+): string {
   const { baseGraph, headGraph, tsgCommand } = applyMutualDifferences(
     fullBaseGraph,
     fullHeadGraph,
@@ -34,19 +34,11 @@ export async function build2GraphsMessage(
   // base の書き出し
   const baseLines: string[] = [];
   const orientation = getOrientation();
-  await mermaidify(
-    (arg: string) => baseLines.push(arg),
-    baseGraph,
-    orientation,
-  );
+  mermaidify((arg: string) => baseLines.push(arg), baseGraph, orientation);
 
   // head の書き出し
   const headLines: string[] = [];
-  await mermaidify(
-    (arg: string) => headLines.push(arg),
-    headGraph,
-    orientation,
-  );
+  mermaidify((arg: string) => headLines.push(arg), headGraph, orientation);
 
   return buildNormal2GraphMessage(tsgCommand, baseLines, headLines);
 }
