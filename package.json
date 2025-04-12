@@ -20,7 +20,7 @@
     "@jest/globals": "29.7.0",
     "@total-typescript/ts-reset": "0.6.1",
     "@types/jest": "29.5.14",
-    "@types/node": "22.14.0",
+    "@types/node": "22.14.1",
     "@typescript-eslint/parser": "8.29.1",
     "@vercel/ncc": "0.38.3",
     "eslint": "9.24.0",
