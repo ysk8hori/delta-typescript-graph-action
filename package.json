@@ -21,7 +21,7 @@
     "@total-typescript/ts-reset": "0.6.1",
     "@types/jest": "30.0.0",
     "@types/node": "22.15.34",
-    "@typescript-eslint/parser": "8.35.0",
+    "@typescript-eslint/parser": "8.35.1",
     "@vercel/ncc": "0.38.3",
     "eslint": "9.30.0",
     "eslint-config-prettier": "10.1.5",
@@ -31,7 +31,7 @@
     "prettier": "3.6.2",
     "ts-jest": "29.4.0",
     "typescript": "5.8.3",
-    "typescript-eslint": "8.35.0",
+    "typescript-eslint": "8.35.1",
     "zx": "8.6.0"
   },
   "dependencies": {
