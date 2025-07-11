@@ -1,7 +1,7 @@
 import childA from './children/childA';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const a2 = require('./excludeFiles/g');
 const c2 = import('./excludeFiles/i');
+const a2 = require('./excludeFiles/g');
 import { style } from './excludeFiles/style/style';
 import ClassA from './excludeFiles/class/classA';
 
