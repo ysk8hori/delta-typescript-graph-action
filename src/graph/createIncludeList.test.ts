@@ -1,11 +1,24 @@
 import type { Node, Relation } from '@ysk8hori/typescript-graph';
 import { isIncludeIndexFileDependencies } from '../utils/config';
+import type { Context } from '../utils/context';
 import { createIncludeList } from './createIncludeList';
 
 jest.mock('../utils/config', () => ({
   isIncludeIndexFileDependencies: jest.fn(),
 }));
 
+const baseConfig: Context["config"] = {
+  tsconfigRoot: './',
+  tsconfig: './tsconfig.json',
+  maxSize: 30,
+  orientation: { TB: true },
+  debugEnabled: false,
+  inDetails: false,
+  exclude: [],
+  includeIndexFileDependencies: false,
+  commentTitle: 'Delta TypeScript Graph Action',
+  showMetrics: false,
+};
 test('新規作成、更新、削除、リネーム前後のファイルが include 対象となる', () => {
   expect(
     createIncludeList({
@@ -40,6 +53,7 @@ test('新規作成、更新、削除、リネーム前後のファイルが incl
             },
           ],
         },
+        config: baseConfig,
       },
       // created: ['created.ts'],
       // deleted: ['deleted.ts'],
@@ -73,6 +87,7 @@ test('TSG_INCLUDE_INDEX_FILE_DEPENDENCIES が false の場合は include 対象�
           ],
           renamed: [],
         },
+        config: baseConfig,
       },
       // created: [],
       // deleted: [],
@@ -126,6 +141,7 @@ test('TSG_INCLUDE_INDEX_FILE_DEPENDENCIES が true の場合は include 対象�
           ],
           renamed: [],
         },
+        config: baseConfig,
       },
       graphs: [
         {
@@ -156,4 +172,56 @@ test('TSG_INCLUDE_INDEX_FILE_DEPENDENCIES が true の場合は include 対象�
       ],
     }),
   ).toEqual(['src/a.ts', 'src/index.ts']);
+});
+
+test('tsconfig が指定されている場合は相対パスで出力される', () => {
+  expect(
+    createIncludeList({
+      context: {
+        filesChanged: {
+          created: [],
+          deleted: [],
+          modified: [
+            {
+              filename: 'dummy_project/src/a.ts',
+              status: 'modified',
+              previous_filename: undefined,
+            },
+          ],
+          renamed: [],
+        },
+        config: {
+          ...baseConfig,
+          tsconfig: "./dummy_project/tsconfig-dummy.json",
+        },
+      },
+      graphs: [
+        {
+          nodes: [
+            {
+              changeStatus: 'not_modified',
+              name: 'a.ts',
+              path: 'dummy_project/src/a.ts',
+            } satisfies Node,
+          ],
+          relations: [
+            {
+              from: {
+                changeStatus: 'not_modified',
+                name: 'index.ts',
+                path: 'dummy_project/src/index.ts',
+              } satisfies Node,
+              to: {
+                changeStatus: 'not_modified',
+                name: 'a.ts',
+                path: 'dummy_project/src/a.ts',
+              } satisfies Node,
+              changeStatus: 'not_modified',
+              kind: 'depends_on',
+            } satisfies Relation,
+          ],
+        },
+      ],
+    }),
+  ).toEqual(['src/a.ts']);
 });
