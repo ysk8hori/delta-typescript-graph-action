@@ -225,3 +225,34 @@ test('tsconfig が指定されている場合は相対パスで出力される',
     }),
   ).toEqual(['src/a.ts']);
 });
+
+test('tsconfig の範囲外のファイルは除外される', () => {
+  expect(
+    createIncludeList({
+      context: {
+        filesChanged: {
+          created: [],
+          deleted: [],
+          modified: [
+            {
+              filename: 'dummy_project/src/a.ts',
+              status: 'modified',
+              previous_filename: undefined,
+            },
+            {
+              filename: 'outside/file.ts',
+              status: 'modified',
+              previous_filename: undefined,
+            },
+          ],
+          renamed: [],
+        },
+        config: {
+          ...baseConfig,
+          tsconfig: "./dummy_project/tsconfig.json",
+        },
+      },
+      graphs: [],
+    }),
+  ).toEqual(['src/a.ts']);
+});

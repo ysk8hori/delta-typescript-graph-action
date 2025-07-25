@@ -95,6 +95,8 @@ export function getCommentTitle(): string {
   return core.getInput(COMMENT_TITLE) ?? 'Delta TypeScript Graph';
 }
 
+export type Config = ReturnType<typeof getConfig>;
+
 export function getConfig() {
   return {
     tsconfigRoot: getTsconfigRoot(),
