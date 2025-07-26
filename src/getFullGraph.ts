@@ -9,6 +9,7 @@ import {
 import { anyPass, isNot, map, pipe } from 'remeda';
 import { getCreateGraphsArguments } from './tsg/getCreateGraphsArguments';
 import type { Context } from './utils/context';
+import { filterFilesInTsconfigScope } from './utils/tsconfigPath';
 
 /** word に該当するか */
 const bindMatchFunc = (word: string) => (filePath: string) =>
@@ -61,7 +62,7 @@ function getGraph(
   context: Pick<Context, 'config' | 'filesChanged'>,
 ): [Graph, ProjectTraverser | undefined] {
   const { modified, created, deleted, renamed } = context.filesChanged;
-  const includeFiles = [modified, created, deleted, renamed]
+  const allChangedFiles = [modified, created, deleted, renamed]
     .flat()
     .map(v => v.filename);
   const tsconfigInfo = getCreateGraphsArguments(context.config);
@@ -80,11 +81,29 @@ function getGraph(
 
   const tsConfig = resolveTsconfig(tsconfigInfo);
   const traverser = new ProjectTraverser(tsConfig);
+
+  // Filter out files that are outside of the tsconfig scope
+  const filesInScope = filterFilesInTsconfigScope(
+    allChangedFiles,
+    context.config,
+  );
+
+  // If no files are in scope, return an empty graph
+  if (filesInScope.length === 0) {
+    return [
+      {
+        nodes: [],
+        relations: [],
+      } satisfies Graph,
+      undefined,
+    ];
+  }
+
   return [
     pipe(
       traverser.traverse(
         anyPass([
-          isExactMatchSome(includeFiles),
+          isExactMatchSome(filesInScope),
           isNot(matchSome(context.config.exclude)),
         ]),
         GraphAnalyzer.create,
