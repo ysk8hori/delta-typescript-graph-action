@@ -4,7 +4,7 @@ import type { Config } from './config';
 /**
  * Get the base directory for tsconfig
  */
-export function getTsconfigBaseDir(config: Pick<Config, 'tsconfig' | 'tsconfigRoot'>): string {
+function getTsconfigBaseDir(config: Pick<Config, 'tsconfig' | 'tsconfigRoot'>): string {
   return config.tsconfig ? path.dirname(config.tsconfig) : config.tsconfigRoot;
 }
 
