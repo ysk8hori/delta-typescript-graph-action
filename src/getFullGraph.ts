@@ -68,7 +68,7 @@ function getGraph(
   const tsconfigInfo = getCreateGraphsArguments(context.config);
   // - tsconfig が指定されているが、そのファイルが存在しない場合は空のグラフとする
   //   （createGraph は指定された tsconfig がない場合、カレントディレクトリより上に向かって tsconfig.json を探すが、ここではそれをしたくない）
-  // - tsconfig が指定されていない場合は、tsconfig-root から tsconfig.json を探索する
+  // - tsconfig が指定されていない場合は、tsconfig-root から tsconfig.json を探索するaaa
   if (!tsconfigInfo) {
     return [
       {
