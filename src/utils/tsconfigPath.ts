@@ -12,7 +12,7 @@ function getTsconfigBaseDir(config: Pick<Config, 'tsconfig' | 'tsconfigRoot'>): 
  * Convert an absolute file path to a path relative to the tsconfig base directory
  * @returns null if the file is outside the tsconfig scope
  */
-export function getRelativePathFromTsconfig(
+function getRelativePathFromTsconfig(
   absolutePath: string,
   config: Pick<Config, 'tsconfig' | 'tsconfigRoot'>
 ): string | null {
