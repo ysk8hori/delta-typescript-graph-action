@@ -7,7 +7,7 @@ jest.mock('../utils/config', () => ({
   isIncludeIndexFileDependencies: jest.fn(),
 }));
 
-const baseConfig: Context["config"] = {
+const baseConfig: Context['config'] = {
   tsconfigRoot: './',
   tsconfig: './tsconfig.json',
   maxSize: 30,
@@ -192,7 +192,7 @@ test('tsconfig が指定されている場合は相対パスで出力される',
         },
         config: {
           ...baseConfig,
-          tsconfig: "./dummy_project/tsconfig-dummy.json",
+          tsconfig: './dummy_project/tsconfig-dummy.json',
         },
       },
       graphs: [
@@ -249,7 +249,7 @@ test('tsconfig の範囲外のファイルは除外される', () => {
         },
         config: {
           ...baseConfig,
-          tsconfig: "./dummy_project/tsconfig.json",
+          tsconfig: './dummy_project/tsconfig.json',
         },
       },
       graphs: [],

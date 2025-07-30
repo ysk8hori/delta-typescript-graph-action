@@ -9,7 +9,7 @@ import {
 import { anyPass, isNot, map, pipe } from 'remeda';
 import { getCreateGraphsArguments } from './tsg/getCreateGraphsArguments';
 import type { Context } from './utils/context';
-import { filterFilesInTsconfigScope } from './utils/tsconfigPath';
+import { isInTsconfigScope } from './utils/tsconfigPath';
 
 /** word に該当するか */
 const bindMatchFunc = (word: string) => (filePath: string) =>
@@ -83,9 +83,8 @@ function getGraph(
   const traverser = new ProjectTraverser(tsConfig);
 
   // Filter out files that are outside of the tsconfig scope
-  const filesInScope = filterFilesInTsconfigScope(
-    allChangedFiles,
-    context.config,
+  const filesInScope = allChangedFiles.filter(file =>
+    isInTsconfigScope(file, context.config),
   );
 
   // If no files are in scope, return an empty graph

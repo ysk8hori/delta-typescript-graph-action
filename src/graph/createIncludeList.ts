@@ -1,7 +1,10 @@
 import type { Graph } from '@ysk8hori/typescript-graph';
 import { isIncludeIndexFileDependencies } from '../utils/config';
 import type { Context } from '../utils/context';
-import { convertToRelativePathsFromTsconfig } from '../utils/tsconfigPath';
+import {
+  getRelativePathFromTsconfig,
+  isInTsconfigScope,
+} from '../utils/tsconfigPath';
 import { extractIndexFileDependencies } from './extractIndexFileDependencies';
 
 export function createIncludeList({
@@ -23,10 +26,9 @@ export function createIncludeList({
       .filter(Boolean) ?? []),
   ];
 
-  const relativePaths = convertToRelativePathsFromTsconfig(
-    allChangedFiles,
-    config,
-  );
+  const relativePaths = allChangedFiles
+    .filter(file => isInTsconfigScope(file, config))
+    .map(file => getRelativePathFromTsconfig(file, config));
 
   return isIncludeIndexFileDependencies()
     ? [

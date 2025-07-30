@@ -1,6 +1,9 @@
 import type { Graph, ChangeStatus } from '@ysk8hori/typescript-graph';
 import type { Context } from '../utils/context';
-import { convertToRelativePathsFromTsconfig } from '../utils/tsconfigPath';
+import {
+  getRelativePathFromTsconfig,
+  isInTsconfigScope,
+} from '../utils/tsconfigPath';
 
 export default function addStatus(
   {
@@ -12,18 +15,18 @@ export default function addStatus(
   const { nodes, relations } = graph;
 
   // Convert changed file paths to be relative to the tsconfig directory
-  const deletedPaths = convertToRelativePathsFromTsconfig(
-    deleted.map(({ filename }) => filename),
-    config,
-  );
-  const createdPaths = convertToRelativePathsFromTsconfig(
-    created.map(({ filename }) => filename),
-    config,
-  );
-  const modifiedPaths = convertToRelativePathsFromTsconfig(
-    modified.map(({ filename }) => filename),
-    config,
-  );
+  const deletedPaths = deleted
+    .map(({ filename }) => filename)
+    .filter(filename => isInTsconfigScope(filename, config))
+    .map(filename => getRelativePathFromTsconfig(filename, config));
+  const createdPaths = created
+    .map(({ filename }) => filename)
+    .filter(filename => isInTsconfigScope(filename, config))
+    .map(filename => getRelativePathFromTsconfig(filename, config));
+  const modifiedPaths = modified
+    .map(({ filename }) => filename)
+    .filter(filename => isInTsconfigScope(filename, config))
+    .map(filename => getRelativePathFromTsconfig(filename, config));
 
   const newNodes = nodes.map(node => {
     const changeStatus: ChangeStatus = (function () {
