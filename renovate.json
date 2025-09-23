@@ -4,5 +4,34 @@
     "config:recommended"
   ],
   "ignoreDeps": ["ysk8hori/delta-typescript-graph-action"],
-  "automerge": true
+  "automerge": true,
+  "baseBranches": ["main"],
+  "timezone": "Asia/Tokyo",
+  "schedule": ["after 5pm and before 10pm on Thursday"],
+  "minimumReleaseAge": "7 days",
+  "rangeStrategy": "pin",
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["major", "minor"],
+      "labels": ["TypeScript"],
+      "matchPackageNames": ["typescript"],
+      "groupName": "TypeScript"
+    },
+    {
+      "groupName": "ESLint related packages",
+      "packageNames": ["eslint", "eslint-config-prettier"],
+      "packagePatterns": ["^@typescript-eslint/", "^eslint-plugin"]
+    },
+    {
+      "groupName": "All minor and patch dependencies",
+      "matchUpdateTypes": ["minor", "patch"],
+      "labels": ["UPDATE-MINOR&PATCH"],
+      "excludePackageNames": ["typescript", "eslint", "eslint-config-prettier"],
+      "excludePackagePatterns": ["^@typescript-eslint/", "^eslint-plugin"]
+    }
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["after 5pm and before 10pm on Thursday"]
+  }
 }
