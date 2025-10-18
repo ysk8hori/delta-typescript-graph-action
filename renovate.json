@@ -1,8 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
+  "extends": ["config:recommended"],
   "ignoreDeps": ["ysk8hori/delta-typescript-graph-action"],
   "automerge": true,
   "baseBranches": ["main"],
@@ -16,6 +14,18 @@
       "labels": ["TypeScript"],
       "matchPackageNames": ["typescript"],
       "groupName": "TypeScript"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["packageManager"],
+      "matchPackageNames": ["pnpm"],
+      "enabled": true,
+      "groupName": "pnpm"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "pinDigests": true,
+      "minimumReleaseAge": "1 week"
     },
     {
       "groupName": "ESLint related packages",
