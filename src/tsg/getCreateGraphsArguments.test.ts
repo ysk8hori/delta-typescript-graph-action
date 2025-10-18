@@ -1,15 +1,16 @@
 import fs from 'fs';
+import { vi } from 'vitest';
 import { getCreateGraphsArguments } from './getCreateGraphsArguments';
 
-jest.mock('fs');
-jest.mock('../utils/config', () => {
+vi.mock('fs');
+vi.mock('../utils/config', () => {
   return {
     isDebugEnabled: () => false,
   };
 });
 
 test('root も path も 未指定の場合は undefined', () => {
-  const mockExistsSync = jest.fn();
+  const mockExistsSync = vi.fn();
   mockExistsSync.mockReturnValueOnce(true);
   fs.existsSync = mockExistsSync;
 
@@ -17,7 +18,7 @@ test('root も path も 未指定の場合は undefined', () => {
 });
 
 test('tsconfigRoot を指定するとそれが dir に設定される', () => {
-  const mockExistsSync = jest.fn();
+  const mockExistsSync = vi.fn();
   mockExistsSync.mockReturnValueOnce(true);
   fs.existsSync = mockExistsSync;
 
@@ -51,7 +52,7 @@ test.each([
 ])(
   'tsconfig を指定するとそれが tsconfig に、tsconfig のあるディレクトリが dir に設定される',
   ({ tsconfig, expected }) => {
-    const mockExistsSync = jest.fn();
+    const mockExistsSync = vi.fn();
     mockExistsSync.mockReturnValueOnce(true);
     fs.existsSync = mockExistsSync;
 
@@ -60,7 +61,7 @@ test.each([
 );
 
 test('tsconfig が存在しない場合は undefined を返す', () => {
-  const mockExistsSync = jest.fn();
+  const mockExistsSync = vi.fn();
   mockExistsSync.mockReturnValueOnce(false);
   fs.existsSync = mockExistsSync;
 
@@ -75,7 +76,7 @@ test.each([
   { tsconfig: './tsconfig.yaml' },
   { tsconfig: './tsconfig.json.js' },
 ])('json でない場合は undefined を返す', ({ tsconfig }) => {
-  const mockExistsSync = jest.fn();
+  const mockExistsSync = vi.fn();
   mockExistsSync.mockReturnValueOnce(true);
   fs.existsSync = mockExistsSync;
 
@@ -83,7 +84,7 @@ test.each([
 });
 
 test('tsconfigRoot と tsconfig を指定すると tsconfigRoot は無視される', () => {
-  const mockExistsSync = jest.fn();
+  const mockExistsSync = vi.fn();
   mockExistsSync.mockReturnValueOnce(true);
   fs.existsSync = mockExistsSync;
 
