@@ -1,21 +1,22 @@
+import { vi, beforeAll, afterAll } from 'vitest';
 import { retry } from './retry';
 
 const warn = global.console.warn;
 
 beforeAll(() => {
-  jest.useFakeTimers({ doNotFake: ['nextTick'] });
-  global.console.warn = jest.fn();
+  vi.useFakeTimers();
+  global.console.warn = vi.fn();
 });
 
 afterAll(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
   global.console.warn = warn;
 });
 
 async function runTimersAndNextTick(times: number) {
   if (times <= 0) return;
   await new Promise(process.nextTick);
-  jest.runAllTimers();
+  vi.runAllTimers();
   await runTimersAndNextTick(times - 1);
 }
 
@@ -26,7 +27,7 @@ test('成功時には値を返す', async () => {
 });
 
 test('成功後はコールバックを実行しない', async () => {
-  const fn = jest.fn();
+  const fn = vi.fn();
 
   const result = retry<'success'>(
     () =>
@@ -42,7 +43,7 @@ test('成功後はコールバックを実行しない', async () => {
 });
 
 test('失敗時にはundefinedを返す', async () => {
-  const fn = jest.fn();
+  const fn = vi.fn();
   fn.mockRejectedValue(new Error('fail'));
 
   const result = retry(fn);
@@ -52,7 +53,7 @@ test('失敗時にはundefinedを返す', async () => {
 });
 
 test('コールバック関数を最初の1回＋リトライ回数分実行する', async () => {
-  const fn = jest.fn();
+  const fn = vi.fn();
 
   const result = retry<true>(
     () =>
@@ -69,7 +70,7 @@ test('コールバック関数を最初の1回＋リトライ回数分実行す�
 });
 
 test('指定した回数だけリトライし成功できる', async () => {
-  const fn = jest.fn();
+  const fn = vi.fn();
   fn.mockRejectedValueOnce(new Error('fail'))
     .mockRejectedValueOnce(new Error('fail'))
     .mockRejectedValueOnce(new Error('fail'))

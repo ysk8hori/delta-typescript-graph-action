@@ -1,10 +1,11 @@
+import { vi, type Mock } from 'vitest';
 import type { Node, Relation } from '@ysk8hori/typescript-graph';
 import { isIncludeIndexFileDependencies } from '../utils/config';
 import type { Context } from '../utils/context';
 import { createIncludeList } from './createIncludeList';
 
-jest.mock('../utils/config', () => ({
-  isIncludeIndexFileDependencies: jest.fn(),
+vi.mock('../utils/config', () => ({
+  isIncludeIndexFileDependencies: vi.fn(),
 }));
 
 const baseConfig: Context['config'] = {
@@ -71,7 +72,7 @@ test('新規作成、更新、削除、リネーム前後のファイルが incl
 });
 
 test('TSG_INCLUDE_INDEX_FILE_DEPENDENCIES が false の場合は include 対象となるファイルを参照している index.ts を含めない', () => {
-  (isIncludeIndexFileDependencies as jest.Mock).mockImplementation(() => false);
+  (isIncludeIndexFileDependencies as Mock).mockImplementation(() => false);
   expect(
     createIncludeList({
       context: {
@@ -125,7 +126,7 @@ test('TSG_INCLUDE_INDEX_FILE_DEPENDENCIES が false の場合は include 対象�
 });
 
 test('TSG_INCLUDE_INDEX_FILE_DEPENDENCIES が true の場合は include 対象となるファイルを参照している index.ts を含める', () => {
-  (isIncludeIndexFileDependencies as jest.Mock).mockImplementation(() => true);
+  (isIncludeIndexFileDependencies as Mock).mockImplementation(() => true);
   expect(
     createIncludeList({
       context: {

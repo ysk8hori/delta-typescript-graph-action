@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import type { Context } from './context';
 import type GitHub from './github';
 
@@ -19,13 +20,13 @@ export function getDummyContext(context?: {
       showMetrics: false,
     },
     github: {
-      getWorkflowName: jest.fn(),
-      commentToPR: jest.fn(),
-      deleteComment: jest.fn(),
-      getTSFiles: jest.fn(),
-      getBaseSha: jest.fn(),
-      getHeadSha: jest.fn(),
-      cloneRepo: jest.fn(),
+      getWorkflowName: vi.fn(),
+      commentToPR: vi.fn(),
+      deleteComment: vi.fn(),
+      getTSFiles: vi.fn(),
+      getBaseSha: vi.fn(),
+      getHeadSha: vi.fn(),
+      cloneRepo: vi.fn(),
     } as unknown as GitHub,
     fullCommentTitle: '## Delta TypeScript Graph<!--test-workflow.yml-->',
     filesChanged: {
