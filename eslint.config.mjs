@@ -30,6 +30,13 @@ export default [
       'import/order': 'error',
       'import/no-unresolved': 'off',
     },
+    settings: {
+      'import/resolver': {
+        typescript: {
+          alwaysTryTypes: true,
+        },
+      },
+    },
   },
   {
     // typescript-eslint
