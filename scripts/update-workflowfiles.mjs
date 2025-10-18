@@ -10,7 +10,7 @@ import fs from 'fs';
 import path from 'path';
 import { $ } from 'zx';
 
-await $`npm run build`;
+await $`pnpm run build`;
 await $`git commit -am "chore: update dist"`;
 
 const headSha = (await $`git rev-parse HEAD`).toString().trim();
