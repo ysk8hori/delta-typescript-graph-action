@@ -34,7 +34,7 @@
     "prettier": "3.7.4",
     "typescript": "5.9.3",
     "typescript-eslint": "8.51.0",
-    "vitest": "3.2.4",
+    "vitest": "4.0.16",
     "zx": "8.8.5"
   },
   "dependencies": {
