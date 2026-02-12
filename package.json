@@ -5,7 +5,7 @@
   "main": "index.js",
   "packageManager": "pnpm@10.28.2",
   "engines": {
-    "node": "25.5.0"
+    "node": "25.6.0"
   },
   "scripts": {
     "test": "vitest run",
@@ -23,7 +23,7 @@
   "devDependencies": {
     "@eslint/js": "9.39.2",
     "@total-typescript/ts-reset": "0.6.1",
-    "@types/node": "24.10.9",
+    "@types/node": "24.10.11",
     "@typescript-eslint/parser": "8.54.0",
     "@vercel/ncc": "0.38.4",
     "eslint": "9.39.2",
@@ -41,6 +41,6 @@
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
     "@ysk8hori/typescript-graph": "0.26.5",
-    "remeda": "2.33.4"
+    "remeda": "2.33.5"
   }
 }

@@ -18,8 +18,8 @@ importers:
         specifier: 0.26.5
         version: 0.26.5
       remeda:
-        specifier: 2.33.4
-        version: 2.33.4
+        specifier: 2.33.5
+        version: 2.33.5
     devDependencies:
       '@eslint/js':
         specifier: 9.39.2
@@ -28,8 +28,8 @@ importers:
         specifier: 0.6.1
         version: 0.6.1
       '@types/node':
-        specifier: 24.10.9
-        version: 24.10.9
+        specifier: 24.10.11
+        version: 24.10.11
       '@typescript-eslint/parser':
         specifier: 8.54.0
         version: 8.54.0(eslint@9.39.2)(typescript@5.9.3)
@@ -62,7 +62,7 @@ importers:
         version: 8.54.0(eslint@9.39.2)(typescript@5.9.3)
       vitest:
         specifier: 4.0.18
-        version: 4.0.18(@types/node@24.10.9)
+        version: 4.0.18(@types/node@24.10.11)
       zx:
         specifier: 8.8.5
         version: 8.8.5
@@ -519,8 +519,8 @@ packages:
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
-  '@types/node@24.10.9':
-    resolution: {integrity: sha512-ne4A0IpG3+2ETuREInjPNhUGis1SFjv1d5asp8MzEAGtOZeTeHVDOYqOgqfhvseqg/iXty2hjBf1zAOb7RNiNw==}
+  '@types/node@24.10.11':
+    resolution: {integrity: sha512-/Af7O8r1frCVgOz0I62jWUtMohJ0/ZQU/ZoketltOJPZpnb17yoNc9BSoVuV9qlaIXJiPNOpsfq4ByFajSArNQ==}
 
   '@typescript-eslint/eslint-plugin@8.54.0':
     resolution: {integrity: sha512-hAAP5io/7csFStuOmR782YmTthKBJ9ND3WVL60hcOjvtGFb+HJxH4O5huAcmcZ9v9G8P+JETiZ/G1B8MALnWZQ==}
@@ -1450,8 +1450,8 @@ packages:
   remeda@2.31.1:
     resolution: {integrity: sha512-FRZefcuXbmCoYt8hAITAzW4t8i/RERaGk/+GtRN90eV3NHxsnRKCDIOJVrwrQ6zz77TG/Xyi9mGRfiJWT7DK1g==}
 
-  remeda@2.33.4:
-    resolution: {integrity: sha512-ygHswjlc/opg2VrtiYvUOPLjxjtdKvjGz1/plDhkG66hjNjFr1xmfrs2ClNFo/E6TyUFiwYNh53bKV26oBoMGQ==}
+  remeda@2.33.5:
+    resolution: {integrity: sha512-FqmpPA9i9T5EGcqgyHf9kHjefnyCZM1M3kSdZjPk1j2StGNoJyoYp0807RYcjNkQ1UpsEQa5qzgsjLY4vYtT8g==}
 
   resolve-from@4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
@@ -2129,7 +2129,7 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
-  '@types/node@24.10.9':
+  '@types/node@24.10.11':
     dependencies:
       undici-types: 7.16.0
 
@@ -2294,13 +2294,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.0.3
 
-  '@vitest/mocker@4.0.18(vite@7.1.9(@types/node@24.10.9))':
+  '@vitest/mocker@4.0.18(vite@7.1.9(@types/node@24.10.11))':
     dependencies:
       '@vitest/spy': 4.0.18
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.1.9(@types/node@24.10.9)
+      vite: 7.1.9(@types/node@24.10.11)
 
   '@vitest/pretty-format@4.0.18':
     dependencies:
@@ -3199,7 +3199,7 @@ snapshots:
     dependencies:
       type-fest: 4.41.0
 
-  remeda@2.33.4: {}
+  remeda@2.33.5: {}
 
   resolve-from@4.0.0: {}
 
@@ -3490,7 +3490,7 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  vite@7.1.9(@types/node@24.10.9):
+  vite@7.1.9(@types/node@24.10.11):
     dependencies:
       esbuild: 0.25.10
       fdir: 6.5.0(picomatch@4.0.3)
@@ -3499,13 +3499,13 @@ snapshots:
       rollup: 4.52.4
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 24.10.9
+      '@types/node': 24.10.11
       fsevents: 2.3.3
 
-  vitest@4.0.18(@types/node@24.10.9):
+  vitest@4.0.18(@types/node@24.10.11):
     dependencies:
       '@vitest/expect': 4.0.18
-      '@vitest/mocker': 4.0.18(vite@7.1.9(@types/node@24.10.9))
+      '@vitest/mocker': 4.0.18(vite@7.1.9(@types/node@24.10.11))
       '@vitest/pretty-format': 4.0.18
       '@vitest/runner': 4.0.18
       '@vitest/snapshot': 4.0.18
@@ -3522,10 +3522,10 @@ snapshots:
       tinyexec: 1.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vite: 7.1.9(@types/node@24.10.9)
+      vite: 7.1.9(@types/node@24.10.11)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 24.10.9
+      '@types/node': 24.10.11
     transitivePeerDependencies:
       - jiti
       - less
