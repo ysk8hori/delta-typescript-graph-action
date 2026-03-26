@@ -38,7 +38,7 @@
     "zx": "8.8.5"
   },
   "dependencies": {
-    "@actions/core": "1.11.1",
+    "@actions/core": "3.0.0",
     "@actions/github": "6.0.1",
     "@ysk8hori/typescript-graph": "0.26.5",
     "remeda": "2.33.6"
