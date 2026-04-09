@@ -5,7 +5,7 @@
   "main": "index.js",
   "packageManager": "pnpm@10.33.0",
   "engines": {
-    "node": "25.8.2"
+    "node": "25.9.0"
   },
   "scripts": {
     "test": "vitest run",
@@ -33,14 +33,14 @@
     "globals": "17.4.0",
     "prettier": "3.8.1",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.57.2",
-    "vitest": "4.1.1",
+    "typescript-eslint": "8.58.0",
+    "vitest": "4.1.2",
     "zx": "8.8.5"
   },
   "dependencies": {
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
     "@ysk8hori/typescript-graph": "0.26.5",
-    "remeda": "2.33.6"
+    "remeda": "2.33.7"
   }
 }
