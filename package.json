@@ -24,7 +24,7 @@
     "@eslint/js": "10.0.1",
     "@total-typescript/ts-reset": "0.6.1",
     "@types/node": "24.13.2",
-    "@typescript-eslint/parser": "8.61.1",
+    "@typescript-eslint/parser": "8.62.0",
     "@vercel/ncc": "0.44.0",
     "eslint": "10.5.0",
     "eslint-config-prettier": "10.1.8",
