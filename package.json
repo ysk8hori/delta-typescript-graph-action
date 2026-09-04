@@ -33,14 +33,14 @@
     "globals": "17.11.0",
     "prettier": "3.9.6",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.67.0",
-    "vitest": "4.1.10",
+    "typescript-eslint": "8.68.0",
+    "vitest": "4.1.11",
     "zx": "8.8.5"
   },
   "dependencies": {
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
     "@ysk8hori/typescript-graph": "0.26.5",
-    "remeda": "2.39.0"
+    "remeda": "2.45.0"
   }
 }
