@@ -4,7 +4,7 @@ import {
   getRelativePathFromTsconfig,
   isInTsconfigScope,
 } from '../utils/tsconfigPath';
-
+// foo
 export default function addStatus(
   {
     filesChanged: { modified, created, deleted },
