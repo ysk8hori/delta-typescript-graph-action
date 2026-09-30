@@ -102,7 +102,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # specify latest version
-      - uses: ysk8hori/delta-typescript-graph-action@v # specify latest version
+      - uses: ysk8hori/delta-typescript-graph-action@v1 # specify latest major version
 ```
 
 This basic setup will trigger the Action on every pull request. The Action will run on the latest Ubuntu runner and use its default settings. If you want to customize the Action, you can add parameters under the `with` section of the workflow file.
@@ -129,7 +129,7 @@ To use these parameters, include them under the `with` section of your workflow 
 
 ```yml
 steps:
-  - uses: ysk8hori/delta-typescript-graph-action@v # specify latest version
+  - uses: ysk8hori/delta-typescript-graph-action@v1 # specify latest major version
     with:
       access-token: ${{ secrets.GITHUB_TOKEN }}
       tsconfig: './my-app/tsconfig.json'

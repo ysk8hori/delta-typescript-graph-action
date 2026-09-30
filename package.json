@@ -5,7 +5,7 @@
   "main": "index.js",
   "packageManager": "pnpm@10.34.5",
   "engines": {
-    "node": "25.9.0"
+    "node": ">=24 <26"
   },
   "scripts": {
     "test": "vitest run",
