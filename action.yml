@@ -1,5 +1,5 @@
 name: 'Delta TypeScript Graph'
-auther: 'ysk8hori'
+author: 'ysk8hori'
 description: 'Visualizes changes in typescript-file dependencies.'
 inputs:
   access-token:
@@ -46,7 +46,7 @@ inputs:
     required: false
     default: false
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
 branding:
   icon: 'git-pull-request'
