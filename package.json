@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "This GitHub Action uses Mermaid to visualize in a diagram the files that were changed in a Pull Request and their related dependency files. This approach aims to reduce the initial cognitive load during the review process and assist in understanding the structure around the modified code.",
   "main": "index.js",
-  "packageManager": "pnpm@10.34.6",
+  "packageManager": "pnpm@10.34.7",
   "engines": {
     "node": ">=24 <26"
   },
@@ -23,7 +23,7 @@
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@total-typescript/ts-reset": "0.6.1",
-    "@types/node": "24.19.1",
+    "@types/node": "24.19.2",
     "@typescript-eslint/parser": "8.71.2",
     "@vercel/ncc": "0.45.0",
     "eslint": "10.12.0",
@@ -31,16 +31,16 @@
     "eslint-import-resolver-typescript": "4.4.5",
     "eslint-plugin-import": "2.32.0",
     "globals": "17.13.0",
-    "prettier": "3.9.9",
+    "prettier": "3.9.10",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.71.1",
-    "vitest": "4.1.11",
+    "typescript-eslint": "8.71.2",
+    "vitest": "4.1.12",
     "zx": "8.8.5"
   },
   "dependencies": {
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
     "@ysk8hori/typescript-graph": "0.26.5",
-    "remeda": "2.51.0"
+    "remeda": "2.52.0"
   }
 }
