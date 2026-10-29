@@ -33,7 +33,7 @@
     "globals": "17.13.0",
     "prettier": "3.9.10",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.71.2",
+    "typescript-eslint": "8.72.0",
     "vitest": "4.1.12",
     "zx": "8.8.5"
   },
@@ -41,6 +41,6 @@
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
     "@ysk8hori/typescript-graph": "0.26.5",
-    "remeda": "2.52.0"
+    "remeda": "2.53.0"
   }
 }
